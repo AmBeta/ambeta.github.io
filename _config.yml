@@ -1,0 +1,28 @@
+# Site settings
+title: AmBeta Blog
+SEOTitle: 三土的博客 | AmBeta's Blog
+header-img: imgs/header-bg.png
+header-thumb: imgs/my-thumb.png
+email: cyandrewchen@gmail.com
+description: ""
+keyword: ""
+url: "http://ambeta.github.io"  # your host, for absolute URL
+baseurl: "/"                     # for example, '/blog' if your blog hosted on 'host/blog'
+
+# Build settings
+gems: [jekyll-paginate]
+paginate: 5
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+
+# SNS settings
+RSS: false
+weibo_username:     andrewidiot
+#zhihu_username:     AmBeta
+github_username:    ambeta
+#twitter_username:  AmBeta
+#facebook_username:  AmBeta
+
+# Markdown settings
+markdown: kramdown
+kramdown:
+  input: GFM

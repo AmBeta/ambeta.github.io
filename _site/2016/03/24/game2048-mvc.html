@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="img/favicon.ico">
+
+    <title>利用MVC思想实现的2048小游戏 - 三土的博客 | AmBeta's Blog</title>
+
+    <link rel="canonical" href="http://ambeta.github.io//2016/03/24/game2048-mvc.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//css/bootstrap.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="//css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="//css/main.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+
+    <link href="http://cdn.staticfile.org/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<body>
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="//">AmBeta Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="//">HOME</a></li>
+                    <li><a href="//tags.html">TAGS</a></li>
+                    <li><a href="//about.html" target="_blank">ABOUT</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Navigation -->
+<style type="text/css">
+    nav.navbar-custom, .navbar-toggle, .navber-brand {
+        color: #000 !important;
+    }
+</style>
+
+<!-- Post Header -->
+<header class="post-header">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+            <div class="tags">
+                
+                <a class="tag" href="//tags.html/#JavaScript" title="JavaScript">JavaScript</a>
+                
+                <a class="tag" href="//tags.html/#MVC" title="MVC">MVC</a>
+                
+            </div>
+            <h1>利用MVC思想实现的2048小游戏</h1>
+            <div class="post-meta">
+                Posted on March 24, 2016
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+                <p>2048是一款很经典的小游戏，据说游戏的源码就是用JavaScript写的，暂时还没来得及看。网上别人写的代码也很多，最少有不到280行代码写成的。</p>
+
+<p><img src="/imgs/in-posts/game2048.png" alt="Game2048" title="Game 2048" /></p>
+
+<p>JS本身语法比较松散，如果随便写的话很容易就写成了面向过程的结构，时间一长，各种复杂的逻辑就很难再理清楚了，后续的维护难度很高。而使用MVC的思想可以强化其面向对象的设计，逻辑清晰，方便日后回顾和修改。</p>
+
+<p>但是使用MVC的代码开销也是比较大的，所以也要酌情采用。<br />
+这次使用MVC来设计这个小游戏，主要还是为了练习一下这种模式，当然，也是为了后续方便再添加一些新的功能。</p>
+
+<hr />
+
+<h2 id="section">游戏逻辑与设计思路</h2>
+
+<p>首先简单梳理一下游戏的逻辑：</p>
+
+<ol>
+  <li><strong><em>游戏开始</em></strong><br />
+ 游戏载入时在两个随机的位置生成数字（2或4）。</li>
+  <li><strong><em>移动与合并</em></strong><br />
+ 响应玩家操作，往一个方向移动所有的数字，<br />
+ 如果两个相同的数字碰到一起则发生合并，进入步骤<code class="highlighter-rouge">3</code>；<br />
+ 否则不发生任何变化，等待玩家继续尝试。</li>
+  <li><strong><em>生成新数字</em></strong><br />
+ 在空余位置随机生成一个数字（2或4）；<br />
+ 获取当前剩余空位的数目，若仍有剩余空位，跳转至步骤<code class="highlighter-rouge">2</code>等待响应玩家操作；<br />
+ 若已无剩余空位，判断当前数字阵列是否可发生合并，若可发生合并，则跳转至步骤<code class="highlighter-rouge">2</code>等待响应玩家操作，否则，游戏结束，进入步骤<code class="highlighter-rouge">4</code>。</li>
+  <li><strong><em>游戏结束</em></strong><br />
+ 当前数字阵列已无可以继续合并的数字，游戏结束；如果玩家选择重新开始，则进入步骤<code class="highlighter-rouge">1</code>继续游戏。</li>
+</ol>
+
+<h2 id="mvc">MVC实现</h2>
+
+<p>接着就利用MVC的思想将游戏分解为模型（Model）、视图（View）以及控制器（Controller）三大部分。</p>
+
+<ul>
+  <li><strong>M - 模型</strong> 主要负责记录和处理游戏的数据。在该游戏中，游戏的数据主要包括所有的数字、玩家当前得分及历史最高得分。</li>
+  <li><strong>V - 视图</strong> 主要负责游戏数据的呈现，同时需要响应用户对UI元素的操作。在该游戏中，用户可操作的元素主要包括所有数字的移动和游戏的开始按钮。</li>
+  <li><strong>C - 控制器</strong> 主要负责响应UI操作的输入，并将这些输入转化为游戏数据的变化。</li>
+</ul>
+
+<p>M、V、C三者各司其职，其通过事件的绑定与通知实现彼此之间的通讯：<br />
+<strong>M</strong> 响应 <strong>C</strong> 对数据的直接操作，并在数据发生变化时及时发出通知；<br />
+<strong>V</strong> 监听 <strong>M</strong> 中的数据变化并刷新视图，并在玩家操作UI元素时及时发出通知；<br />
+<strong>C</strong> 监听 <strong>V</strong> 中的玩家操作事件，并相应地调用 <strong>M</strong> 中的方法请求数据操作。</p>
+
+<p>下面是一个简单地实现了 <em>观察者模式（Observer Pattern）</em> 的类，其主要负责类与类之间事件的绑定与通知：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function Event(sender) {
+    this._sender = sender;
+    this._listeners = [];
+}
+
+Event.prototype = {
+    attach: function(listener) {	// bind event
+        this._listeners.push(listener);
+    },
+
+    notify: function() {	// trigger event
+        var i, len, args = [];
+
+        args.push(this._sender);
+        for (i = 0, len = arguments.length; i &lt; len; i++) {
+            args.push(arguments[i]);
+        }
+
+        for (i = 0; i &lt; this._listeners.length; i++) {
+            this._listeners[i].apply(this, args);
+        }
+    }
+};
+</code></pre>
+</div>
+
+<h3 id="model">模型（Model）</h3>
+
+<p>模型中主要包含的是游戏的数据，除了主要的数字阵列和玩家得分外，还需要根据功能的实现添加一些辅助数据。该游戏的数据模型定义如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function Game2048Model(row, col) {
+    this._row = row;
+    this._col = col;
+    this._currScore = 0;	// player's current score
+    this._maxScore = 0;		// player's best score
+    this._cells = [];		// number cells     
+    this._shift = [];		// shift of number cells when moving
+    this._empty = [];		// empty grid left
+    this._isLocked = false;// lock for data in case of frequent operation
+
+    this.cellsMovedUp = new Event(this);
+    this.cellsMovedDown = new Event(this);
+    this.cellsMovedLeft = new Event(this);
+    this.cellsMovedRight = new Event(this);
+    this.cellCreated = new Event(this);
+    this.scoreUpdated = new Event(this);
+    this.gameOver = new Event(this);
+    this.gameRestarted = new Event(this);
+
+    this.init();
+}
+</code></pre>
+</div>
+
+<ul>
+  <li>这里将所有的格子中的数字存放在一个名为<code class="highlighter-rouge">this._cells</code>的二维数组中；</li>
+  <li>由于需要显示数字在移动与合并过程中的轨迹，因此这里使用二维数组<code class="highlighter-rouge">this._shift</code>来保存每个数字的位移信息；</li>
+  <li><code class="highlighter-rouge">this._empty</code>用以保存当前空余的位置信息，为了减少不必要的遍历，同时方便取随机，这里将它设计为一维数组，元素值是用类似于<code class="highlighter-rouge">'row,col'</code>的字符串保存的行列位置信息；</li>
+  <li><code class="highlighter-rouge">this._isLocked</code>变量用以对数据进行锁定，防止对数据同时进行多个操作而产生异常。</li>
+</ul>
+
+<p>同时，模型上还有一系列的事件触发器，他们用于在数据发生变化时触发视图的更新。</p>
+
+<p>在处理数字的移动与合并时，提取了一个原子操作<code class="highlighter-rouge">mergeCells(array)</code>，实现了将一行元素向左移动与合并，返回合并后的序列与每个元素的位移。
+同时，在数字合并的过程中，更新当前的玩家得分。<br />
+具体实现如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mergeCells: function(array) {   // merge cells from right to left
+    var i, len, lastNum, result = [], shift = [];
+
+    len = array.length;
+    for (i = 0, lastNum = -1; i &lt; len; i++) {
+        if (array[i] === lastNum) { // merge cells
+            result.pop();
+            result.push(2 * array[i]);
+            lastNum = -1;
+            shift[i] = i + 1 - result.length;
+            this._currScore += 2 * array[i];
+        } else if (array[i]) {	// the current number is not 0
+            result.push(array[i]);
+            lastNum = array[i];
+            shift[i] = i + 1 - result.length;
+        } else {	// the number 0 never moves
+            shift[i] = 0;
+        }
+    }
+    for (i = 0; i &lt; len; i++) {
+        result[i] = result[i] || 0;	// fill result with 0
+    }
+
+    return {result: result, shift: shift};
+},
+</code></pre>
+</div>
+
+<p>完成了这一原子操作之后，基本上整个游戏的主要逻辑都解决了，接下来就是分别在上下左右四个方向应用该原子操作，获得一次数字移动之后的结果矩阵与位移矩阵。
+这里是一个<code class="highlighter-rouge">moveUp</code>操作的代码，操作过程中需要上锁和解锁，并及时更新当前空余位置的坐标信息：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var i, j, tmpArray, mergeResult, isMerged;
+
+if (this._isLocked) return false;	// if another data operation is in process, refuse this one
+this._isLocked = true;	// lock the data for operation
+
+isMerged = false;
+for (j = 0; j &lt; this._col; j++) {
+    tmpArray = [];
+    for (i = 0; i &lt; this._row; i++) {
+        tmpArray.push(this._cells[i][j]);
+    }
+    mergeResult = this.mergeCells(tmpArray);
+    for (i = this._row - 1; i &gt;= 0; i--) {
+        this._cells[i][j] = mergeResult.result.pop();
+        this._shift[i][j] = mergeResult.shift.pop();
+
+        isMerged = this.updateEmpty(i, j, this._cells[i][j]) || isMerged;
+    }
+}
+
+if (isMerged) {	// data changed, trigger a UI update
+    this.cellsMovedUp.notify(this._cells, this._shift);
+
+    this.updateScore();
+    this.createRandomCell();
+}
+
+this._isLocked = false;	//release the lock of data
+</code></pre>
+</div>
+
+<p>完成了上下左右的操作实现之后，整个数据模型就基本上建立好了，可以先在一个html文件中引入该脚本，再通过浏览器的控制台实例化一个数据模型并上下左右移动数据，以检验逻辑是否正确。</p>
+
+<p><img src="/imgs/in-posts/game2048console.png" alt="game2048console" title="Game2048 in Safari Console" /></p>
+
+<p>这样子玩2048确实还是第一次:9</p>
+
+<h4 id="section-1"><em>更多实现细节</em></h4>
+<p>在实现数字移动与合并时，使用了一个<code class="highlighter-rouge">lastNum</code>变量来记录上一个push进<code class="highlighter-rouge">result</code>中的数字，<code class="highlighter-rouge">lastNum</code>初始化为－1，并且在每次完成数字合并之后都进行复位。<strong>注意</strong>这里不能直接判断push进<code class="highlighter-rouge">result</code>数组中的最后一个数字是否可与当前数字合并，因为当遇到<code class="highlighter-rouge">[2 2 4 0]</code>这样的序列时会发生两次合并操作，使得结果变成了<code class="highlighter-rouge">[8 0 0 0]</code>，这并不是我们想要的结果:(</p>
+
+<h3 id="view">视图（View）</h3>
+
+<p>视图随时监听数据模型的变化，并负责将游戏的数据呈现出来，这里主要分为<strong>两个方面</strong>，一方面是当前数字的位置信息，另一方面则是数字在移动过程中的轨迹。前者就是将数据模型<code class="highlighter-rouge">Game2048Model._cells</code>数组中的数字呈现出来，而后者则需要将<code class="highlighter-rouge">Game2048Model._shift</code>数组中的信息表现出来。此外，视图还需要监听玩家对UI的操作，并及时通知到控制器以进行数据操作。</p>
+
+<p>视图的功能非常明确，其需要绑定一个数据模型，同时还需要绑定一组UI元素。<br />
+视图的类设计如下（代码比较长，但是还是有必要提一下的）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function Game2048View(gameModel, ctrlEle) {
+    this._gameModel = gameModel;
+    this._ctrlEle = ctrlEle;
+    this._$cellDiv = [];
+    this._row = 0;
+    this._col = 0;
+    this._animDur = 200;    // the animation duration (ms)
+    this._cellSize = 100;  // the size/width of cells (px)
+    this._cellGap = 20;     // the gap between cells (px)
+
+    this.restartButtonClicked = new Event(this);
+    this.upKeyPressed = new Event(this);
+    this.downKeyPressed = new Event(this);
+    this.leftKeyPressed = new Event(this);
+    this.rightKeyPressed = new Event(this);
+
+
+    var _this = this;
+
+    // bind model events
+    this._gameModel.gameRestarted.attach(function(sender, cells) {
+        _this._ctrlEle.$gameOverLayer.hide();
+        _this.rebuildCells(cells);
+    });
+    this._gameModel.cellsMovedUp.attach(function(sender, cells, shift) {
+        _this.moveUp(cells, shift);
+    });
+    this._gameModel.cellsMovedDown.attach(function(sender, cells, shift) {
+        _this.moveDown(cells, shift);
+    });
+    this._gameModel.cellsMovedLeft.attach(function(sender, cells, shift) {
+        _this.moveLeft(cells, shift);
+    });
+    this._gameModel.cellsMovedRight.attach(function(sender, cells, shift) {
+        _this.moveRight(cells, shift);
+    });
+    this._gameModel.cellCreated.attach(function(sender, index, val) {
+        _this.createCell(index, val);
+    });
+    this._gameModel.scoreUpdated.attach(function(sender, currScore, maxScore) {
+        _this.updateScore(currScore, maxScore);
+    });
+    this._gameModel.gameOver.attach(function() {
+        _this._ctrlEle.$gameOverLayer.show();
+    });
+
+    // bind UI events
+    this._ctrlEle.$restartButton.on('click touchstart', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        _this.restartButtonClicked.notify();
+    });
+    $('body').on('keydown', function(e) {
+        switch (e.keyCode) {
+            case 87:    // key 'W'
+            case 38:    // key 'UP'
+                _this.upKeyPressed.notify();
+                break;
+            case 83:    // key 'S'
+            case 40:    // key 'DOWN'
+                _this.downKeyPressed.notify();
+                break;
+            case 65:    // key 'A'
+            case 37:    // key 'LEFT'
+                _this.leftKeyPressed.notify();
+                break;
+            case 68:    // key 'D'
+            case 39:    // key 'RIGHT'
+                _this.rightKeyPressed.notify();
+                break;
+            default:
+                return true;    // release for default trigger
+                break;
+        }
+        return false;   // prevent default and stop propagation
+    });
+
+    // touch and move events for mobile devices
+    var lastX, lastY;
+    this._ctrlEle.$container.on('touchstart', function(e) {
+        e.preventDefault();
+        lastX = e.originalEvent.changedTouches[0].pageX;
+        lastY = e.originalEvent.changedTouches[0].pageY;
+    });
+    this._ctrlEle.$container.on('touchend', function(e) {
+        var deltaX, deltaY;
+
+        deltaX = e.originalEvent.changedTouches[0].pageX - lastX;
+        deltaY = e.originalEvent.changedTouches[0].pageY - lastY;
+
+        if (Math.abs(deltaX) &gt; Math.abs(deltaY)) {          // move horizontally
+            if (deltaX &gt; 0) _this.rightKeyPressed.notify(); // move right
+            else _this.leftKeyPressed.notify();             // move left
+        } else {                                            // move vertically
+            if (deltaY &gt; 0) _this.downKeyPressed.notify();  // move down
+            else _this.upKeyPressed.notify();               // move up
+        }
+    });
+    this._ctrlEle.$container.on('touchmove', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    this.init();
+}
+</code></pre>
+</div>
+
+<ul>
+  <li><code class="highlighter-rouge">ctrlEle</code>是一个保存有所有需要操控的UI元素的对象，这里使用的是jQuery的DOM节点对象，变量命名以<code class="highlighter-rouge">$</code>开头，以示区分。其中<code class="highlighter-rouge">$container</code>是一个容器元素，提供绘制数字块的区域。</li>
+  <li>由于需要适配不同的屏幕尺寸，因此定义了<code class="highlighter-rouge">this._cellSize</code>以及<code class="highlighter-rouge">this._cellGap</code>用于在页面初始化时动态地设定每个数字块的大小及间距。</li>
+  <li><code class="highlighter-rouge">this._restartButtonClicked</code>、<code class="highlighter-rouge">this._upKeyPressed</code>等一系列的事件触发器用于响应玩家输入并通知控制器对游戏数据进行更新。</li>
+  <li>视图类实现了对数据模型的监听，并调用自身的方法对页面进行重绘。</li>
+</ul>
+
+<p>在收到数据模型发送的数字上移变化的通知时，视图首先根据<code class="highlighter-rouge">Game2048Model._shift</code>数组中的数字位移信息显示移动的动画，再刷新视图显示最后的移动结果。<br />
+如下是一个上移操作的实现：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>moveUp: function(cells, shift) {
+    var i, j, pos, _this;
+
+    _this = this;
+    for (i = 0; i &lt; this._row; i++) for (j = 0; j &lt; this._col; j++) if (shift[i][j]) {
+        pos = this.getPos(i - shift[i][j], j);
+        this._$cellDiv[i][j].stop(true, true).animate({
+            'top': pos.top,
+            'left': pos.left
+        }, this._animDur, function () {
+            _this.rebuildCells(cells);
+        });
+    }
+}
+</code></pre>
+</div>
+
+<h4 id="section-2"><em>更多实现细节</em></h4>
+
+<ol>
+  <li>
+    <p>处理移动端的触摸操作时需要注意以下几点：</p>
+
+    <ul>
+      <li>移动端触摸的原生事件主要有<code class="highlighter-rouge">ontouchstart</code>, <code class="highlighter-rouge">ontouchmove</code>, <code class="highlighter-rouge">ontouchend</code>，其分别在触摸开始、触摸移动以及触摸结束时触发；</li>
+      <li>PC端的鼠标点击事件<code class="highlighter-rouge">onclick</code>在移动端也可以触发，但是在iPhone上会表现出明显的延迟，主要时因为iPhone会在手指点击屏幕后等待一段时间进行判断，使用<code class="highlighter-rouge">ontouchstart</code>事件则表现较好，但需要<strong>注意</strong>使用<code class="highlighter-rouge">event.preventDefault()</code>来阻止进一步触发<code class="highlighter-rouge">onclick</code>事件；</li>
+      <li>在iPhone端可以直接使用<code class="highlighter-rouge">event.pageX</code>, <code class="highlighter-rouge">event.pageY</code>来获取触摸点的坐标，但在Android端则需要使用对于多点触控设计的<code class="highlighter-rouge">event.touches</code>及<code class="highlighter-rouge">event.changedTouches</code>来获取触摸点的坐标，当然iPhone也是支持后者的，所以都用后者也没有问题；</li>
+      <li>在<code class="highlighter-rouge">ontouchstart</code>事件回调函数中使用<code class="highlighter-rouge">event.preventDefault()</code>可以防止在Android系统上<code class="highlighter-rouge">ontouchend</code>事件无法正常触发；</li>
+      <li>在<code class="highlighter-rouge">ontouchmove</code>事件回调函数中使用<code class="highlighter-rouge">event.preventDefault()</code>可以防止页面滚动，这有助于得到原生应用的效果，尤其是针对这种需要以滑动方式进行操作的应用和游戏。</li>
+    </ul>
+  </li>
+  <li>使用jQuery的动画函数<code class="highlighter-rouge">animate()</code>时需要根据情况在调用前使用<code class="highlighter-rouge">stop([boolean], [boolean])</code>来终止元素上已有的动画，其中第一个布尔值表示是停止当前元素上的动画，第二个布尔值表示是否将元素置为上一个动画的结束状态。</li>
+  <li>在为数字添加移动效果时使用了<code class="highlighter-rouge">animate()</code>的回调函数用来将元素复位，如果紧接着<code class="highlighter-rouge">animate()</code>就复位数字的话，则数字最后的位置是在动画结束的地方。</li>
+</ol>
+
+<h3 id="controller">控制器（Controller）</h3>
+
+<p>控制器主要负责监听UI事件，并调用数据模型上的变化函数，起到的主要是桥梁的作用，避免视图类对数据的直接操作。
+控制器类的实现如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function Game2048Controller(gameModel, gameView) {
+    this._gameModel = gameModel;
+    this._gameView = gameView;
+
+    var _this = this;
+
+    this._gameView.restartButtonClicked.attach(function() {
+        _this.restartGame();
+    });
+    this._gameView.upKeyPressed.attach(function() {
+        _this.moveUp();
+    });
+    this._gameView.downKeyPressed.attach(function() {
+        _this.moveDown();
+    });
+    this._gameView.leftKeyPressed.attach(function() {
+        _this.moveLeft();
+    });
+    this._gameView.rightKeyPressed.attach(function() {
+        _this.moveRight();
+    });
+}
+</code></pre>
+</div>
+
+<h2 id="section-3">小结</h2>
+
+
+            
+                <hr>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/andrewidiot">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ambeta">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; AmBeta Blog 2016
+                    <br>
+                    Theme by <a href="http://ambeta.github.io">AmBeta</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=ambeta&repo=ambeta.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="//js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="//js/bootstrap.min.js "></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- Highlight.js -->
+<script>
+    async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+        hljs.initHighlightingOnLoad();
+    })
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+<link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+<!--fastClick.js -->
+<script>
+    async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+</body>
+</html>
