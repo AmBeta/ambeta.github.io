@@ -1,4 +1,166 @@
-/* Hux Optimize UserExperience */
+body {
+  font-family: -apple-system, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+  line-height: 1.7;
+  font-size: 16px;
+  color: #404040;
+  overflow-x: hidden;
+}
+p {
+  margin: 30px 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: -apple-system, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+  line-height: 1.1;
+  font-weight: bold;
+}
+h4 {
+  font-size: 21px;
+}
+a {
+  color: #404040;
+}
+a:hover,
+a:focus {
+  color: #0085a1;
+}
+a img:hover,
+a img:focus {
+  cursor: zoom-in;
+}
+
+/* Post Content */
+article {
+  overflow-x: hidden;
+}
+blockquote {
+  color: #808080;
+  font-style: italic;
+  font-size: 0.95em;
+  margin: 20px 0 20px;
+}
+blockquote p {
+  margin: 0;
+}
+small.img-hint {
+  display: block;
+  margin-top: -20px;
+  text-align: center;
+}
+br + small.img-hint {
+  margin-top: -40px;
+}
+img.shadow {
+  box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
+}
+@media screen and (max-width: 768px) {
+  select {
+    -webkit-appearance: none;
+    margin-top: 15px;
+    color: #337ab7;
+    border-color: #337ab7;
+    padding: 0em 0.4em;
+    background: white;
+  }
+}
+.table th,
+.table td {
+  border: 1px solid #eee !important;
+}
+hr.small {
+  max-width: 100px;
+  margin: 15px auto;
+  border-width: 4px;
+  border-color: white;
+}
+pre,
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+pre code {
+  display: block;
+  width: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
+.post-container a {
+  color: #337ab7;
+}
+.post-container a:hover,
+.post-container a:focus {
+  color: #0085a1;
+}
+.post-container h1,
+.post-container h2,
+.post-container h3,
+.post-container h4,
+.post-container h5,
+.post-container h6 {
+  margin: 30px 0 10px;
+}
+.post-container h5 {
+  font-size: 19px;
+  font-weight: 600;
+  color: gray;
+}
+.post-container h5 + p {
+  margin-top: 5px;
+}
+.post-container h6 {
+  font-size: 16px;
+  font-weight: 600;
+  color: gray;
+}
+.post-container h6 + p {
+  margin-top: 5px;
+}
+.post-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+.post-container ul,
+.post-container ol {
+  margin-bottom: 40px;
+}
+@media screen and (max-width: 768px) {
+  .post-container ul,
+  .post-container ol {
+    padding-left: 30px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .post-container ul,
+  .post-container ol {
+    padding-left: 20px;
+  }
+}
+.post-container ol ol,
+.post-container ol ul,
+.post-container ul ol,
+.post-container ul ul {
+  margin-bottom: 5px;
+}
+.post-container li p {
+  margin: 0;
+  margin-bottom: 5px;
+}
+.post-container li h1,
+.post-container li h2,
+.post-container li h3,
+.post-container li h4,
+.post-container li h5,
+.post-container li h6 {
+  line-height: 2;
+  margin-top: 20px;
+}
+
+/* Navigation Bar */
 .navbar-default .navbar-toggle:focus,
 .navbar-default .navbar-toggle:hover {
   background-color: inherit;
@@ -6,7 +168,6 @@
 .navbar-default .navbar-toggle:active {
   background-color: rgba(255, 255, 255, 0.25);
 }
-/* Hux customize Style for navBar button */
 .navbar-default .navbar-toggle {
   border-color: transparent;
   padding: 19px 16px;
@@ -23,60 +184,10 @@
 .navbar-default .navbar-toggle .icon-bar + .icon-bar {
   margin-top: 3px;
 }
-@media only screen and (max-width: 767px) {
-  .navbar-default .navbar-collapse {
-    border: none;
-    background: white;
-    box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 4px;
-    border-radius: 2px;
-    width: 170px;
-    float: right;
-    margin: 0px;
-  }
-  #huxblog_navbar {
-    opacity: 0;
-    transform: scaleX(0);
-    transform-origin: top right;
-    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-    -webkit-transform: scaleX(0);
-    -webkit-transform-origin: top right;
-    -webkit-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  #huxblog_navbar a {
-    font-size: 13px;
-    line-height: 28px;
-  }
-  #huxblog_navbar .navbar-collapse {
-    height: 0px;
-    transform: scaleY(0);
-    transform-origin: top right;
-    transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
-    -webkit-transform: scaleY(0);
-    -webkit-transform-origin: top right;
-    -webkit-transition: -webkit-transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  #huxblog_navbar li {
-    opacity: 0;
-    transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
-    -webkit-transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
-  }
-  #huxblog_navbar.in {
-    transform: scaleX(1);
-    -webkit-transform: scaleX(1);
-    opacity: 1;
-  }
-  #huxblog_navbar.in .navbar-collapse {
-    transform: scaleY(1);
-    -webkit-transform: scaleY(1);
-  }
-  #huxblog_navbar.in li {
-    opacity: 1;
-  }
-}
 .navbar-custom {
   background: none;
   border: none;
+  border-radius: 0;
   position: absolute;
   top: 0;
   left: 0;
@@ -108,9 +219,63 @@
 .navbar-custom .nav li a:active {
   background: rgba(0, 0, 0, 0.12);
 }
+@media only screen and (max-width: 767px) {
+  .navbar-default .navbar-collapse {
+    border: none;
+    background: white;
+    box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 4px;
+    border-radius: 2px;
+    width: 170px;
+    float: right;
+    margin: 0px;
+  }
+  .navbar-header {
+    background: #2B7369;
+  }
+  #navbar-items {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: top right;
+    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+    -webkit-transform: scaleX(0);
+    -webkit-transform-origin: top right;
+    -webkit-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  #navbar-items a {
+    font-size: 13px;
+    line-height: 28px;
+  }
+  #navbar-items .navbar-collapse {
+    height: 0px;
+    transform: scaleY(0);
+    transform-origin: top right;
+    transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+    -webkit-transform: scaleY(0);
+    -webkit-transform-origin: top right;
+    -webkit-transition: -webkit-transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  #navbar-items li {
+    opacity: 0;
+    transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
+    -webkit-transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
+  }
+  #navbar-items.in {
+    transform: scaleX(1);
+    -webkit-transform: scaleX(1);
+    opacity: 1;
+  }
+  #navbar-items.in .navbar-collapse {
+    transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+  }
+  #navbar-items.in li {
+    opacity: 1;
+  }
+}
 @media only screen and (min-width: 768px) {
   .navbar-custom {
-    background: transparent;
+    background: #2B7369;
     border-bottom: 1px solid transparent;
   }
   .navbar-custom body {
@@ -186,9 +351,10 @@
 }
 
 .intro-header {
-    padding: 8em 1em 5em;
+    padding: 7em 2em 2em;
     margin-bottom: 2em;
     background: center top fixed #2B7369;
+    background-size: 100% 100%;
     color: #fff;
     text-align: center;
 }
@@ -198,19 +364,19 @@
 }
 .header-thumb-container {
     width: 10em;
-    padding: 3px;
     background: #f5f4f0;
     border-radius: 50%;
-    border: 3px solid #2B7369;
+    border: 1px solid #fff;
 }
 .header-title {
     color: #aaa;
-    font-size: 1.8em;
+    font-size: 1.5em;
+    line-height: 2.2;
 }
 .header-title strong {
     color: #fff;
-    font-size: 2.2em;
-    line-height: 1.7em;
+    font-size: 2.5em;
+    line-height: 1;
 }
 
 .post-preview > a {
@@ -222,7 +388,7 @@
   color: #0085a1;
 }
 .post-preview .post-title {
-  font-size: 1.5em;
+  font-size: 1.2em;
   line-height: 120%;
 }
 .post-preview .post-meta {
@@ -245,10 +411,6 @@
 }
 .pager li > a,
 .pager li > span {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
   font-family: -apple-system, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   text-transform: uppercase;
@@ -285,23 +447,23 @@
 }
 
 .post-header {
-    padding: 3.5em 1em 2em;
-    margin-bottom: 2.5em;
-    border-top: 3.5em solid #2B7369;
+    padding: 6em 0 2em;
+    margin-bottom: 1.5em;
     background: #fff;
     color: rgba(13, 13, 13, .75);
-    box-shadow: 0 1px 10px 5px #eee;
+    box-shadow: 0 2px 10px 5px #eee;
 }
 .post-header h1 {
-    font-size: 2.5em;
+    font-size: 2em;
 }
 .post-meta {
+    margin-top: 0;
     color: #888;
     font-size: 1em;
     font-style: italic;
     font-family: 'Lora', 'Times New Roman', serif;
 }
-/* Hux add tags support */
+
 .tags {
   margin-bottom: -5px;
 }
@@ -310,9 +472,8 @@
   display: inline-block;
   border: 1px solid #2B7369;
   border-radius: 999em;
-  padding: 0 10px;
+  padding: 0 12px;
   color: #2B7369;
-  line-height: 24px;
   font-size: 12px;
   text-decoration: none;
   margin: 0 1px;
@@ -334,6 +495,9 @@
   }
 }
 
+footer {
+    padding: 50px 0;
+}
 footer .copyright {
   font-size: 14px;
   text-align: center;
@@ -346,6 +510,59 @@ footer .copyright a:hover,
 footer .copyright a:focus {
   color: #0085a1;
 }
+
+.tags-header {
+    padding: 4em 0 1em;
+    text-align: center;
+}
+.tags-header h1 {
+    margin: 0 0 0 -.5em;
+    font-size: 4em;
+    font-weight: 800;
+}
+.tags-header h1 .tags-t {
+    display: inline-block;
+    font-size: 2em;
+    color: #4cacde;
+    transform: rotate(10deg);
+}
+.tags-header h1 .tags-a {
+    display: inline-block;
+    color: #f5c769;
+    transform: rotate(-8deg);
+}
+.tags-header h1 .tags-g {
+    display: inline-block;
+    color: #e37746;
+    transform: rotate(5deg);
+}
+.tags-header h1 .tags-s {
+    display: inline-block;
+    color: #8978ac;
+    transform: rotate(-5deg);
+}
+#tag-cloud {
+    margin-bottom: 2em;
+}
+.one-tag-list .listing-seperator {
+    margin: 1em 0 .5em;
+    color: #0085a1;
+    font-weight: 200;
+    
+}
+.one-tag-list .tag-text {
+    margin-left: .5em;
+}
+.one-tag-list .post-title {
+    margin: .6em 0 .4em;
+    font-size: 1em;
+    line-height: 1;
+}
+.one-tag-list .post-meta {
+    margin: 0;
+    line-height: 1;
+}
+
 
 
 

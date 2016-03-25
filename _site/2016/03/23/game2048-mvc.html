@@ -10,7 +10,7 @@
     <meta name="keyword"  content="">
     <link rel="shortcut icon" href="img/favicon.ico">
 
-    <title>利用MVC思想实现的2048小游戏 - 三土的博客 | AmBeta's Blog</title>
+    <title>利用MVC思想实现的2048小游戏 - 三土的博客 | AmBeta Blog</title>
 
     <link rel="canonical" href="http://ambeta.github.io/2016/03/23/game2048-mvc.html">
 
@@ -36,12 +36,10 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- ga & ba script hoook -->
-    <script></script>
 </head>
 
 
-<body>
+<body ontouchstart="">
     <!-- Navigation -->
 <nav class="navbar navbar-default navbar-custom">
     <div class="container-fluid">
@@ -56,76 +54,75 @@
             <a class="navbar-brand" href="/">AmBeta Blog</a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- Known Issue, found by Hux:
-            <nav>'s height woule be hold on by its content.
-            so, when navbar scale out, the <nav> will cover tags.
-            also mask any touch event of tags, unfortunately.
-        -->
-        <div id="huxblog_navbar">
+        <div id="navbar-items">
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">HOME</a></li>
                     <li><a href="/tags.html">TAGS</a></li>
-                    <li><a href="/about.html" target="_blank">ABOUT</a></li>
+                    <li><a href="/about.html">ABOUT</a></li>
                 </ul>
             </div>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container -->
 </nav>
 <script>
-    // Drop Bootstarp low-performance Navbar
-    // Use customize navbar with high-quality material design animation
-    // in high-perf jank-free CSS3 implementation
-    var $body   = document.body;
-    var $toggle = document.querySelector('.navbar-toggle');
-    var $navbar = document.querySelector('#huxblog_navbar');
-    var $collapse = document.querySelector('.navbar-collapse');
-
-    $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
-        if ($navbar.className.indexOf('in') > 0) {
-        // CLOSE
-            $navbar.className = " ";
+    // Navbar derives from huxpro@github
+    var _body   = document.body;
+    var _toggle = document.querySelector('.navbar-toggle');
+    var _navitems = document.querySelector('#navbar-items');
+    var _collapse = document.querySelector('.navbar-collapse');
+    var _navDisp = {
+        hide: function() {
+            _navitems.className = " ";
             // wait until animation end.
             setTimeout(function(){
                 // prevent frequently toggle
-                if($navbar.className.indexOf('in') < 0) {
-                    $collapse.style.height = "0px"
+                if(_navitems.className.indexOf('in') < 0) {
+                    _collapse.style.height = "0px";
                 }
-            },400)
-        }else{
-        // OPEN
-            $collapse.style.height = "auto"
-            $navbar.className += " in";
+            },400);
+        },
+
+        show: function() {
+            _collapse.style.height = "auto";
+            _navitems.className += " in";
         }
+    }
+
+    _toggle.addEventListener('click', toggleNav);
+    _body.addEventListener('click', hideNav);
+
+    function toggleNav(e) {
+        if (_navitems.className.indexOf('in') > 0) {
+            _navDisp.hide();
+        }else {
+            _navDisp.show();
+        }
+    }
+    function hideNav(e) {
+        if (e.target == _toggle) return;
+        if (e.target == _navitems) return;
+        _navDisp.hide();
     }
 </script>
 
 
-    <!-- Navigation -->
-<style type="text/css">
-    nav.navbar-custom, .navbar-toggle, .navber-brand {
-        color: #000 !important;
-    }
-</style>
-
-<!-- Post Header -->
+    <!-- Post Header -->
 <header class="post-header">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-            <div class="tags">
-                
-                <a class="tag" href="/tags.html/#JavaScript" title="JavaScript">JavaScript</a>
-                
-                <a class="tag" href="/tags.html/#MVC" title="MVC">MVC</a>
-                
-            </div>
-            <h1>利用MVC思想实现的2048小游戏</h1>
-            <div class="post-meta">
-                Posted on March 23, 2016
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                <div class="tags">
+                    
+                    <a class="tag" href="/tags.html/#JavaScript" title="JavaScript">JavaScript</a>
+                    
+                    <a class="tag" href="/tags.html/#MVC" title="MVC">MVC</a>
+                    
+                </div>
+                <h1>利用MVC思想实现的2048小游戏</h1>
+                <div class="post-meta">
+                    Posted on March 23, 2016
+                </div>
             </div>
         </div>
     </div>
@@ -135,7 +132,7 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 post-container">
 
                 <p>2048是一款很经典的小游戏，据说游戏的源码就是用JavaScript写的，暂时还没来得及看。网上别人写的代码也很多，最少有不到280行代码写成的。</p>
 
@@ -282,34 +279,36 @@ Event.prototype = {
 <p>完成了这一原子操作之后，基本上整个游戏的主要逻辑都解决了，接下来就是分别在上下左右四个方向应用该原子操作，获得一次数字移动之后的结果矩阵与位移矩阵。
 这里是一个<code class="highlighter-rouge">moveUp</code>操作的代码，操作过程中需要上锁和解锁，并及时更新当前空余位置的坐标信息：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>var i, j, tmpArray, mergeResult, isMerged;
+<div class="highlighter-rouge"><pre class="highlight"><code>moveUp: function() {
+    var i, j, tmpArray, mergeResult, isMerged;
 
-if (this._isLocked) return false;	// if another data operation is in process, refuse this one
-this._isLocked = true;	// lock the data for operation
+    if (this._isLocked) return false;
+    this._isLocked = true;	// lock the data for operation
 
-isMerged = false;
-for (j = 0; j &lt; this._col; j++) {
-    tmpArray = [];
-    for (i = 0; i &lt; this._row; i++) {
-        tmpArray.push(this._cells[i][j]);
+    isMerged = false;
+    for (j = 0; j &lt; this._col; j++) {
+        tmpArray = [];
+        for (i = 0; i &lt; this._row; i++) {
+            tmpArray.push(this._cells[i][j]);
+        }
+        mergeResult = this.mergeCells(tmpArray);
+        for (i = this._row - 1; i &gt;= 0; i--) {
+            this._cells[i][j] = mergeResult.result.pop();
+            this._shift[i][j] = mergeResult.shift.pop();
+
+            isMerged = this.updateEmpty(i, j, this._cells[i][j]) || isMerged;
+        }
     }
-    mergeResult = this.mergeCells(tmpArray);
-    for (i = this._row - 1; i &gt;= 0; i--) {
-        this._cells[i][j] = mergeResult.result.pop();
-        this._shift[i][j] = mergeResult.shift.pop();
 
-        isMerged = this.updateEmpty(i, j, this._cells[i][j]) || isMerged;
+    if (isMerged) {	// data changed, trigger a UI update
+        this.cellsMovedUp.notify(this._cells, this._shift);
+
+        this.updateScore();
+        this.createRandomCell();
     }
+
+    this._isLocked = false;	// release the lock of data
 }
-
-if (isMerged) {	// data changed, trigger a UI update
-    this.cellsMovedUp.notify(this._cells, this._shift);
-
-    this.updateScore();
-    this.createRandomCell();
-}
-
-this._isLocked = false;	//release the lock of data
 </code></pre>
 </div>
 
@@ -518,10 +517,20 @@ this._isLocked = false;	//release the lock of data
             
                 <hr>
 
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/03/23/hello-world.html" data-toggle="tooltip" data-placement="top" title="Hello, World!">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
             </div>
         </div>
     </div>
 </article>
+
+
 
 
     <!-- Footer -->
@@ -592,23 +601,31 @@ this._isLocked = false;	//release the lock of data
     }
 </script>
 
+<!-- init tooltip -->
+<script type="text/javascript">
+    $(function() {
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+
 <!-- Highlight.js -->
 <script>
     async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
         hljs.initHighlightingOnLoad();
     })
     // only load tagcloud.js in tag.html
-    if($('#tag_cloud').length !== 0){
+    if($('#tag-cloud').length !== 0){
         async("/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
-                //size: {start: 1, end: 1, unit: 'em'},
-                color: {start: '#bbbbee', end: '#0085a1'},
+                size: {start: .8, end: 1.8, unit: 'em'},
+                //color: {start: '#bbbbee', end: '#0085a1'},
             };
             $('#tag_cloud a').tagcloud();
         })
     }
 </script>
 <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+
 <!--fastClick.js -->
 <script>
     async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
@@ -616,8 +633,8 @@ this._isLocked = false;	//release the lock of data
         if($nav) FastClick.attach($nav);
     })
 </script>
-<!-- Google Analytics -->
 
+<!-- Google Analytics -->
 
 
 <!-- Baidu Tongji -->

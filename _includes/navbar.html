@@ -12,50 +12,54 @@
             <a class="navbar-brand" href="{{ site.baseurl }}/">{{ site.title }}</a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- Known Issue, found by Hux:
-            <nav>'s height woule be hold on by its content.
-            so, when navbar scale out, the <nav> will cover tags.
-            also mask any touch event of tags, unfortunately.
-        -->
-        <div id="huxblog_navbar">
+        <div id="navbar-items">
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{ "/" | prepend: site.baseurl }}">HOME</a></li>
                     <li><a href="{{ "/tags.html" | prepend: site.baseurl }}">TAGS</a></li>
-                    <li><a href="{{ "/about.html" | prepend: site.baseurl }}" target="_blank">ABOUT</a></li>
+                    <li><a href="{{ "/about.html" | prepend: site.baseurl }}">ABOUT</a></li>
                 </ul>
             </div>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container -->
 </nav>
 <script>
-    // Drop Bootstarp low-performance Navbar
-    // Use customize navbar with high-quality material design animation
-    // in high-perf jank-free CSS3 implementation
-    var $body   = document.body;
-    var $toggle = document.querySelector('.navbar-toggle');
-    var $navbar = document.querySelector('#huxblog_navbar');
-    var $collapse = document.querySelector('.navbar-collapse');
-
-    $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
-        if ($navbar.className.indexOf('in') > 0) {
-        // CLOSE
-            $navbar.className = " ";
+    // Navbar derives from huxpro@github
+    var _body   = document.body;
+    var _toggle = document.querySelector('.navbar-toggle');
+    var _navitems = document.querySelector('#navbar-items');
+    var _collapse = document.querySelector('.navbar-collapse');
+    var _navDisp = {
+        hide: function() {
+            _navitems.className = " ";
             // wait until animation end.
             setTimeout(function(){
                 // prevent frequently toggle
-                if($navbar.className.indexOf('in') < 0) {
-                    $collapse.style.height = "0px"
+                if(_navitems.className.indexOf('in') < 0) {
+                    _collapse.style.height = "0px";
                 }
-            },400)
-        }else{
-        // OPEN
-            $collapse.style.height = "auto"
-            $navbar.className += " in";
+            },400);
+        },
+
+        show: function() {
+            _collapse.style.height = "auto";
+            _navitems.className += " in";
         }
+    }
+
+    _toggle.addEventListener('click', toggleNav);
+    _body.addEventListener('click', hideNav);
+
+    function toggleNav(e) {
+        if (_navitems.className.indexOf('in') > 0) {
+            _navDisp.hide();
+        }else {
+            _navDisp.show();
+        }
+    }
+    function hideNav(e) {
+        if (e.target == _toggle) return;
+        if (e.target == _navitems) return;
+        _navDisp.hide();
     }
 </script>

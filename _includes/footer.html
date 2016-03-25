@@ -102,23 +102,31 @@
     }
 </script>
 
+<!-- init tooltip -->
+<script type="text/javascript">
+    $(function() {
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+
 <!-- Highlight.js -->
 <script>
     async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
         hljs.initHighlightingOnLoad();
     })
     // only load tagcloud.js in tag.html
-    if($('#tag_cloud').length !== 0){
+    if($('#tag-cloud').length !== 0){
         async("/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
-                //size: {start: 1, end: 1, unit: 'em'},
-                color: {start: '#bbbbee', end: '#0085a1'},
+                size: {start: .8, end: 1.8, unit: 'em'},
+                //color: {start: '#bbbbee', end: '#0085a1'},
             };
             $('#tag_cloud a').tagcloud();
         })
     }
 </script>
 <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+
 <!--fastClick.js -->
 <script>
     async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
@@ -126,6 +134,7 @@
         if($nav) FastClick.attach($nav);
     })
 </script>
+
 <!-- Google Analytics -->
 {% if site.ga_track_id %}
 <script>
@@ -143,7 +152,6 @@
     ga('send', 'pageview');
 </script>
 {% endif %}
-
 
 <!-- Baidu Tongji -->
 {% if site.ba_track_id %}

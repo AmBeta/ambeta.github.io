@@ -1,7 +1,20 @@
 ---
 layout: page
-title: AmBeta Blog
 ---
+
+<!-- Navigation Background -->
+<style type="text/css">
+	@media screen and (max-width: 767px) {
+		.navbar-header {
+			background: none;
+		}
+	}
+	@media screen and (min-width: 768px) {
+		.navbar-custom {
+			background: none;
+		}
+	}
+</style>
 
 <!-- Post Content Preview -->
 {% for post in paginator.posts %}

@@ -3,3 +3,56 @@ title: Tags
 layout: default
 ---
 
+<!-- Tags Header -->
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                <div class="tags-header">
+                    <h1>
+                        <span class="tags-t">T</span>
+                        <span class="tags-a">A</span>
+                        <span class="tags-g">G</span>
+                        <span class="tags-s">S</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+
+            <!-- Tag Cloud -->
+            <div id="tag-cloud" class="tags">
+                {% for tag in site.tags %}
+                <a class="tag" name="{{ tag[0] }}" href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{tag[1].size }}">{{ tag[0] }}</a>
+                {% endfor %}
+            </div>
+
+            <!-- Taged Posts List -->
+            {% for tag in site.tags %}
+            <div class="one-tag-list">
+                <span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
+                    <span class="tag-text">{{ tag[0] }}</span>
+                </span>
+                {% for post in tag[1] %}
+                <div class="post-preview">
+                    <a href="{{ post.url | prepend: site.baseurl }}">
+                        <h2 class="post-title">
+                            {{ post.title }}
+                        </h2>
+                    </a>
+                    <p class="post-meta">
+                        {{ post.date | date: "%Y-%m-%d" }}
+                    </p>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
