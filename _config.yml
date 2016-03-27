@@ -10,6 +10,8 @@ url: "http://ambeta.github.io"  # your host, for absolute URL
 baseurl: ""                     # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Build settings
+encoding : utf-8
+timezone: Asia/Shanghai
 gems: [jekyll-paginate]
 paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
