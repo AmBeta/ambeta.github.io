@@ -11,7 +11,7 @@ baseurl: ""                     # for example, '/blog' if your blog hosted on 'h
 
 # Build settings
 gems: [jekyll-paginate]
-paginate: 5
+paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 
 # SNS settings

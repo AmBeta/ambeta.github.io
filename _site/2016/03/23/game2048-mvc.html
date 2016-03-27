@@ -114,9 +114,9 @@
             <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
                 <div class="tags">
                     
-                    <a class="tag" href="/tags.html/#JavaScript" title="JavaScript">JavaScript</a>
+                    <a class="tag" href="/tags.html#JavaScript" title="JavaScript">JavaScript</a>
                     
-                    <a class="tag" href="/tags.html/#MVC" title="MVC">MVC</a>
+                    <a class="tag" href="/tags.html#MVC" title="MVC">MVC</a>
                     
                 </div>
                 <h1>利用MVC思想实现的2048小游戏</h1>
@@ -136,7 +136,7 @@
 
                 <p>2048是一款很经典的小游戏，据说游戏的源码就是用JavaScript写的，暂时还没来得及看。网上别人写的代码也很多，最少有不到280行代码写成的。</p>
 
-<p><img src="/imgs/in-posts/game2048.png" alt="Game2048" title="Game 2048" /></p>
+<p><img src="/imgs/in-posts/2016-03/game2048.png" alt="Game2048" title="Game 2048" /></p>
 
 <p>JS本身语法比较松散，如果随便写的话很容易就写成了面向过程的结构，时间一长，各种复杂的逻辑就很难再理清楚了，后续的维护难度很高。而使用MVC的思想可以强化其面向对象的设计，逻辑清晰，方便日后回顾和修改。</p>
 
@@ -314,7 +314,7 @@ Event.prototype = {
 
 <p>完成了上下左右的操作实现之后，整个数据模型就基本上建立好了，可以先在一个html文件中引入该脚本，再通过浏览器的控制台实例化一个数据模型并上下左右移动数据，以检验逻辑是否正确。</p>
 
-<p><img src="/imgs/in-posts/game2048console.png" alt="game2048console" title="Game2048 in Safari Console" /></p>
+<p><img src="/imgs/in-posts/2016-03/game2048console.png" alt="game2048console" title="Game2048 in Safari Console" /></p>
 
 <p>这样子玩2048确实还是第一次:9</p>
 
@@ -513,15 +513,23 @@ Event.prototype = {
 
 <h2 id="section-3">小结</h2>
 
+<p>MVC框架是一种比较传统的框架，其运用简单，容易理解，框架自身的开销比较小。使用MVC将数据处理的逻辑与视图渲染的逻辑代码分开，使得代码结构更加清晰，也降低了模块之间的耦合，方便独立地修改数据逻辑与视图逻辑。</p>
+
+<p>在JavaScript的模型视图框架中，<em>backbonejs</em> 与该思想比较相符，其同样也是MVC架构，但其中的<code class="highlighter-rouge">C</code>并不表示Controller，而是Collection的意思，意为多个数据模型的集合。而目前更为流行的框架主要是MVVM，例如 <em>angularjs</em> 等，其使用ViewModel代替了MVC中的Controller，通过增加数据绑定层进一步降低了View和Model之间的耦合程度，同时也提供了双向数据绑定的思想，值得深入学习。</p>
+
 
             
                 <hr>
 
                 <ul class="pager">
                     
+                    <li class="previous">
+                        <a href="/2016/03/22/hello-world.html" data-toggle="tooltip" data-placement="top" title="Hello, World!">&larr; Previous Post</a>
+                    </li>
+                    
                     
                     <li class="next">
-                        <a href="/2016/03/23/hello-world.html" data-toggle="tooltip" data-placement="top" title="Hello, World!">Next Post &rarr;</a>
+                        <a href="/2016/03/27/build-website-with-jekyll.html" data-toggle="tooltip" data-placement="top" title="如何使用jekyll建站">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
