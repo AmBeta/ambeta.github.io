@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Hello, World!
-date:   2016-3-22-23:59:00
+date:   2016-3-23 00:17:00 +0800
 ---
 
 This is my first blog.  

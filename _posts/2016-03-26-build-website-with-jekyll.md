@@ -1,6 +1,6 @@
 ---
 title: 如何使用jekyll建站
-date: 2016-03-27-23:35:00
+date: 2016-03-27 23:35:00 +0800
 layout: post
 tags:
     - jekyll
