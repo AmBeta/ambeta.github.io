@@ -57,7 +57,7 @@ br + small.img-hint {
 img.shadow {
   box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   select {
     -webkit-appearance: none;
     margin-top: 15px;
@@ -405,8 +405,17 @@ pre code {
   margin: 20px 0 0 !important;
   padding: 0px !important;
 }
-.pager li > a,
-.pager li > span {
+.pager li {
+  display: inline-block;
+  max-width: 48%;
+}
+.pager li.previous {
+  float: left;
+}
+.pager li.next {
+  float: right;
+}
+.pager li > a {
   font-family: -apple-system, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   text-transform: uppercase;
@@ -424,6 +433,11 @@ pre code {
     padding: 15px 25px;
   }
 }
+.pager li > a > span {
+  color: gray;
+  font-weight: 400;
+  text-transform: none;
+}
 .pager li > a {
   color: #404040;
 }
@@ -432,6 +446,10 @@ pre code {
   color: white;
   background-color: #2B7369;
   border: 1px solid #2B7369;
+}
+.pager li > a:hover span,
+.pager li > a:focus span {
+  color: white;
 }
 .pager .disabled > a,
 .pager .disabled > a:hover,

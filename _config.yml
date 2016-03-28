@@ -4,8 +4,8 @@ SEOTitle: 三土的博客 | AmBeta Blog
 header-img: imgs/header-bg.png
 header-thumb: imgs/my-thumb.png
 email: cyandrewchen@gmail.com
-description: ""
-keyword: ""
+description: "AmBeta's personal tech blog."
+keyword: "Front-end Web, JavaScript, HTML, CSS"
 url: "http://ambeta.github.io"  # your host, for absolute URL
 baseurl: ""                     # for example, '/blog' if your blog hosted on 'host/blog'
 
