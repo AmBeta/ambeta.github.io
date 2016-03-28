@@ -118,10 +118,10 @@
     if($('#tag-cloud').length !== 0){
         async("/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
-                size: {start: .8, end: 1.8, unit: 'em'},
+                size: {start: .8, end: 1.2, unit: 'em'},
                 //color: {start: '#bbbbee', end: '#0085a1'},
             };
-            $('#tag_cloud a').tagcloud();
+            $('#tag-cloud a').tagcloud();
         })
     }
 </script>

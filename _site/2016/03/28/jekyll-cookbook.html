@@ -9,9 +9,9 @@
     <meta name="keyword"  content="">
     <link rel="shortcut icon" href="img/favicon.ico">
 
-    <title>Tags - 三土的博客 | AmBeta Blog</title>
+    <title>jekyll + gh-pages搭建个人博客常见问题记录 - 三土的博客 | AmBeta Blog</title>
 
-    <link rel="canonical" href="http://ambeta.github.io/tags.html">
+    <link rel="canonical" href="http://ambeta.github.io/2016/03/28/jekyll-cookbook.html">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -106,113 +106,96 @@
 </script>
 
 
-    <!-- Tags Header -->
-<header>
+    <!-- Post Header -->
+<header class="post-header">
     <div class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-                <div class="tags-header">
-                    <h1>
-                        <span class="tags-t">T</span>
-                        <span class="tags-a">A</span>
-                        <span class="tags-g">G</span>
-                        <span class="tags-s">S</span>
-                    </h1>
+                <div class="tags">
+                    
+                    <a class="tag" href="/tags.html#jekyll" title="jekyll">jekyll</a>
+                    
+                </div>
+                <h1>jekyll + gh-pages搭建个人博客常见问题记录</h1>
+                <div class="post-meta">
+                    Posted on March 28, 2016
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 post-container">
 
-            <!-- Tag Cloud -->
-            <div id="tag-cloud" class="tags">
-                
-                <a class="tag" name="JavaScript" href="#JavaScript" title="JavaScript" rel="1">JavaScript</a>
-                
-                <a class="tag" name="MVC" href="#MVC" title="MVC" rel="1">MVC</a>
-                
-                <a class="tag" name="jekyll" href="#jekyll" title="jekyll" rel="2">jekyll</a>
-                
-            </div>
+                <h3 id="jekyllgh-pages">jekyll本地调试与gh-pages实际显示不一致</h3>
 
-            <!-- Taged Posts List -->
+<blockquote>
+  <p>Q: 使用<code class="highlighter-rouge">jekyll serve</code>命令在本地查看站点一切正常，但提交到gh-pages之后无法正常显示。  <br />
+A: 推荐使用与gh-pages相同的jekyll版本进行本地调试，即通过命令<code class="highlighter-rouge">bundle exec jekyll build --safe</code>进行本地编译，并通过<code class="highlighter-rouge">bundle exec jekyll serve</code>命令来进行本地页面调试。</p>
+</blockquote>
+
+<p>将本地jekyll环境配置与gh-pages服务器端的相同步，可以最大程度地降低本地调试出现问题的可能，主要可通过以下手段来保证本地与远端访问体验相一致。</p>
+
+<ul>
+  <li>安装GitHub Pages Gem。</li>
+  <li>通过<code class="highlighter-rouge">bundle exec jekyll build --safe</code>命令可依采用与gh-pages相同的页面生成方式生成你自己的页面。</li>
+  <li>定期使用<code class="highlighter-rouge">bundle update github-pages</code>或简单地采用<code class="highlighter-rouge">bundle update</code>来确保gem维持在最新的版本。</li>
+</ul>
+
+<p><em>更多详细请参阅：<a href="https://help.github.com/articles/setting-up-your-pages-site-locally-with-jekyll/">GitHub Help - Setting up your Pages site locally with Jekyll</a>。</em></p>
+
+<h3 id="jekyllpost">jekyll时区设置及post发布时间设置</h3>
+
+<blockquote>
+  <p>Q: post文件生成正常，但无法在站点主页中显示；post显示的时间不正确。  <br />
+A: 在post文件的YAML头部中的<code class="highlighter-rouge">date</code>属性中加上时区信息，<strong>同时</strong>，在站点配置文件<code class="highlighter-rouge">_config.yml</code>中加上时区配置。</p>
+</blockquote>
+
+<p>jekyll中post的时间默认是由文件名确定的，但如果在post中YAML头部添加了<code class="highlighter-rouge">date</code>属性，则post的时间由该属性值 <em>唯一</em> 确定。</p>
+
+<p><code class="highlighter-rouge">date</code>属性值的格式如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>date: year-month-date [hour:minute:second] [timezone]
+</code></pre>
+</div>
+
+<p>例如<code class="highlighter-rouge">2016-03-28</code>, <code class="highlighter-rouge">2016-02-22 22:22:22</code>, <code class="highlighter-rouge">2016-01-11 11:11:11 +0800</code>都是有效的时间格式。但jekyll在生成可访问的站点时仅会根据日期来分配页面的地址，具体的时间以及时区信息会对日期的计算产生影响。</p>
+
+<p>在不输入<code class="highlighter-rouge">[timezone]</code>的情况下，jekyll默认使用的是UTC时间，这样就有可能出现post的时间对于gh-pages服务器来说处于未来，从而拒绝编译产生页面。例如我在凌晨发布了一篇post并将时间设置为当地时间<code class="highlighter-rouge">2016-03-28</code>，而由于我在东八区（<code class="highlighter-rouge">timezone +0800</code>），实际上UTC时区仍在前一天，因此提交编译之后服务器判定该post的时间处于未来而拒绝编译，也就无法在生成的站点中看到该文了。</p>
+
+<p>于是尝试给post中的时间加上时区信息，提交修改。OK，这样post在站点中可以看到了，但是时间不正确，提前了一天。这是因为站点的时间仍然时UTC时区的，站点编译时根据post中的时区信息将post的时间修正到了UTC时区的时间。</p>
+
+<p>于是再次尝试在站点配置文件<code class="highlighter-rouge">_config.yml</code>中加上时区配置信息如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>timezone: Asia/Shanghai
+</code></pre>
+</div>
+
+<p>提交修改，再次打开站点，OK，post显示出来了，而且post的日期也是正确的了。</p>
+
+<p><strong><em>注意:</em></strong> <em>GitHub Pages已于2016年2月将其jekyll版本升级到了Jekyll 3.0版本，其支持在<code class="highlighter-rouge">_config.yml</code>文件中加入<code class="highlighter-rouge">future:true</code>选项以显示时间处于“未来”的post。更多详细可以参考：<a href="https://github.com/blog/2100-github-pages-jekyll-3">GitHub Pages now faster and simpler with Jekyll 3.0</a>以及<a href="http://jekyllrb.com/docs/upgrading/2-to-3/">Upgrading from 2.x to 3.x</a>。</em></p>
+
             
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="JavaScript">
-                    <span class="tag-text">JavaScript</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/23/game2048-mvc.html">
-                        <h2 class="post-title">
-                            利用MVC思想实现的2048小游戏
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-23
-                    </p>
-                </div>
                 <hr>
-                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/03/27/build-website-with-jekyll.html" data-toggle="tooltip" data-placement="top" title="如何使用jekyll建站">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
             </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="MVC">
-                    <span class="tag-text">MVC</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/23/game2048-mvc.html">
-                        <h2 class="post-title">
-                            利用MVC思想实现的2048小游戏
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-23
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="jekyll">
-                    <span class="tag-text">jekyll</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/28/jekyll-cookbook.html">
-                        <h2 class="post-title">
-                            jekyll + gh-pages搭建个人博客常见问题记录
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-28
-                    </p>
-                </div>
-                <hr>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/27/build-website-with-jekyll.html">
-                        <h2 class="post-title">
-                            如何使用jekyll建站
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-27
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
         </div>
     </div>
-</div>
+</article>
+
+
 
 
     <!-- Footer -->

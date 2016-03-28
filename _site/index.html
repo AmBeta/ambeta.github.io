@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="keyword"  content="">
@@ -139,6 +138,25 @@
 <!-- Post Content Preview -->
 
 <div class="post-preview">
+    <a href="/2016/03/28/jekyll-cookbook.html">
+        <h2 class="post-title">
+            jekyll + gh-pages搭建个人博客常见问题记录
+        </h2>
+        <div class="post-content-preview">
+            jekyll本地调试与gh-pages实际显示不一致
+
+
+  Q: 使用jekyll serve命令在本地查看站点一切正常，但提交到gh-pages之后无法正常显示。  
+A: 推荐使用与gh-pages相同的jekyll版本进行本地调试，即通过命令bundle exec ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted on March 28, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2016/03/27/build-website-with-jekyll.html">
         <h2 class="post-title">
             如何使用jekyll建站
@@ -146,7 +164,9 @@
         <div class="post-content-preview">
             终于把自己的个人博客折腾好了，可以开开心心地发博文啦！
 
-个人博客这种东西，主要是为了记录一下自己成长的过程，其次也可以作为与其他人交流共享一些经验的平台，而对于我这种健忘的人则是个必不可少的东...
+个人博客这种东西，主要是为了记录一下自己成长的过程，其次也可以作为与其他人交流共享一些经验的平台，而对于我这种健忘的人则是个必不可少的东西，不然过些时日，连jekyll怎么拼的都会忘掉了Orz。。
+
+之前也尝试在CS...
         </div>
     </a>
     <p class="post-meta">
@@ -165,7 +185,7 @@
 
 
 
-JS本身语法比较松散，如果随便写的话很...
+JS本身语法比较松散，如果随便写的话很容易就写成了面向过程的结构，时间一长，各种复杂的逻辑就很难再理清楚了，后续的维护...
         </div>
     </a>
     <p class="post-meta">
@@ -182,7 +202,9 @@ JS本身语法比较松散，如果随便写的话很...
         <div class="post-content-preview">
             This is my first blog.
 
-ATTENTION: This blog is still in construction, so that some links are not...
+ATTENTION: This blog is still in construction, so that some links are not valid now.
+
+STATEMENT: This theme deriv...
         </div>
     </a>
     <p class="post-meta">
@@ -282,10 +304,10 @@ ATTENTION: This blog is still in construction, so that some links are not...
     if($('#tag-cloud').length !== 0){
         async("/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
-                size: {start: .8, end: 1.8, unit: 'em'},
+                size: {start: .8, end: 1.2, unit: 'em'},
                 //color: {start: '#bbbbee', end: '#0085a1'},
             };
-            $('#tag_cloud a').tagcloud();
+            $('#tag-cloud a').tagcloud();
         })
     }
 </script>
@@ -300,6 +322,21 @@ ATTENTION: This blog is still in construction, so that some links are not...
 </script>
 
 <!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-75340276-2';
+    var _gaDomain = 'ambeta.github.io';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
 
 
 <!-- Baidu Tongji -->

@@ -28,3 +28,10 @@ github_username:    ambeta
 markdown: kramdown
 kramdown:
   input: GFM
+
+# Analytics settings
+# Baidu Analytics
+#ba_track_id: serial-number
+# Google Analytics
+ga_track_id: 'UA-75340276-2'            # Format: UA-xxxxxx-xx
+ga_domain: ambeta.github.io
