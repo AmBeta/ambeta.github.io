@@ -10,9 +10,9 @@
     <meta name="keyword"  content="Front-end Web, JavaScript, HTML, CSS" />
     <link rel="shortcut icon" href="imgs/favicon.ico" />
 
-    <title>三土的博客 | AmBeta Blog</title>
+    <title>商户中心项目代码结构 - 三土的博客 | AmBeta Blog</title>
 
-    <link rel="canonical" href="http://ambeta.github.io/">
+    <link rel="canonical" href="http://ambeta.github.io/2016/04/19/merchant-code-structure.html">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -107,171 +107,91 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/imgs/header-bg.png')">
-    <div class="header-thumb-container center-block">
-        <img class="img-responsive" src="/imgs/my-thumb.png">
+    <!-- Post Header -->
+<header class="post-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                <div class="tags">
+                    
+                    <a class="tag" href="/tags.html#MVC" title="MVC">MVC</a>
+                    
+                    <a class="tag" href="/tags.html#Stapes" title="Stapes">Stapes</a>
+                    
+                </div>
+                <h1>商户中心项目代码结构</h1>
+                <div class="post-meta">
+                    Posted on April 19, 2016
+                </div>
+            </div>
+        </div>
     </div>
-    <h2 class="header-title">Hello, here is<br/>
-    <strong> AmBeta Blog </strong><br/>
-    <i>一个伪程序猿的自我拉扯</i>
-    </h2>
 </header>
 
-<!-- Page Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-            <!-- Navigation Background -->
-<style type="text/css">
-    @media screen and (max-width: 767px) {
-        .navbar-header {
-            background: none;
-        }
-    }
-    @media screen and (min-width: 768px) {
-        .navbar-custom {
-            background: none;
-        }
-    }
-</style>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 post-container">
 
-<!-- Post Content Preview -->
+                <p>商户中心项目，为商户提供各种订单查询与管理、自助点餐服务配置等功能。</p>
 
-<div class="post-preview">
-    <a href="/2016/04/19/merchant-code-structure.html">
-        <h2 class="post-title">
-            商户中心项目代码结构
-        </h2>
-        <div class="post-content-preview">
-            商户中心项目，为商户提供各种订单查询与管理、自助点餐服务配置等功能。
+<p>该项目各个模块基本均采用了MVC思想进行搭建，使用了 <a href="https://github.com/hay/stapes">Stapes.js</a> 这个非常轻量级的MVC框架，配合使用 <a href="http://https://github.com/wycats/handlebars.js">handlebars.js</a> 进行模版加载，UI方面使用 <a href="http://https://github.com/twbs/bootstrap">bootstrap</a> 进行布局，可以让前端工程师把更多精力放到业务逻辑上。</p>
 
-该项目各个模块基本均采用了MVC思想进行搭建，使用了 Stapes.js 这个非常轻量级的MVC框架，配合使用 handlebars.js 进行模版加载，UI方面使用 bootstrap 进行布局，可以...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on April 19, 2016
-    </p>
-</div>
-<hr>
+<p>项目的打包使用的是 <a href="https://github.com/gruntjs/grunt">grunt</a> 构建工具。</p>
 
-<div class="post-preview">
-    <a href="/2016/04/16/stapes-learning-notes.html">
-        <h2 class="post-title">
-            Stapes.js
-        </h2>
-        <div class="post-content-preview">
-            Stapes.extend()
+<h2 id="section">整体结构</h2>
 
+<h2 id="section-1">主要模块</h2>
 
-  Stapes.extend() can be used for writing extra methods and properties that will be available on all Stapes modules, ev...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on April 16, 2016
-    </p>
-</div>
-<hr>
+<h3 id="section-2">订单</h3>
 
-<div class="post-preview">
-    <a href="/2016/04/01/reactjs-study-notes-first.html">
-        <h2 class="post-title">
-            react.js学习记录——实现一个简单的消息中心组件
-        </h2>
-        <div class="post-content-preview">
-            React作为最近比较火的前端框架，受到越来越多人的关注，其常常与Angular相提并论，但实际上React并不是一个完整的MVC框架，其基本上只做了V-View部分的工作。
+<ul>
+  <li>
+    <p><strong><em>order.init.js</em></strong>  <br />
+  各个 order 对象的实例化。  <br />
+  <code class="highlighter-rouge">orderQueryModel</code>: 初始化请求的参数列表、参数值等。<br />
+  <code class="highlighter-rouge">orderQueryView</code>: 初始化各个视图模板与视图元素。<br />
+  <code class="highlighter-rouge">orderQueryController</code>: 初始化。</p>
+  </li>
+  <li>
+    <p><strong><em>order.query.model.js</em></strong></p>
+  </li>
+  <li><strong><em>order.query.view.js</em></strong>
+    <ul>
+      <li><code class="highlighter-rouge">constructor()</code>  <br />
+  调用接口初始化页面模板。</li>
+      <li><code class="highlighter-rouge">loadTemplates()</code>  <br />
+  载入页面模板。</li>
+      <li><code class="highlighter-rouge">renderData()</code>  <br />
+  根据不同的页面，调用不同的入口函数生成页面上下文。</li>
+    </ul>
+  </li>
+  <li><strong><em>order.query.controller.js</em></strong></li>
+</ul>
 
-React核心的组件思想大概是其吸引人眼球的主要原因，通过将页面上不同的功能模块转化为组件的方式...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on April 1, 2016
-    </p>
-</div>
-<hr>
+            
+                <hr>
 
-<div class="post-preview">
-    <a href="/2016/03/28/jekyll-cookbook.html">
-        <h2 class="post-title">
-            jekyll + gh-pages搭建个人博客常见问题记录
-        </h2>
-        <div class="post-content-preview">
-            jekyll本地调试与gh-pages实际显示不一致
-
-
-  Q: 使用jekyll serve命令在本地查看站点一切正常，但提交到gh-pages之后无法正常显示。  
-A: 推荐使用与gh-pages相同的jekyll版本进行本地调试，即通过命令bundle exec ...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on March 28, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/03/27/build-website-with-jekyll.html">
-        <h2 class="post-title">
-            如何使用jekyll建站
-        </h2>
-        <div class="post-content-preview">
-            终于把自己的个人博客折腾好了，可以开开心心地发博文啦！
-
-个人博客这种东西，主要是为了记录一下自己成长的过程，其次也可以作为与其他人交流共享一些经验的平台，而对于我这种健忘的人则是个必不可少的东西，不然过些时日，连jekyll怎么拼的都会忘掉了Orz。。
-
-之前也尝试在CS...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on March 27, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/03/23/game2048-mvc.html">
-        <h2 class="post-title">
-            利用MVC思想实现的2048小游戏
-        </h2>
-        <div class="post-content-preview">
-            2048是一款很经典的小游戏，据说游戏的源码就是用JavaScript写的，暂时还没来得及看。网上别人写的代码也很多，最少有不到280行代码写成的。
-
-
-
-JS本身语法比较松散，如果随便写的话很容易就写成了面向过程的结构，时间一长，各种复杂的逻辑就很难再理清楚了，后续的维护...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on March 23, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/03/23/hello-world.html">
-        <h2 class="post-title">
-            Hello, World!
-        </h2>
-        <div class="post-content-preview">
-            This is my first blog.
-
-ATTENTION: This blog is still in construction, so that some links are not valid now.
-
-STATEMENT: This theme deriv...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on March 23, 2016
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/04/16/stapes-learning-notes.html" data-toggle="tooltip" data-placement="top" title="Stapes.js">
+                        Previous Post
+                        <br />
+                        <span>Stapes.js</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
         </div>
     </div>
-</div>
+</article>
+
+
+
 
     <!-- Footer -->
 <footer>
