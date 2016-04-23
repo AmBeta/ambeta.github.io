@@ -15,13 +15,13 @@
     <link rel="canonical" href="http://ambeta.github.io/">
 
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
 
     <!-- Pygments Github CSS -->
-    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 
     <!-- Custom Fonts -->
     <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
@@ -326,17 +326,76 @@ STATEMENT: This theme deriv...
     async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
         hljs.initHighlightingOnLoad();
     })
+</script>
+
+<script>
+    // show top navbar when scroll up
+    $(window).on('scroll', (function(e) {
+        var oldPosY = 0;
+        var $navbar = $('.navbar-custom, .navbar-header');
+        var isFixed = false;
+        var isShown = true;
+        return function() {
+            var newPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            var sense = 20;
+            if (newPosY < 0 && isShown) {   // scroll up out of the screen
+                $navbar.fadeOut(200);
+                isShown = false;
+                setTimeout(function() {
+                    $navbar.fadeIn(200);
+                }, 200);
+            } else if ((newPosY > 0) && (oldPosY - newPosY > sense) && !isFixed) { // scroll up
+                $navbar.addClass('fixed');
+                isFixed = true;
+            } else if ((newPosY > 0) && (newPosY - oldPosY > sense) && isFixed) {  // scroll down
+                $navbar.removeClass('fixed');
+                isFixed = false;
+            }
+            if (newPosY >= 0 && newPosY < sense) {
+                isShown = true;
+                if (isFixed) $navbar.removeClass('fixed');
+            }
+
+            // only update oldPosY when newPosY is much more greater
+            if (Math.abs(newPosY - oldPosY) > sense) {
+                oldPosY = newPosY;
+            }
+        };
+    })());
+
     // only load tagcloud.js in tag.html
-    if($('#tag-cloud').length !== 0){
-        async("/js/jquery.tagcloud.js",function(){
+    if($('#tag-cloud').length !== 0) {
+        async('/assets/js/jquery.tagcloud.js',function (){
             $.fn.tagcloud.defaults = {
                 size: {start: .8, end: 1.2, unit: 'em'},
                 //color: {start: '#bbbbee', end: '#0085a1'},
             };
             $('#tag-cloud a').tagcloud();
-        })
+        });
+    }
+    // only generate doc navbar in page with doc-navbar enabled
+    if ($('#post-sidebar-nav').length !== 0) {
+        async('/assets/js/jquery.gennav.min.js', function() {
+            $('#post-sidebar-nav').genDocNav({
+                navItems: '.post-container h2, h3, h4'
+            });
+            $('body').scrollspy({ 
+                target: '#post-sidebar-nav',
+                offset: 20
+            });
+
+            var $postSidebar = $('.post-sidebar');
+            var startPosY = $('.post-sidebar-container').offset().top;
+            $(window).on('scroll', function(e) {
+                var nowPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var delta = nowPosY - startPosY;
+                delta > 0 ? $postSidebar.addClass('post-sidebar-fixed') : 
+                            $postSidebar.removeClass('post-sidebar-fixed');
+            });
+        });
     }
 </script>
+
 <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
 
 <!--fastClick.js -->

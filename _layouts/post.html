@@ -6,7 +6,7 @@ layout: default
 <header class="post-header">
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <div class="tags">
                     {% for tag in page.tags %}
                     <a class="tag" href="{{ site.baseurl }}/tags.html#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
@@ -25,12 +25,27 @@ layout: default
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 post-container">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2 post-container">
 
                 {{ content }}
-            
+
                 <hr>
 
+            </div>
+
+            <!-- Side Navbar -->
+            <div class="col-md-2 col-lg-2 post-sidebar-container">
+                <div class="post-sidebar">
+                    <nav id="post-sidebar-nav" class="post-sidebar-nav hidden-print hidden-xs hidden-sm affix-bottom">
+                    </nav>
+                    <a href="#top" class="back-to-top"> 返回顶部 </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pager -->
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">

@@ -500,6 +500,13 @@ a img:focus {
     margin-right: 5px;
   }
 }
+.post-sidebar .post-sidenav li a {
+  border-left: 2px solid #808080;
+}
+.post-sidebar .post-sidenav li a:hover,
+.post-sidebar .post-sidenav li a:active {
+  border-left: 4px solid #39988b;
+}
 /* Footer */
 footer {
   padding: 50px 0;

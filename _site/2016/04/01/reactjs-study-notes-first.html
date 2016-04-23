@@ -15,13 +15,13 @@
     <link rel="canonical" href="http://ambeta.github.io/2016/04/01/reactjs-study-notes-first.html">
 
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
 
     <!-- Pygments Github CSS -->
-    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 
     <!-- Custom Fonts -->
     <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
@@ -111,7 +111,7 @@
 <header class="post-header">
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <div class="tags">
                     
                     <a class="tag" href="/tags.html#react" title="react">react</a>
@@ -130,7 +130,7 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 post-container">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2 post-container">
 
                 <p>React作为最近比较火的前端框架，受到越来越多人的关注，其常常与Angular相提并论，但实际上React并不是一个完整的MVC框架，其基本上只做了<code class="highlighter-rouge">V-View</code>部分的工作。</p>
 
@@ -506,9 +506,24 @@ var MessageList = React.createClass({
 但由于其使用的特殊的JSX语法，使得脚本在调试时变得比较困难，尽管使用babel工具可以将其转换为标准的JavaScript语法，但报错仍显得扑朔迷离。  <br />
 此外，使用React处理逆向数据流（从子组件到父组件方向的数据传递）时，过程比较繁琐，虽然可以不用过于担心由此造成的性能问题（React提醒不必怀疑JavaScript的执行速度）。</p>
 
-            
+
                 <hr>
 
+            </div>
+
+            <!-- Side Navbar -->
+            <div class="col-md-2 col-lg-2 post-sidebar-container">
+                <div class="post-sidebar">
+                    <nav id="post-sidebar-nav" class="post-sidebar-nav hidden-print hidden-xs hidden-sm affix-bottom">
+                    </nav>
+                    <a href="#top" class="back-to-top"> 返回顶部 </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pager -->
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <ul class="pager">
                     
                     <li class="previous">
@@ -610,17 +625,76 @@ var MessageList = React.createClass({
     async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
         hljs.initHighlightingOnLoad();
     })
+</script>
+
+<script>
+    // show top navbar when scroll up
+    $(window).on('scroll', (function(e) {
+        var oldPosY = 0;
+        var $navbar = $('.navbar-custom, .navbar-header');
+        var isFixed = false;
+        var isShown = true;
+        return function() {
+            var newPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            var sense = 20;
+            if (newPosY < 0 && isShown) {   // scroll up out of the screen
+                $navbar.fadeOut(200);
+                isShown = false;
+                setTimeout(function() {
+                    $navbar.fadeIn(200);
+                }, 200);
+            } else if ((newPosY > 0) && (oldPosY - newPosY > sense) && !isFixed) { // scroll up
+                $navbar.addClass('fixed');
+                isFixed = true;
+            } else if ((newPosY > 0) && (newPosY - oldPosY > sense) && isFixed) {  // scroll down
+                $navbar.removeClass('fixed');
+                isFixed = false;
+            }
+            if (newPosY >= 0 && newPosY < sense) {
+                isShown = true;
+                if (isFixed) $navbar.removeClass('fixed');
+            }
+
+            // only update oldPosY when newPosY is much more greater
+            if (Math.abs(newPosY - oldPosY) > sense) {
+                oldPosY = newPosY;
+            }
+        };
+    })());
+
     // only load tagcloud.js in tag.html
-    if($('#tag-cloud').length !== 0){
-        async("/js/jquery.tagcloud.js",function(){
+    if($('#tag-cloud').length !== 0) {
+        async('/assets/js/jquery.tagcloud.js',function (){
             $.fn.tagcloud.defaults = {
                 size: {start: .8, end: 1.2, unit: 'em'},
                 //color: {start: '#bbbbee', end: '#0085a1'},
             };
             $('#tag-cloud a').tagcloud();
-        })
+        });
+    }
+    // only generate doc navbar in page with doc-navbar enabled
+    if ($('#post-sidebar-nav').length !== 0) {
+        async('/assets/js/jquery.gennav.min.js', function() {
+            $('#post-sidebar-nav').genDocNav({
+                navItems: '.post-container h2, h3, h4'
+            });
+            $('body').scrollspy({ 
+                target: '#post-sidebar-nav',
+                offset: 20
+            });
+
+            var $postSidebar = $('.post-sidebar');
+            var startPosY = $('.post-sidebar-container').offset().top;
+            $(window).on('scroll', function(e) {
+                var nowPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var delta = nowPosY - startPosY;
+                delta > 0 ? $postSidebar.addClass('post-sidebar-fixed') : 
+                            $postSidebar.removeClass('post-sidebar-fixed');
+            });
+        });
     }
 </script>
+
 <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
 
 <!--fastClick.js -->

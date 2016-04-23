@@ -1,0 +1,24 @@
+{
+  "name": "ambeta.github.io",
+  "version": "1.0.0",
+  "description": "ambeta's blog",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmBeta/ambeta.github.io.git"
+  },
+  "author": "ambeta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AmBeta/ambeta.github.io/issues"
+  },
+  "homepage": "https://github.com/AmBeta/ambeta.github.io#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-less": "^1.3.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0"
+  }
+}
