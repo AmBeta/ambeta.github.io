@@ -187,8 +187,8 @@ A: 在post文件的YAML头部中的<code class="highlighter-rouge">date</code>�
 
             <!-- Side Navbar -->
             <div class="col-md-2 col-lg-2 post-sidebar-container">
-                <div class="post-sidebar">
-                    <nav id="post-sidebar-nav" class="post-sidebar-nav hidden-print hidden-xs hidden-sm affix-bottom">
+                <div class="post-sidebar hidden-print hidden-xs hidden-sm">
+                    <nav id="post-sidebar-nav" class="post-sidebar-nav affix-bottom">
                     </nav>
                     <a href="#top" class="back-to-top"> 返回顶部 </a>
                 </div>
@@ -303,36 +303,32 @@ A: 在post文件的YAML头部中的<code class="highlighter-rouge">date</code>�
 
 <script>
     // show top navbar when scroll up
-    $(window).on('scroll', (function(e) {
+    $(window).on('scroll touchmove', (function(e) {
         var oldPosY = 0;
         var $navbar = $('.navbar-custom, .navbar-header');
         var isFixed = false;
         var isShown = true;
         return function() {
             var newPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-            var sense = 20;
+            if (newPosY === 0) {
+                isShown = true;
+                if (isFixed) $navbar.removeClass('fixed');
+            }
+            if (Math.abs(newPosY - oldPosY) < 20) return;
             if (newPosY < 0 && isShown) {   // scroll up out of the screen
                 $navbar.fadeOut(200);
                 isShown = false;
                 setTimeout(function() {
                     $navbar.fadeIn(200);
                 }, 200);
-            } else if ((newPosY > 0) && (oldPosY - newPosY > sense) && !isFixed) { // scroll up
+            } else if ((newPosY > 0) && (oldPosY > newPosY) && !isFixed) { // scroll up
                 $navbar.addClass('fixed');
                 isFixed = true;
-            } else if ((newPosY > 0) && (newPosY - oldPosY > sense) && isFixed) {  // scroll down
+            } else if ((newPosY > 0) && (newPosY > oldPosY) && isFixed) {  // scroll down
                 $navbar.removeClass('fixed');
                 isFixed = false;
             }
-            if (newPosY >= 0 && newPosY < sense) {
-                isShown = true;
-                if (isFixed) $navbar.removeClass('fixed');
-            }
-
-            // only update oldPosY when newPosY is much more greater
-            if (Math.abs(newPosY - oldPosY) > sense) {
-                oldPosY = newPosY;
-            }
+            oldPosY = newPosY;
         };
     })());
 
