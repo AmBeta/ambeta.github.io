@@ -5,6 +5,7 @@ body {
   font-size: 16px;
   color: #404040;
   overflow-x: hidden;
+  position: relative;
 }
 p {
   margin: 30px 0;
@@ -38,7 +39,7 @@ a img:focus {
   font-style: italic;
   font-size: .95em;
   margin: 20px 0;
-  border-left: 0.5em solid #39988b;
+  border-left: 0.5em solid rgba(43, 115, 105, 0.4);
 }
 .post-container blockquote p {
   margin: 0;
@@ -189,6 +190,17 @@ a img:focus {
   font-family: -apple-system, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
 }
+.navbar-custom.fixed {
+  position: fixed;
+  top: -62px;
+  background: rgba(43, 115, 105, 0.9);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  transform: scaleY(0);
+}
+.navbar-custom.fixed.visible {
+  top: 0;
+  transform: scaleY(1);
+}
 .navbar-custom .navbar-brand {
   font-weight: 800;
   color: white;
@@ -251,38 +263,6 @@ a img:focus {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
-  .navbar-custom.is-fixed {
-    /* when the user scrolls down, we hide the header right above the viewport */
-    position: fixed;
-    top: -61px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-bottom: 1px solid #f2f2f2;
-    -webkit-transition: -webkit-transform 0.3s;
-    -moz-transition: -moz-transform 0.3s;
-    transition: transform 0.3s;
-  }
-  .navbar-custom.is-fixed .navbar-brand {
-    color: #404040;
-  }
-  .navbar-custom.is-fixed .navbar-brand:hover,
-  .navbar-custom.is-fixed .navbar-brand:focus {
-    color: #0085a1;
-  }
-  .navbar-custom.is-fixed .nav li a {
-    color: #404040;
-  }
-  .navbar-custom.is-fixed .nav li a:hover,
-  .navbar-custom.is-fixed .nav li a:focus {
-    color: #0085a1;
-  }
-  .navbar-custom.is-visible {
-    /* if the user changes the scrolling direction, we show the header */
-    -webkit-transform: translate3d(0, 100%, 0);
-    -moz-transform: translate3d(0, 100%, 0);
-    -ms-transform: translate3d(0, 100%, 0);
-    -o-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0);
-  }
 }
 @media only screen and (max-width: 767px) {
   .navbar-default .navbar-collapse {
@@ -336,6 +316,12 @@ a img:focus {
   }
   #navbar-items.in li {
     opacity: 1;
+  }
+  .navbar-custom.fixed {
+    background: none;
+  }
+  .navbar-custom.fixed .navbar-header {
+    background: rgba(43, 115, 105, 0.9);
   }
 }
 /* Self Introduction Banner */
@@ -500,12 +486,110 @@ a img:focus {
     margin-right: 5px;
   }
 }
-.post-sidebar .post-sidenav li a {
-  border-left: 2px solid #808080;
+/* Post Sidebar */
+.post-sidebar-container {
+  position: relative;
 }
-.post-sidebar .post-sidenav li a:hover,
-.post-sidebar .post-sidenav li a:active {
-  border-left: 4px solid #39988b;
+.post-sidebar-container .post-sidebar {
+  padding-top: 20px;
+}
+@media only screen and (min-width: 992px) {
+  .post-sidebar-container .post-sidebar-fixed {
+    position: fixed;
+    top: 0;
+    width: 163px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .post-sidebar-container .post-sidebar-fixed {
+    width: 213px;
+  }
+}
+/* Post Sidebar Navigator */
+#post-sidebar-nav {
+  font-size: 1.2em;
+}
+#post-sidebar-nav + a {
+  display: block;
+  padding: 10px 0;
+  margin: 10px 12px;
+  color: #bbb;
+  font-size: .8em;
+}
+#post-sidebar-nav + a:hover,
+#post-sidebar-nav + a:focus {
+  color: #777;
+  text-decoration: none;
+}
+#post-sidebar-nav ul li.post-nav-item.h1 {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1em;
+}
+#post-sidebar-nav ul li.post-nav-item.h1 a {
+  padding: 20px 10px;
+  padding-right: 2px;
+}
+#post-sidebar-nav ul li.post-nav-item.h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.8em;
+}
+#post-sidebar-nav ul li.post-nav-item.h2 a {
+  padding: 15px 10px;
+  padding-right: 2px;
+}
+#post-sidebar-nav ul li.post-nav-item.h3 {
+  margin: 0;
+  font-weight: 400;
+  font-size: 0.7em;
+}
+#post-sidebar-nav ul li.post-nav-item.h3 a {
+  padding: 8px 10px;
+  padding-right: 2px;
+}
+#post-sidebar-nav ul li.post-nav-item.h4 {
+  margin: 0;
+  font-weight: 300;
+  font-size: 0.6em;
+}
+#post-sidebar-nav ul li.post-nav-item.h4 a {
+  padding: 4px 10px;
+  padding-right: 2px;
+}
+#post-sidebar-nav ul li.post-nav-item.h5 {
+  margin: 0;
+  font-weight: 200;
+  font-size: 0.5em;
+}
+#post-sidebar-nav ul li.post-nav-item.h5 a {
+  padding: 2px 10px;
+  padding-right: 2px;
+}
+#post-sidebar-nav ul li.post-nav-item.h6 {
+  margin: 0;
+  font-weight: 200;
+  font-size: 0.5em;
+}
+#post-sidebar-nav ul li.post-nav-item.h6 a {
+  padding: 0px 10px;
+  padding-right: 2px;
+}
+#post-sidebar-nav ul li a {
+  color: gray;
+  border-radius: 0;
+  border-left: 2px solid transparent;
+}
+#post-sidebar-nav ul li a:hover,
+#post-sidebar-nav ul li a:active {
+  color: #39988b;
+  border-left: 2px solid #39988b;
+  background: none;
+}
+#post-sidebar-nav ul li.active a {
+  color: #39988b;
+  border-left: 2px solid #39988b;
+  background: none;
 }
 /* Footer */
 footer {

@@ -13,6 +13,7 @@
     defaults: {
       navItems: 'h1, h2, h3, h4, h5',
       navItemsId: 'post-nav-item', 
+      offset: 10,
       scrollSpeed: 700,
       easing: 'swing'
     },
@@ -39,11 +40,14 @@
     },
 
     handleClick: function() {
+      var self = this;
       this.$elem.on('click', 'a', function(e) {
+        var target = this.href.match(/\#.*$/gi).toString();
         e.preventDefault();
         $('html, body').animate({
-          scrollTop: $(this.href).offset().top
-      }, this.config.scrollSpeed, this.config.easing);
+          scrollTop: $(target).offset().top - self.config.offset
+        }, self.config.scrollSpeed, self.config.easing);
+      });
     },
 
     genListHTML: function() {

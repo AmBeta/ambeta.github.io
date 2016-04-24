@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/assets/css/syntax.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/ambeta.main.css">
 
     <!-- Custom Fonts -->
     <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
@@ -66,7 +66,6 @@
     </div>
 </nav>
 <script>
-    // Navbar derives from huxpro@github
     var _body   = document.body;
     var _toggle = document.querySelector('.navbar-toggle');
     var _navitems = document.querySelector('#navbar-items');
@@ -89,8 +88,14 @@
         }
     }
 
-    _toggle.addEventListener('click', toggleNav);
-    _body.addEventListener('click', hideNav);
+    // enable touch events on mobile devices
+    if ('ontouchstart' in document) {
+        _toggle.addEventListener('touchstart', toggleNav);
+        _body.addEventListener('touchstart', hideNav);
+    } else {
+        _toggle.addEventListener('click', toggleNav);
+        _body.addEventListener('click', hideNav);
+    }
 
     function toggleNav(e) {
         if (_navitems.className.indexOf('in') > 0) {
@@ -182,6 +187,9 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="/assets/js/bootstrap.min.js "></script>
 
+<!-- ambeta.main.js -->
+<script src="/assets/js/ambeta.main.js "></script>
+
 <!-- async load function -->
 <script>
     function async(u, c) {
@@ -203,35 +211,28 @@
 
 <script>
     // show top navbar when scroll up
-    $(window).on('scroll touchmove', (function() {
-        var oldPosY = 0;
-        var $navbar = $('.navbar-custom, .navbar-header');
-        var isFixed = false;
-        var isShown = true;
-        return function(e) {
-            var newPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-            newPosY = (e.originalEvent.changedTouches && e.originalEvent.changedTouches[0].pageY) || newPosY; // for mobile devices
-            if (newPosY === 0) {
-                isShown = true;
-                if (isFixed) $navbar.removeClass('fixed');
-            }
-            if (Math.abs(newPosY - oldPosY) < 20) return;
-            if (newPosY < 0 && isShown) {   // scroll up out of the screen
-                $navbar.fadeOut(200);
-                isShown = false;
-                setTimeout(function() {
-                    $navbar.fadeIn(200);
-                }, 200);
-            } else if ((newPosY > 0) && (oldPosY > newPosY) && !isFixed) { // scroll up
-                $navbar.addClass('fixed');
-                isFixed = true;
-            } else if ((newPosY > 0) && (newPosY > oldPosY) && isFixed) {  // scroll down
-                $navbar.removeClass('fixed');
-                isFixed = false;
-            }
-            oldPosY = newPosY;
-        };
-    })());
+    // $(window).on('scroll', (function(e) {
+    //     var oldPosY = 0;
+    //     var $navbar = $('.navbar-custom, .navbar-header');
+    //     var tiktok;
+    //     return function() {
+    //         var newPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+
+    //         newPosY > 30 ? $navbar.addClass('fixed') : $navbar.removeClass('fixed visible');
+    //         if (newPosY < 0 || Math.abs(newPosY - oldPosY) < 20) return;
+    //         if (oldPosY > newPosY) {        // scroll up
+    //             $navbar.addClass('visible');
+    //             // automatically hide the navbar
+    //             clearTimeout(tiktok);
+    //             tiktok = setTimeout(function() {
+    //                 $navbar.removeClass('visible');
+    //             }, 3000);
+    //         } else if (newPosY > oldPosY) {  // scroll down
+    //             $navbar.removeClass('visible');
+    //         }
+    //         oldPosY = newPosY;
+    //     };
+    // })());
 
     // only load tagcloud.js in tag.html
     if($('#tag-cloud').length !== 0) {
@@ -245,7 +246,7 @@
     }
     // only generate doc navbar in page with doc-navbar enabled
     if ($('#post-sidebar-nav').length !== 0) {
-        async('/assets/js/jquery.gennav.min.js', function() {
+        async('/assets/js/jquery.gennav.js', function() {
             $('#post-sidebar-nav').genDocNav({
                 navItems: '.post-container h2, h3, h4'
             });

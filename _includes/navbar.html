@@ -24,7 +24,6 @@
     </div>
 </nav>
 <script>
-    // Navbar derives from huxpro@github
     var _body   = document.body;
     var _toggle = document.querySelector('.navbar-toggle');
     var _navitems = document.querySelector('#navbar-items');
@@ -47,8 +46,14 @@
         }
     }
 
-    _toggle.addEventListener('click', toggleNav);
-    _body.addEventListener('click', hideNav);
+    // enable touch events on mobile devices
+    if ('ontouchstart' in document) {
+        _toggle.addEventListener('touchstart', toggleNav);
+        _body.addEventListener('touchstart', hideNav);
+    } else {
+        _toggle.addEventListener('click', toggleNav);
+        _body.addEventListener('click', hideNav);
+    }
 
     function toggleNav(e) {
         if (_navitems.className.indexOf('in') > 0) {

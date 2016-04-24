@@ -9,8 +9,10 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: 'assets/src/js/jquery.gennav.js',
-        dest: 'assets/js/jquery.gennav.min.js'
+        files: {
+          'assets/js/jquery.gennav.min.js': 'assets/js/jquery.gennav.js', 
+          'assets/js/ambeta.main.min.js': 'assets/js/ambeta.main.js'
+        }
       }
     },
 
@@ -20,14 +22,14 @@ module.exports = function(grunt) {
           paths: ['assets/css']
         },
         files: {
-          'assets/css/main.css': 'assets/src/less/main.less'
+          'assets/css/ambeta.main.css': 'assets/less/ambeta.main.less'
         }
       }
     },
 
     watch: {
       build: {
-        files: ['assets/src/less/*.less', 'assets/src/js/*.js'],
+        files: ['assets/less/*.less', 'assets/js/*.js'],
         tasks: ['uglify', 'less'],
         options: { spawn: false }
       }
