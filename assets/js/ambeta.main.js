@@ -54,7 +54,7 @@
             $(window).trigger(myEvent);
           }
 
-
+          oldPosY = newPosY;
         });
       }
       // bind window scroll events on normal screens 
@@ -77,6 +77,7 @@
             myEvent.namespace = 'scrollDown';
             $(window).trigger(myEvent);
           }
+          
           oldPosY = newPosY;
         });
       }

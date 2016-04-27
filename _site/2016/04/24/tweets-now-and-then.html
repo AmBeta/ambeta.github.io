@@ -10,9 +10,9 @@
     <meta name="keyword"  content="Front-end Web, JavaScript, HTML, CSS" />
     <link rel="shortcut icon" href="imgs/favicon.ico" />
 
-    <title>Tags - 三土的博客 | AmBeta Blog</title>
+    <title>杂七杂八的随感［持续更新］ - 三土的博客 | AmBeta Blog</title>
 
-    <link rel="canonical" href="http://ambeta.github.io/tags.html">
+    <link rel="canonical" href="http://ambeta.github.io/2016/04/24/tweets-now-and-then.html">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -112,197 +112,140 @@
 </script>
 
 
-    <!-- Tags Header -->
-<header>
+    <!-- Post Header -->
+<header class="post-header">
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-                <div class="tags-header">
-                    <h1>
-                        <span class="tags-t">T</span>
-                        <span class="tags-a">A</span>
-                        <span class="tags-g">G</span>
-                        <span class="tags-s">S</span>
-                    </h1>
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
+                <div class="tags">
+                    
+                    <a class="tag" href="/tags.html#tweets" title="tweets">tweets</a>
+                    
+                    <a class="tag" href="/tags.html#todo" title="todo">todo</a>
+                    
+                </div>
+                <h1>杂七杂八的随感［持续更新］</h1>
+                <div class="post-meta">
+                    Posted on April 24, 2016
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2 post-container">
 
-            <!-- Tag Cloud -->
-            <div id="tag-cloud" class="tags">
-                
-                <a class="tag" name="JavaScript" href="#JavaScript" title="JavaScript" rel="1">JavaScript</a>
-                
-                <a class="tag" name="MVC" href="#MVC" title="MVC" rel="1">MVC</a>
-                
-                <a class="tag" name="jekyll" href="#jekyll" title="jekyll" rel="2">jekyll</a>
-                
-                <a class="tag" name="react" href="#react" title="react" rel="1">react</a>
-                
-                <a class="tag" name="tweets" href="#tweets" title="tweets" rel="1">tweets</a>
-                
-                <a class="tag" name="todo" href="#todo" title="todo" rel="1">todo</a>
-                
-                <a class="tag" name="响应式设计" href="#响应式设计" title="响应式设计" rel="1">响应式设计</a>
-                
+                <p>博客开起来容易，维护起来却不容易Orz。。脑子里的 TodoList 越来越长，但确实又没有集中的时间来处理，想在微博上记下一些想法和计划，但是久了之后就发现它们被无情地淹没在了各种转发的段子中了，索性在这里开一个杂七杂八的记录档，tweets now and then，记录自己关于 <strong>前端开发</strong> 的一些 <strong>想法与计划</strong>。</p>
+
+<p><em>生活上的吐槽依然放在微博（<a href="http://weibo.com/andrewidiot">在下字三土</a>），有兴趣的可以互粉一下哦～</em></p>
+
+<h2 id="section">2016/4/24 22:24</h2>
+
+<h4 id="section-1">个人博客</h4>
+
+<p>花了一整个周末的时间把自己博客的整个架构大改了一下。  css用less重新编写了，真是个大工程，不过改完之后感觉舒畅了好多，css终于不是一团乱麻了。  <br />
+然后为文章添加了右侧边栏导航，这个真的是想做很久了，文章太长看着难受！  <br />
+最后用grunt进行自动化构建。</p>
+
+<p>改完之后虽然页面上看起来并没有多大改变，但是感觉整个项目结构清晰了很多，也更加愿意去维护了。</p>
+
+<h2 id="section-2">2016/4/22 22:13</h2>
+
+<h4 id="section-3">公司项目架构</h4>
+
+<p>目前公司项目的架构是由一个牛人一手搭建起来的，我是没办法想象这种事情，但是我希望将来我也可以信手拈来，哈哈～</p>
+
+<p>然而，搭完架构（或者还没有完全搭完？！）之后，牛人就离开了，文档和规范什么的都还没有写，也没有人整理，因此后来人都只能够根据自己对代码的理解来继续进行开发，从而造成了各个页面的代码风格迥异，甚至都没有遵循架构来开发，因此后续的维护压力也会越来越大。</p>
+
+<p>目前公司的产品也比较稳定了，是时候开始对代码进行梳理，甚至是对整个架构进行整理了，基于此来优化页面的性能，例如template的进一步提取，数据模型的整合等等，这些都是很大的工程，需要一些具体的实施计划。</p>
+
+<h4 id="section-4">第一次刻意使用闭包</h4>
+
+<p>今天在改一个Bug的时候用到了闭包的技术，虽然说JS中闭包并不少见，但如此刻意地利用闭包的技术还是第一次，也让我注意到了一些关于事件回调绑定的问题，这个有待进一步实验验证，需要加入到TodoList中。</p>
+
+<h4 id="todo">Todo</h4>
+
+<ul>
+  <li>整理关于事件回调函数闭包的问题，关注参数的传递方式、闭包中的函数调用等[★★★★★]</li>
+</ul>
+
+<h2 id="section-5">2016/4/21 22:50</h2>
+
+<h4 id="section-6">关于转行</h4>
+
+<p>从开始学习前端开发到正式从事相关的工作已经有一段时间了。一直想写个文档纪录一下自己的学习过程以及面试的经验，但是想想就觉得工程非常浩大，而且自己目前还处于初学者的阶段，并不适合在这里夸夸其谈，这个Todo就暂时搁置吧。</p>
+
+<h4 id="section-7">公司项目</h4>
+
+<p>在公司做项目也快有一个星期了，完成了几个需求，修复了一些bug，读的代码量也算是挺多了，基本的架构都搞清楚了，很多的坑也见识到了，一些自己的想法初见雏形，希望再了解更多之后做出一些改变，小公司好的地方就是可以充分地发挥。</p>
+
+<p>公司做的是单页面应用（SPA），属于比较前卫的产品，也是我在前端领域最感兴趣的一块！MVC框架用的是 Stapes.js，模板库用的是 handlebars.js，工具库混用 underscore.js 和 jquery.js，布局和组件库用的是 bootstrap。</p>
+
+<p>公司的各个页面基本都采用了 MVC 的思想，但目前代码看下来，并 <em>没有</em> 觉得其实现了 MVC 思想的关键部分；使用了 Stapes.js 框架，但仅仅用到了他的自定义事件触发与回调机制，核心的类继承、数据模型自动事件触发都没有用到，而且 <code class="highlighter-rouge">view.js</code> 中的代码充斥着大量的业务逻辑甚至是直接的数据操作，这些都与 MVC 的思想相去甚远。</p>
+
+<p>使用 handlebars 定义的模板不错，但是没有文档对调用时的 <code class="highlighter-rouge">context</code> 进行说明，而且 <code class="highlighter-rouge">helper</code> 与 <code class="highlighter-rouge">partial</code> 的注册函数放在了模板文件之外，让人有些不知所云。</p>
+
+<p>搭建架构的牛X同事自己写了一个函数库，但是文档不全，代码读起来非常费劲，这个要加入到 Todo List，代码读都读了，不写个接口文档出来岂不是白读了！</p>
+
+<p>今天做一个需求，需要联动两个不同路由下的参数配置，前人的做法非常hack，是将参数放在了一个公用的 navbar 元素的 <code class="highlighter-rouge">data</code> 属性里面，我在改另一个bug的时候碰巧发现了，不然我又得搞出另一种hack来，这样以后代码还怎么读！  <br />
+我觉得把这种需要共享的变量放到一个全局命名空间中再适合不过了，在一个文件中统一定义这些参数的默认值，这样可以非常方便地查找到共享的参数，同时也减轻了DOM元素的压力，而且关键是不用hack啊！（我一直对 <code class="highlighter-rouge">data</code> 属性有深深的成见，希望是我的误解。。</p>
+
+<h4 id="todo-1">Todo</h4>
+
+<ul>
+  <li>完善自定义库函数的接口文档 [★★★★★]</li>
+  <li>完善模板库的调用上下文接口文档 [★★★☆]</li>
+  <li>总结不同路由下的公共参数，并将其归纳到一个统一的命名空间中 [★★]</li>
+</ul>
+
+
+                <hr>
+
             </div>
 
-            <!-- Taged Posts List -->
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="JavaScript">
-                    <span class="tag-text">JavaScript</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/23/game2048-mvc.html">
-                        <h2 class="post-title">
-                            利用MVC思想实现的2048小游戏
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-23
-                    </p>
+            <!-- Side Navbar -->
+            <div class="col-md-2 col-lg-2 post-sidebar-container">
+                <div class="post-sidebar hidden-print hidden-xs hidden-sm">
+                    <nav id="post-sidebar-nav" class="post-sidebar-nav affix-bottom">
+                    </nav>
+                    <a href="#top" class="back-to-top"> 返回顶部 </a>
                 </div>
-                <hr>
-                
             </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="MVC">
-                    <span class="tag-text">MVC</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/23/game2048-mvc.html">
-                        <h2 class="post-title">
-                            利用MVC思想实现的2048小游戏
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-23
-                    </p>
-                </div>
-                <hr>
-                
+        </div>
+
+        <!-- Pager -->
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/04/01/reactjs-study-notes-first.html" data-toggle="tooltip" data-placement="top" title="react.js学习记录——实现一个简单的消息中心组件">
+                        Previous Post
+                        <br />
+                        <span>react.js学习记录——实现一个简单的消息中心组件</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/04/24/compatibility-of-click-and-touch.html" data-toggle="tooltip" data-placement="top" title="移动端的触摸事件接口与常见问题">
+                        Next Post
+                        <br />
+                        <span>移动端的触摸事件接口与常见问题</span>
+                        </a>
+                    </li>
+                    
+                </ul>
             </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="jekyll">
-                    <span class="tag-text">jekyll</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/28/jekyll-cookbook.html">
-                        <h2 class="post-title">
-                            jekyll + gh-pages搭建个人博客常见问题记录
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-28
-                    </p>
-                </div>
-                <hr>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/27/build-website-with-jekyll.html">
-                        <h2 class="post-title">
-                            如何使用jekyll建站
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-27
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="react">
-                    <span class="tag-text">react</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/01/reactjs-study-notes-first.html">
-                        <h2 class="post-title">
-                            react.js学习记录——实现一个简单的消息中心组件
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-01
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="tweets">
-                    <span class="tag-text">tweets</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/24/tweets-now-and-then.html">
-                        <h2 class="post-title">
-                            杂七杂八的随感［持续更新］
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-24
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="todo">
-                    <span class="tag-text">todo</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/24/tweets-now-and-then.html">
-                        <h2 class="post-title">
-                            杂七杂八的随感［持续更新］
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-24
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="响应式设计">
-                    <span class="tag-text">响应式设计</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/24/compatibility-of-click-and-touch.html">
-                        <h2 class="post-title">
-                            移动端的触摸事件接口与常见问题
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-24
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
         </div>
     </div>
-</div>
+</article>
+
+
 
 
     <!-- Footer -->

@@ -10,9 +10,9 @@
     <meta name="keyword"  content="Front-end Web, JavaScript, HTML, CSS" />
     <link rel="shortcut icon" href="imgs/favicon.ico" />
 
-    <title>Tags - 三土的博客 | AmBeta Blog</title>
+    <title>移动端的触摸事件接口与常见问题 - 三土的博客 | AmBeta Blog</title>
 
-    <link rel="canonical" href="http://ambeta.github.io/tags.html">
+    <link rel="canonical" href="http://ambeta.github.io/2016/04/24/compatibility-of-click-and-touch.html">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -112,197 +112,131 @@
 </script>
 
 
-    <!-- Tags Header -->
-<header>
+    <!-- Post Header -->
+<header class="post-header">
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-                <div class="tags-header">
-                    <h1>
-                        <span class="tags-t">T</span>
-                        <span class="tags-a">A</span>
-                        <span class="tags-g">G</span>
-                        <span class="tags-s">S</span>
-                    </h1>
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
+                <div class="tags">
+                    
+                    <a class="tag" href="/tags.html#响应式设计" title="响应式设计">响应式设计</a>
+                    
+                </div>
+                <h1>移动端的触摸事件接口与常见问题</h1>
+                <div class="post-meta">
+                    Posted on April 24, 2016
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2 post-container">
 
-            <!-- Tag Cloud -->
-            <div id="tag-cloud" class="tags">
-                
-                <a class="tag" name="JavaScript" href="#JavaScript" title="JavaScript" rel="1">JavaScript</a>
-                
-                <a class="tag" name="MVC" href="#MVC" title="MVC" rel="1">MVC</a>
-                
-                <a class="tag" name="jekyll" href="#jekyll" title="jekyll" rel="2">jekyll</a>
-                
-                <a class="tag" name="react" href="#react" title="react" rel="1">react</a>
-                
-                <a class="tag" name="tweets" href="#tweets" title="tweets" rel="1">tweets</a>
-                
-                <a class="tag" name="todo" href="#todo" title="todo" rel="1">todo</a>
-                
-                <a class="tag" name="响应式设计" href="#响应式设计" title="响应式设计" rel="1">响应式设计</a>
-                
+                <p>响应式设计是近几年来的热门和趋势，同一套页面和代码在桌面端与移动端都有非常好的体验确实是很酷的事情。布局方面，使用CSS的百分比属性以及诸如 <code class="highlighter-rouge">em</code>, <code class="highlighter-rouge">rem</code> 等相对属性都能取得不错的效果；交互方面，则主要需要注意移动端的<strong>触摸事件</strong>与桌面端<strong>点击事件</strong>的不同。</p>
+
+<h2 id="api">触摸事件API</h2>
+
+<p>HTML5中为触摸屏设备新增了触摸事件，提供的接口主要有 <code class="highlighter-rouge">TouchEvent</code> （触摸状态改变时触发的事件）, <code class="highlighter-rouge">Touch</code> （用户与触摸屏的一个接触点）以及 <code class="highlighter-rouge">TouchList</code> （多点触摸时用户与屏幕的所有接触点的集合）。</p>
+
+<h3 id="section">触摸事件的类别</h3>
+
+<p>触摸事件主要有 <code class="highlighter-rouge">touchstart</code>, <code class="highlighter-rouge">touchend</code>, <code class="highlighter-rouge">touchmove</code>, <code class="highlighter-rouge">touchcancled</code> 四种类型，可以通过 <code class="highlighter-rouge">TouchEvent.type</code> 来检查事件的类型。</p>
+
+<h4 id="touchstart">touchstart</h4>
+
+<p>当手指接触屏幕时触发，即使有一只手指已经放在了屏幕上也会触发该事件。  <br />
+该事件的 <code class="highlighter-rouge">target</code> 会被设置为事件触发位置的元素。</p>
+
+<h4 id="touchend">touchend</h4>
+
+<p>当手指离开屏幕时触发，包括抬起手指以及手指从屏幕边缘滑出。  <br />
+该事件的 <code class="highlighter-rouge">target</code> 会被设置为 <code class="highlighter-rouge">touchstart</code> 事件触发位置的元素，即使 <code class="highlighter-rouge">touchend</code> 事件触发时的位置已经脱离了原来的元素也一样。</p>
+
+<h4 id="touchmove">touchmove</h4>
+
+<p>当手指在屏幕上移动时触发，当触摸的半径、角度以及力度等发生变化时也会触发该事件。  <br />
+与 <code class="highlighter-rouge">touchend</code> 事件一样，该事件的 <code class="highlighter-rouge">target</code> 也会被设置为 <code class="highlighter-rouge">touchstart</code> 事件触发位置的元素。</p>
+
+<blockquote>
+  <p><strong>注意：</strong> <code class="highlighter-rouge">touchmove</code> 事件触发的频率与浏览器以及设备的硬件水平相关，因此不建议依赖该事件进行过细粒度的计算。</p>
+</blockquote>
+
+<h4 id="touchcancel">touchcancel</h4>
+
+<p>当触摸被某种方式中断时触发。  <br />
+触摸中断的具体原因会根据设备或浏览器的不同而存在差异，一下是一些常见的原因：</p>
+
+<ul>
+  <li>有其他事件触发。例如触摸期间弹出提示框。</li>
+  <li>触摸点移出了文档内容区域。例如触摸点移动到了浏览器的UI元素上或者插件等外部内容上。</li>
+  <li>多点触摸时，用户每增加一个触摸点，上一个 <code class="highlighter-rouge">Touch</code> 就会从 <code class="highlighter-rouge">TouchList</code> 中取消。</li>
+</ul>
+
+<h3 id="section-1">触摸事件的属性</h3>
+
+<p>一个 <code class="highlighter-rouge">TouchEvent</code> 中提供了 <code class="highlighter-rouge">altKey</code>, <code class="highlighter-rouge">changedTouches</code>, <code class="highlighter-rouge">ctrlKey</code>, <code class="highlighter-rouge">metaKey</code>, <code class="highlighter-rouge">shiftKey</code>, <code class="highlighter-rouge">targetTouches</code>, <code class="highlighter-rouge">touches</code> 等属性，其中——</p>
+
+<ul>
+  <li><code class="highlighter-rouge">changedTouches</code> 是由多个 <code class="highlighter-rouge">Touch</code> 对象组成的 <code class="highlighter-rouge">TouchList</code>，其中保存着相对于上一次触摸事件触发时改变了的触摸点。</li>
+  <li><code class="highlighter-rouge">targetTouches</code> 是由多个 <code class="highlighter-rouge">Touch</code> 对象组成的 <code class="highlighter-rouge">TouchList</code>，其中保存着当前所有触摸点的信息以及触摸起始位置元素的触摸点信息。</li>
+  <li><code class="highlighter-rouge">touches</code> 是由多个 <code class="highlighter-rouge">Touch</code> 对象组成的 <code class="highlighter-rouge">TouchList</code>，其中保存着当前所有触摸点的信息，<strong>不包含</strong>触摸点的变化信息。</li>
+</ul>
+
+<p><em>更多详细可参阅：<a href="https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent">MDN</a></em></p>
+
+<h2 id="section-2">触摸事件与点击事件的兼容</h2>
+
+<p>在处理元素的点击事件时，一般绑定的是 <code class="highlighter-rouge">click</code> 事件，但在移动端进行触摸点击操作时会感到明显的延迟（尤其是在iPhone上），这主要是因为在触屏设备上事件的触发顺序不同。</p>
+
+<h3 id="section-3">事件的触发顺序</h3>
+
+<h3 id="section-4">阻止点击事件触发</h3>
+
+<h3 id="section-5">检测触摸事件是否支持</h3>
+
+<p>##</p>
+
+
+                <hr>
+
             </div>
 
-            <!-- Taged Posts List -->
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="JavaScript">
-                    <span class="tag-text">JavaScript</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/23/game2048-mvc.html">
-                        <h2 class="post-title">
-                            利用MVC思想实现的2048小游戏
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-23
-                    </p>
+            <!-- Side Navbar -->
+            <div class="col-md-2 col-lg-2 post-sidebar-container">
+                <div class="post-sidebar hidden-print hidden-xs hidden-sm">
+                    <nav id="post-sidebar-nav" class="post-sidebar-nav affix-bottom">
+                    </nav>
+                    <a href="#top" class="back-to-top"> 返回顶部 </a>
                 </div>
-                <hr>
-                
             </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="MVC">
-                    <span class="tag-text">MVC</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/23/game2048-mvc.html">
-                        <h2 class="post-title">
-                            利用MVC思想实现的2048小游戏
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-23
-                    </p>
-                </div>
-                <hr>
-                
+        </div>
+
+        <!-- Pager -->
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/04/24/tweets-now-and-then.html" data-toggle="tooltip" data-placement="top" title="杂七杂八的随感［持续更新］">
+                        Previous Post
+                        <br />
+                        <span>杂七杂八的随感［持续更新］</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
             </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="jekyll">
-                    <span class="tag-text">jekyll</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/28/jekyll-cookbook.html">
-                        <h2 class="post-title">
-                            jekyll + gh-pages搭建个人博客常见问题记录
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-28
-                    </p>
-                </div>
-                <hr>
-                
-                <div class="post-preview">
-                    <a href="/2016/03/27/build-website-with-jekyll.html">
-                        <h2 class="post-title">
-                            如何使用jekyll建站
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-03-27
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="react">
-                    <span class="tag-text">react</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/01/reactjs-study-notes-first.html">
-                        <h2 class="post-title">
-                            react.js学习记录——实现一个简单的消息中心组件
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-01
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="tweets">
-                    <span class="tag-text">tweets</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/24/tweets-now-and-then.html">
-                        <h2 class="post-title">
-                            杂七杂八的随感［持续更新］
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-24
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="todo">
-                    <span class="tag-text">todo</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/24/tweets-now-and-then.html">
-                        <h2 class="post-title">
-                            杂七杂八的随感［持续更新］
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-24
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="响应式设计">
-                    <span class="tag-text">响应式设计</span>
-                </span>
-                
-                <div class="post-preview">
-                    <a href="/2016/04/24/compatibility-of-click-and-touch.html">
-                        <h2 class="post-title">
-                            移动端的触摸事件接口与常见问题
-                        </h2>
-                    </a>
-                    <p class="post-meta">
-                        2016-04-24
-                    </p>
-                </div>
-                <hr>
-                
-            </div>
-            
         </div>
     </div>
-</div>
+</article>
+
+
 
 
     <!-- Footer -->

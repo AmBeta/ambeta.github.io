@@ -144,7 +144,26 @@
 <!-- Post Content Preview -->
 
 <div class="post-preview">
-    <a href="/2016/04/22/tweets-now-and-then.html">
+    <a href="/2016/04/24/compatibility-of-click-and-touch.html">
+        <h2 class="post-title">
+            移动端的触摸事件接口与常见问题
+        </h2>
+        <div class="post-content-preview">
+            响应式设计是近几年来的热门和趋势，同一套页面和代码在桌面端与移动端都有非常好的体验确实是很酷的事情。布局方面，使用CSS的百分比属性以及诸如 em, rem 等相对属性都能取得不错的效果；交互方面，则主要需要注意移动端的触摸事件与桌面端点击事件的不同。
+
+触摸事件API
+
+...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted on April 24, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/04/24/tweets-now-and-then.html">
         <h2 class="post-title">
             杂七杂八的随感［持续更新］
         </h2>
@@ -153,7 +172,7 @@
         </div>
     </a>
     <p class="post-meta">
-        Posted on April 22, 2016
+        Posted on April 24, 2016
     </p>
 </div>
 <hr>
@@ -315,7 +334,7 @@ STATEMENT: This theme deriv...
 <script src="/assets/js/bootstrap.min.js "></script>
 
 <!-- ambeta.main.js -->
-<script src="/assets/js/ambeta.main.js "></script>
+<script src="/assets/js/ambeta.main.min.js "></script>
 
 <!-- async load function -->
 <script>
@@ -337,30 +356,6 @@ STATEMENT: This theme deriv...
 </script>
 
 <script>
-    // show top navbar when scroll up
-    // $(window).on('scroll', (function(e) {
-    //     var oldPosY = 0;
-    //     var $navbar = $('.navbar-custom, .navbar-header');
-    //     var tiktok;
-    //     return function() {
-    //         var newPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-
-    //         newPosY > 30 ? $navbar.addClass('fixed') : $navbar.removeClass('fixed visible');
-    //         if (newPosY < 0 || Math.abs(newPosY - oldPosY) < 20) return;
-    //         if (oldPosY > newPosY) {        // scroll up
-    //             $navbar.addClass('visible');
-    //             // automatically hide the navbar
-    //             clearTimeout(tiktok);
-    //             tiktok = setTimeout(function() {
-    //                 $navbar.removeClass('visible');
-    //             }, 3000);
-    //         } else if (newPosY > oldPosY) {  // scroll down
-    //             $navbar.removeClass('visible');
-    //         }
-    //         oldPosY = newPosY;
-    //     };
-    // })());
-
     // only load tagcloud.js in tag.html
     if($('#tag-cloud').length !== 0) {
         async('/assets/js/jquery.tagcloud.js',function (){
@@ -373,7 +368,7 @@ STATEMENT: This theme deriv...
     }
     // only generate doc navbar in page with doc-navbar enabled
     if ($('#post-sidebar-nav').length !== 0) {
-        async('/assets/js/jquery.gennav.js', function() {
+        async('/assets/js/jquery.gennav.min.js', function() {
             $('#post-sidebar-nav').genDocNav({
                 navItems: '.post-container h2, h3, h4'
             });
@@ -382,6 +377,7 @@ STATEMENT: This theme deriv...
                 offset: 20
             });
 
+            // fix post sidebar on the right side
             var $postSidebar = $('.post-sidebar');
             var startPosY = $('.post-sidebar-container').offset().top;
             $(window).on('scroll', function(e) {

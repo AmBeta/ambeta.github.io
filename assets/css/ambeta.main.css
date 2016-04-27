@@ -30,10 +30,10 @@ a img:focus {
   cursor: zoom-in;
 }
 /* Post Content */
-.post-container article {
+article {
   overflow-x: hidden;
 }
-.post-container blockquote {
+article .post-container blockquote {
   color: #808080;
   background: rgba(43, 115, 105, 0.1);
   font-style: italic;
@@ -41,22 +41,28 @@ a img:focus {
   margin: 20px 0;
   border-left: 0.5em solid rgba(43, 115, 105, 0.4);
 }
-.post-container blockquote p {
-  margin: 0;
+article .post-container blockquote p {
+  margin: 5px;
 }
-.post-container small.img-hint {
+article .post-container p {
+  margin: 20px 0;
+}
+article .post-container p em {
+  color: #777;
+}
+article .post-container small.img-hint {
   display: block;
   margin-top: -20px;
   text-align: center;
 }
-.post-container br + small.img-hint {
+article .post-container br + small.img-hint {
   margin-top: -40px;
 }
-.post-container img.shadow {
+article .post-container img.shadow {
   box-shadow: rgba(255, 255, 255, 0.25) 0px 2px 5px 0px;
 }
 @media screen and (max-width: 767px) {
-  .post-container select {
+  article .post-container select {
     -webkit-appearance: none;
     margin-top: 15px;
     color: #2B7369;
@@ -65,49 +71,49 @@ a img:focus {
     background: white;
   }
 }
-.post-container .table th,
-.post-container .table td {
+article .post-container .table th,
+article .post-container .table td {
   border: 1px solid #eee !important;
 }
-.post-container hr {
+article .post-container hr {
   margin-top: 10px;
   margin-bottom: 20px;
 }
-.post-container hr.small {
+article .post-container hr.small {
   max-width: 100px;
   margin: 15px auto;
   border-width: 4px;
   border-color: white;
 }
-.post-container pre,
-.post-container .table-responsive {
+article .post-container pre,
+article .post-container .table-responsive {
   -webkit-overflow-scrolling: touch;
 }
-.post-container pre code {
+article .post-container pre code {
   display: block;
   width: auto;
   white-space: pre;
   word-wrap: normal;
 }
-.post-container a {
+article .post-container a {
   color: #2B7369;
 }
-.post-container a:hover,
-.post-container a:focus {
+article .post-container a:hover,
+article .post-container a:focus {
   color: #39988b;
 }
-.post-container h1, h2, h3, h4, h5, h6 {
+article .post-container h1, h2, h3, h4, h5, h6 {
   margin: 30px 0 10px;
 }
-.post-container h1,
-.post-container h2,
-.post-container h3 {
+article .post-container h1,
+article .post-container h2,
+article .post-container h3 {
   position: relative;
 }
 @media only screen and (min-width: 800px) {
-  .post-container h1:before,
-  .post-container h2:before,
-  .post-container h3:before {
+  article .post-container h1:before,
+  article .post-container h2:before,
+  article .post-container h3:before {
     content: "#";
     position: absolute;
     top: 0;
@@ -115,42 +121,44 @@ a img:focus {
     color: #39988b;
   }
 }
-.post-container h5 {
+article .post-container h5 {
   font-size: 19px;
   font-weight: 600;
   color: gray;
 }
-.post-container h5 + p {
+article .post-container h5 + p {
   margin-top: 5px;
 }
-.post-container h6 {
+article .post-container h6 {
   font-size: 16px;
   font-weight: 600;
   color: gray;
 }
-.post-container h6 + p {
+article .post-container h6 + p {
   margin-top: 5px;
 }
-.post-container img {
+article .post-container img {
   display: block;
   max-width: 100%;
   height: auto;
   margin: 0 auto;
 }
-.post-container ul,
-.post-container ol {
+article .post-container ul,
+article .post-container ol {
   padding-left: 30px;
 }
-.post-container ul + .post-container ul,
-.post-container ul + .post-container ol,
-.post-container ol + .post-container ul,
-.post-container ol + .post-container ol {
+article .post-container ul + article .post-container ul,
+article .post-container ul + article .post-container ol,
+article .post-container ol + article .post-container ul,
+article .post-container ol + article .post-container ol {
   margin-bottom: 10px;
 }
-.post-container li p {
+article .post-container ul li p,
+article .post-container ol li p {
   margin: 5px 0 10px;
 }
-.post-container li h1, h2, h3, h4, h5, h6 {
+article .post-container ul li h1, h2, h3, h4, h5, h6,
+article .post-container ol li h1, h2, h3, h4, h5, h6 {
   line-height: 2;
   margin-top: 20px;
 }
@@ -616,6 +624,11 @@ footer .copyright a:focus {
   margin: 0 0 0 -0.5em;
   font-size: 4em;
   font-weight: 800;
+}
+@media only screen and (max-width: 767px) {
+  .tags-header h1 {
+    font-size: 3em;
+  }
 }
 .tags-header h1 .tags-t,
 .tags-header h1 .tags-a,
