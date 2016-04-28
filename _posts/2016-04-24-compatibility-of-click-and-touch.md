@@ -58,10 +58,30 @@ HTML5中为触摸屏设备新增了触摸事件，提供的接口主要有 `Touc
 
 ### 事件的触发顺序
 
+在触屏设备上，一次触摸点击的操作会依次触发 `touchstart`, (`touchmove`), `touchend` 以及 `click` 事件。
 
+对于触屏设备而言，有各种多次触摸或者多点触摸的手势，浏览器需要时间对触发的时间进行判断。例如在 iOS 的 Safari 浏览器中，双击屏幕可以进行放大或缩小的操作，因此一次触摸完成后，浏览器需要等待一段时间来判断是否会发生双击触摸时间，如果没有，则触发 `click` 事件，在 iOS 的 Safari 中，从 `touchEnd` 到 `click` 这段时间设置为了 **300ms**，这就是使用 `onClick` 事件带来明显延迟的原因。
 
 ### 阻止点击事件触发
 
+为了避免出现网站在触屏设备上的点击延迟问题，可以通过添加对 `touchstart` 或者 `touchend` 事件的监听，并使用 `event.preventDefault()` 来阻止 `click` 事件的触发。示例如下：
+
+```
+document.querySelector('#element').addEventListener('click', function (e) {
+        // do something
+    });
+document.querySelector('#element').addEventListener('touchend', function (e) {
+        e.preventDefault();
+        // do something the same
+    });
+```
+
+但是这种做法有个问题，当使用 `touchend` 事件时，问题不是很大，但有时为了获得更快的响应速度会选择使用 `touchstart` 事件，添加 `event.preventDefault()` 就会屏蔽掉浏览器的滚动操作。
+
+> 使用 FastClick 插件可以较好地解决上述问题：[https://github.com/ftlabs/fastclick](https://github.com/ftlabs/fastclick)
+
 ### 检测触摸事件是否支持
 
-## 
+#### 利用window对象属性
+
+#### 利用document对象属性 
