@@ -10,9 +10,9 @@
     <meta name="keyword"  content="Front-end Web, JavaScript, HTML, CSS" />
     <link rel="shortcut icon" href="imgs/favicon.ico" />
 
-    <title>移动端的触摸事件接口与常见问题 - 三土的博客 | AmBeta Blog</title>
+    <title>杂七杂八的随感［持续更新］ - 三土的博客 | AmBeta Blog</title>
 
-    <link rel="canonical" href="http://ambeta.github.io/2016/04/24/compatibility-of-click-and-touch.html">
+    <link rel="canonical" href="http://ambeta.github.io/2016/04/28/tweets-now-and-then.html">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -119,12 +119,14 @@
             <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <div class="tags">
                     
-                    <a class="tag" href="/tags.html#响应式设计" title="响应式设计">响应式设计</a>
+                    <a class="tag" href="/tags.html#tweets" title="tweets">tweets</a>
+                    
+                    <a class="tag" href="/tags.html#todo" title="todo">todo</a>
                     
                 </div>
-                <h1>移动端的触摸事件接口与常见问题</h1>
+                <h1>杂七杂八的随感［持续更新］</h1>
                 <div class="post-meta">
-                    Posted on April 24, 2016
+                    Posted on April 28, 2016
                 </div>
             </div>
         </div>
@@ -137,112 +139,78 @@
         <div class="row">
             <div class="col-md-10 col-lg-8 col-lg-offset-2 post-container">
 
-                <p>响应式设计是近几年来的热门和趋势，同一套页面和代码在桌面端与移动端都有非常好的体验确实是很酷的事情。布局方面，使用CSS的百分比属性以及诸如 <code class="highlighter-rouge">em</code>, <code class="highlighter-rouge">rem</code> 等相对属性都能取得不错的效果；交互方面，则主要需要注意移动端的<strong>触摸事件</strong>与桌面端<strong>点击事件</strong>的不同。</p>
+                <p>博客开起来容易，维护起来却不容易Orz。。脑子里的 TodoList 越来越长，但确实又没有集中的时间来处理，想在微博上记下一些想法和计划，但是久了之后就发现它们被无情地淹没在了各种转发的段子中了，索性在这里开一个杂七杂八的记录档，tweets now and then，记录自己关于 <strong>前端开发</strong> 的一些 <strong>想法与计划</strong>。</p>
 
-<h2 id="api">触摸事件API</h2>
+<p><em>生活上的吐槽依然放在微博（<a href="http://weibo.com/andrewidiot">在下字三土</a>），有兴趣的可以互粉一下哦～</em></p>
 
-<p>HTML5中为触摸屏设备新增了触摸事件，提供的接口主要有 <code class="highlighter-rouge">TouchEvent</code> （触摸状态改变时触发的事件）, <code class="highlighter-rouge">Touch</code> （用户与触摸屏的一个接触点）以及 <code class="highlighter-rouge">TouchList</code> （多点触摸时用户与屏幕的所有接触点的集合）。</p>
+<h2 id="section">2016/4/28 23:08:00</h2>
 
-<h3 id="section">触摸事件的类别</h3>
+<h4 id="section-1">公司项目</h4>
 
-<p>触摸事件主要有 <code class="highlighter-rouge">touchstart</code>, <code class="highlighter-rouge">touchend</code>, <code class="highlighter-rouge">touchmove</code>, <code class="highlighter-rouge">touchcancled</code> 四种类型，可以通过 <code class="highlighter-rouge">TouchEvent.type</code> 来检查事件的类型。</p>
+<p>一个需求做了三天终于可以提测了，感觉像过了一个世纪Orz。。之前觉得说公司项目的OO写得不是很好，但这次需求接触到的这个模块，有一部分还是让我觉得很不错的。</p>
 
-<h4 id="touchstart">touchstart</h4>
+<p>我们已经有一个用来查询各种信息的组件了，也有一个用来查询营销活动详细信息的组件了，现在我需要做一个仅查询部分信息的模态框组件。OK，很简单，我实例化了一个信息查询组件的控制器 <code class="highlighter-rouge">QueryControler</code>，又实例化了一个查询营销活动详情的控制器 <code class="highlighter-rouge">EventQueryControler</code>，<code class="highlighter-rouge">EventQueryControler</code> 的数据模型就是一个营销活动详情查询的数据模型，我只需要为这个模态框组件提供相应的视图 <code class="highlighter-rouge">View</code> 并作为 <code class="highlighter-rouge">EventQueryControler</code> 的视图部分就可以了；在这个 <code class="highlighter-rouge">View</code> 中，我只需要提供渲染数据的方法供控制器调用即可。</p>
 
-<p>当手指接触屏幕时触发，即使有一只手指已经放在了屏幕上也会触发该事件。  <br />
-该事件的 <code class="highlighter-rouge">target</code> 会被设置为事件触发位置的元素。</p>
+<p>如此封装，让组件的开发确实简单了很多，我不需要知道查询是怎么进行的，数据又是怎么处理的，我只关心我需要展示的查询框以及查询结果，而这些都是很直观可以处理的。</p>
 
-<h4 id="touchend">touchend</h4>
+<h2 id="section-2">2016/4/24 22:24</h2>
 
-<p>当手指离开屏幕时触发，包括抬起手指以及手指从屏幕边缘滑出。  <br />
-该事件的 <code class="highlighter-rouge">target</code> 会被设置为 <code class="highlighter-rouge">touchstart</code> 事件触发位置的元素，即使 <code class="highlighter-rouge">touchend</code> 事件触发时的位置已经脱离了原来的元素也一样。</p>
+<h4 id="section-3">个人博客</h4>
 
-<h4 id="touchmove">touchmove</h4>
+<p>花了一整个周末的时间把自己博客的整个架构大改了一下。  css用less重新编写了，真是个大工程，不过改完之后感觉舒畅了好多，css终于不是一团乱麻了。  <br />
+然后为文章添加了右侧边栏导航，这个真的是想做很久了，文章太长看着难受！  <br />
+最后用grunt进行自动化构建。</p>
 
-<p>当手指在屏幕上移动时触发，当触摸的半径、角度以及力度等发生变化时也会触发该事件。  <br />
-与 <code class="highlighter-rouge">touchend</code> 事件一样，该事件的 <code class="highlighter-rouge">target</code> 也会被设置为 <code class="highlighter-rouge">touchstart</code> 事件触发位置的元素。</p>
+<p>改完之后虽然页面上看起来并没有多大改变，但是感觉整个项目结构清晰了很多，也更加愿意去维护了。</p>
 
-<blockquote>
-  <p><strong>注意：</strong> <code class="highlighter-rouge">touchmove</code> 事件触发的频率与浏览器以及设备的硬件水平相关，因此不建议依赖该事件进行过细粒度的计算。</p>
-</blockquote>
+<h2 id="section-4">2016/4/22 22:13</h2>
 
-<h4 id="touchcancel">touchcancel</h4>
+<h4 id="section-5">公司项目架构</h4>
 
-<p>当触摸被某种方式中断时触发。  <br />
-触摸中断的具体原因会根据设备或浏览器的不同而存在差异，一下是一些常见的原因：</p>
+<p>目前公司项目的架构是由一个牛人一手搭建起来的，我是没办法想象这种事情，但是我希望将来我也可以信手拈来，哈哈～</p>
 
-<ul>
-  <li>有其他事件触发。例如触摸期间弹出提示框。</li>
-  <li>触摸点移出了文档内容区域。例如触摸点移动到了浏览器的UI元素上或者插件等外部内容上。</li>
-  <li>多点触摸时，用户每增加一个触摸点，上一个 <code class="highlighter-rouge">Touch</code> 就会从 <code class="highlighter-rouge">TouchList</code> 中取消。</li>
-</ul>
+<p>然而，搭完架构（或者还没有完全搭完？！）之后，牛人就离开了，文档和规范什么的都还没有写，也没有人整理，因此后来人都只能够根据自己对代码的理解来继续进行开发，从而造成了各个页面的代码风格迥异，甚至都没有遵循架构来开发，因此后续的维护压力也会越来越大。</p>
 
-<h3 id="section-1">触摸事件的属性</h3>
+<p>目前公司的产品也比较稳定了，是时候开始对代码进行梳理，甚至是对整个架构进行整理了，基于此来优化页面的性能，例如template的进一步提取，数据模型的整合等等，这些都是很大的工程，需要一些具体的实施计划。</p>
 
-<p>一个 <code class="highlighter-rouge">TouchEvent</code> 中提供了 <code class="highlighter-rouge">altKey</code>, <code class="highlighter-rouge">changedTouches</code>, <code class="highlighter-rouge">ctrlKey</code>, <code class="highlighter-rouge">metaKey</code>, <code class="highlighter-rouge">shiftKey</code>, <code class="highlighter-rouge">targetTouches</code>, <code class="highlighter-rouge">touches</code> 等属性，其中——</p>
+<h4 id="section-6">第一次刻意使用闭包</h4>
+
+<p>今天在改一个Bug的时候用到了闭包的技术，虽然说JS中闭包并不少见，但如此刻意地利用闭包的技术还是第一次，也让我注意到了一些关于事件回调绑定的问题，这个有待进一步实验验证，需要加入到TodoList中。</p>
+
+<h4 id="todo">Todo</h4>
 
 <ul>
-  <li><code class="highlighter-rouge">changedTouches</code> 是由多个 <code class="highlighter-rouge">Touch</code> 对象组成的 <code class="highlighter-rouge">TouchList</code>，其中保存着相对于上一次触摸事件触发时改变了的触摸点。</li>
-  <li><code class="highlighter-rouge">targetTouches</code> 是由多个 <code class="highlighter-rouge">Touch</code> 对象组成的 <code class="highlighter-rouge">TouchList</code>，其中保存着当前所有触摸点的信息以及触摸起始位置元素的触摸点信息。</li>
-  <li><code class="highlighter-rouge">touches</code> 是由多个 <code class="highlighter-rouge">Touch</code> 对象组成的 <code class="highlighter-rouge">TouchList</code>，其中保存着当前所有触摸点的信息，<strong>不包含</strong>触摸点的变化信息。</li>
+  <li>整理关于事件回调函数闭包的问题，关注参数的传递方式、闭包中的函数调用等[★★★★★]</li>
 </ul>
 
-<p><em>更多详细可参阅：<a href="https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent">MDN</a></em></p>
+<h2 id="section-7">2016/4/21 22:50</h2>
 
-<h2 id="section-2">触摸事件与点击事件的兼容</h2>
+<h4 id="section-8">关于转行</h4>
 
-<p>在处理元素的点击事件时，一般绑定的是 <code class="highlighter-rouge">click</code> 事件，但在移动端进行触摸点击操作时会感到明显的延迟（尤其是在iPhone上），这主要是因为在触屏设备上事件的触发顺序不同。</p>
+<p>从开始学习前端开发到正式从事相关的工作已经有一段时间了。一直想写个文档纪录一下自己的学习过程以及面试的经验，但是想想就觉得工程非常浩大，而且自己目前还处于初学者的阶段，并不适合在这里夸夸其谈，这个Todo就暂时搁置吧。</p>
 
-<h3 id="section-3">事件的触发顺序</h3>
+<h4 id="section-9">公司项目</h4>
 
-<p>在触屏设备上，一次触摸点击的操作会依次触发 <code class="highlighter-rouge">touchstart</code>, (<code class="highlighter-rouge">touchmove</code>), <code class="highlighter-rouge">touchend</code> 以及 <code class="highlighter-rouge">click</code> 事件。</p>
+<p>在公司做项目也快有一个星期了，完成了几个需求，修复了一些bug，读的代码量也算是挺多了，基本的架构都搞清楚了，很多的坑也见识到了，一些自己的想法初见雏形，希望再了解更多之后做出一些改变，小公司好的地方就是可以充分地发挥。</p>
 
-<p>对于触屏设备而言，有各种多次触摸或者多点触摸的手势，浏览器需要时间对触发的时间进行判断。例如在 iOS 的 Safari 浏览器中，双击屏幕可以进行放大或缩小的操作，因此一次触摸完成后，浏览器需要等待一段时间来判断是否会发生双击触摸时间，如果没有，则触发 <code class="highlighter-rouge">click</code> 事件，在 iOS 的 Safari 中，从 <code class="highlighter-rouge">touchEnd</code> 到 <code class="highlighter-rouge">click</code> 这段时间设置为了 <strong>300ms</strong>，这就是使用 <code class="highlighter-rouge">onClick</code> 事件带来明显延迟的原因。</p>
+<p>公司做的是单页面应用（SPA），属于比较前卫的产品，也是我在前端领域最感兴趣的一块！MVC框架用的是 Stapes.js，模板库用的是 handlebars.js，工具库混用 underscore.js 和 jquery.js，布局和组件库用的是 bootstrap。</p>
 
-<h3 id="section-4">阻止点击事件触发</h3>
+<p>公司的各个页面基本都采用了 MVC 的思想，但目前代码看下来，并 <em>没有</em> 觉得其实现了 MVC 思想的关键部分；使用了 Stapes.js 框架，但仅仅用到了他的自定义事件触发与回调机制，核心的类继承、数据模型自动事件触发都没有用到，而且 <code class="highlighter-rouge">view.js</code> 中的代码充斥着大量的业务逻辑甚至是直接的数据操作，这些都与 MVC 的思想相去甚远。</p>
 
-<p>为了避免出现网站在触屏设备上的点击延迟问题，可以通过添加对 <code class="highlighter-rouge">touchstart</code> 或者 <code class="highlighter-rouge">touchend</code> 事件的监听，并使用 <code class="highlighter-rouge">event.preventDefault()</code> 来阻止 <code class="highlighter-rouge">click</code> 事件的触发。示例如下：</p>
+<p>使用 handlebars 定义的模板不错，但是没有文档对调用时的 <code class="highlighter-rouge">context</code> 进行说明，而且 <code class="highlighter-rouge">helper</code> 与 <code class="highlighter-rouge">partial</code> 的注册函数放在了模板文件之外，让人有些不知所云。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>document.querySelector('#element').addEventListener('click', function (e) {
-        // do something
-    });
-document.querySelector('#element').addEventListener('touchend', function (e) {
-        e.preventDefault();
-        // do something the same
-    });
-</code></pre>
-</div>
+<p>搭建架构的牛X同事自己写了一个函数库，但是文档不全，代码读起来非常费劲，这个要加入到 Todo List，代码读都读了，不写个接口文档出来岂不是白读了！</p>
 
-<p>但是这种做法有个问题，当使用 <code class="highlighter-rouge">touchend</code> 事件时，问题不是很大，但有时为了获得更快的响应速度会选择使用 <code class="highlighter-rouge">touchstart</code> 事件，添加 <code class="highlighter-rouge">event.preventDefault()</code> 就会屏蔽掉浏览器的滚动操作，这一点在移动端开发时或许很有用，为了使 WebAPP 有更加接近 NativeAPP 的使用体验，除了禁用页面缩放外，还可以禁用页面滚动操作。</p>
+<p>今天做一个需求，需要联动两个不同路由下的参数配置，前人的做法非常hack，是将参数放在了一个公用的 navbar 元素的 <code class="highlighter-rouge">data</code> 属性里面，我在改另一个bug的时候碰巧发现了，不然我又得搞出另一种hack来，这样以后代码还怎么读！  <br />
+我觉得把这种需要共享的变量放到一个全局命名空间中再适合不过了，在一个文件中统一定义这些参数的默认值，这样可以非常方便地查找到共享的参数，同时也减轻了DOM元素的压力，而且关键是不用hack啊！（我一直对 <code class="highlighter-rouge">data</code> 属性有深深的成见，希望是我的误解。。</p>
 
-<blockquote>
-  <p>使用 FastClick 插件可以较好地解决上述问题：<a href="https://github.com/ftlabs/fastclick">https://github.com/ftlabs/fastclick</a></p>
-</blockquote>
+<h4 id="todo-1">Todo</h4>
 
-<h3 id="section-5">检测触摸事件是否支持</h3>
-
-<p>如果不做事件的兼容，通过运行一遍脚本来绑定对应的事件也是一种不错的方法。但如果设备既支持点击又支持触摸，那就很蛋疼了（但我相信用苏菲的人不多。。毕竟这样的体验并没有微软想象得那么好）。</p>
-
-<h4 id="window">利用window对象属性</h4>
-
-<p>如上述API所描述的，触屏设备的 <code class="highlighter-rouge">window</code> 对象中包含了一些原生的触摸事件对象，通过检测这些对象是否存在即可判断出当前设备是否支持触摸操作。</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>if (window.Touch || window.TouchEvent || window.TouchList) {
-    alert('You can touch me!');
-}
-</code></pre>
-</div>
-
-<h4 id="document">利用document对象属性</h4>
-
-<p>支持触摸设备的 DOM 元素上都提供了触摸事件的监听接口，因此，使用如下代码也可以检测设备是否支持触摸操作：</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>if ('ontouchstart' in document || 'ontouchmove' in document || 'ontouchend' in document) {
-    alert('Don't touch me anymore!');
-}
-</code></pre>
-</div>
-
+<ul>
+  <li>完善自定义库函数的接口文档 [★★★★★]</li>
+  <li>完善模板库的调用上下文接口文档 [★★★☆]</li>
+  <li>总结不同路由下的公共参数，并将其归纳到一个统一的命名空间中 [★★]</li>
+</ul>
 
 
                 <hr>
@@ -265,21 +233,13 @@ document.querySelector('#element').addEventListener('touchend', function (e) {
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2016/04/01/reactjs-study-notes-first.html" data-toggle="tooltip" data-placement="top" title="react.js学习记录——实现一个简单的消息中心组件">
+                        <a href="/2016/04/24/compatibility-of-click-and-touch.html" data-toggle="tooltip" data-placement="top" title="移动端的触摸事件接口与常见问题">
                         Previous Post
                         <br />
-                        <span>react.js学习记录——实现一个简单的消息中心组件</span>
+                        <span>移动端的触摸事件接口与常见问题</span>
                         </a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2016/04/28/tweets-now-and-then.html" data-toggle="tooltip" data-placement="top" title="杂七杂八的随感［持续更新］">
-                        Next Post
-                        <br />
-                        <span>杂七杂八的随感［持续更新］</span>
-                        </a>
-                    </li>
                     
                 </ul>
             </div>

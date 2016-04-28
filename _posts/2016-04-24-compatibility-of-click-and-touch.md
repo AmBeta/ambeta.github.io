@@ -76,12 +76,31 @@ document.querySelector('#element').addEventListener('touchend', function (e) {
     });
 ```
 
-但是这种做法有个问题，当使用 `touchend` 事件时，问题不是很大，但有时为了获得更快的响应速度会选择使用 `touchstart` 事件，添加 `event.preventDefault()` 就会屏蔽掉浏览器的滚动操作。
+但是这种做法有个问题，当使用 `touchend` 事件时，问题不是很大，但有时为了获得更快的响应速度会选择使用 `touchstart` 事件，添加 `event.preventDefault()` 就会屏蔽掉浏览器的滚动操作，这一点在移动端开发时或许很有用，为了使 WebAPP 有更加接近 NativeAPP 的使用体验，除了禁用页面缩放外，还可以禁用页面滚动操作。
 
 > 使用 FastClick 插件可以较好地解决上述问题：[https://github.com/ftlabs/fastclick](https://github.com/ftlabs/fastclick)
 
 ### 检测触摸事件是否支持
 
+如果不做事件的兼容，通过运行一遍脚本来绑定对应的事件也是一种不错的方法。但如果设备既支持点击又支持触摸，那就很蛋疼了（但我相信用苏菲的人不多。。毕竟这样的体验并没有微软想象得那么好）。
+
 #### 利用window对象属性
 
+如上述API所描述的，触屏设备的 `window` 对象中包含了一些原生的触摸事件对象，通过检测这些对象是否存在即可判断出当前设备是否支持触摸操作。
+
+```
+if (window.Touch || window.TouchEvent || window.TouchList) {
+    alert('You can touch me!');
+}
+```
+
 #### 利用document对象属性 
+
+支持触摸设备的 DOM 元素上都提供了触摸事件的监听接口，因此，使用如下代码也可以检测设备是否支持触摸操作：
+
+```
+if ('ontouchstart' in document || 'ontouchmove' in document || 'ontouchend' in document) {
+    alert('Don't touch me anymore!');
+}
+```
+
