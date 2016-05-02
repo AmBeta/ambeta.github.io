@@ -19,10 +19,11 @@ exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 # SNS settings
 RSS: false
 weibo_username:     andrewidiot
-#zhihu_username:     AmBeta
+#zhihu_username:    AmBeta
 github_username:    ambeta
 #twitter_username:  AmBeta
-#facebook_username:  AmBeta
+#facebook_username: AmBeta
+duoshuo_username:   ambeta
 
 # Markdown settings
 markdown: kramdown

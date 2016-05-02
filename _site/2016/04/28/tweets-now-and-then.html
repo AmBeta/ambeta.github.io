@@ -153,6 +153,12 @@
 
 <p>如此封装，让组件的开发确实简单了很多，我不需要知道查询是怎么进行的，数据又是怎么处理的，我只关心我需要展示的查询框以及查询结果，而这些都是很直观可以处理的。</p>
 
+<h4 id="todo">Todo</h4>
+
+<ul>
+  <li>写了一个即时生成文档导航条的jQuery插件一直都没来得及放上Github，抽时间写个 readme 放上去 [★★☆]</li>
+</ul>
+
 <h2 id="section-2">2016/4/24 22:24</h2>
 
 <h4 id="section-3">个人博客</h4>
@@ -177,7 +183,7 @@
 
 <p>今天在改一个Bug的时候用到了闭包的技术，虽然说JS中闭包并不少见，但如此刻意地利用闭包的技术还是第一次，也让我注意到了一些关于事件回调绑定的问题，这个有待进一步实验验证，需要加入到TodoList中。</p>
 
-<h4 id="todo">Todo</h4>
+<h4 id="todo-1">Todo</h4>
 
 <ul>
   <li>整理关于事件回调函数闭包的问题，关注参数的传递方式、闭包中的函数调用等[★★★★★]</li>
@@ -204,7 +210,7 @@
 <p>今天做一个需求，需要联动两个不同路由下的参数配置，前人的做法非常hack，是将参数放在了一个公用的 navbar 元素的 <code class="highlighter-rouge">data</code> 属性里面，我在改另一个bug的时候碰巧发现了，不然我又得搞出另一种hack来，这样以后代码还怎么读！  <br />
 我觉得把这种需要共享的变量放到一个全局命名空间中再适合不过了，在一个文件中统一定义这些参数的默认值，这样可以非常方便地查找到共享的参数，同时也减轻了DOM元素的压力，而且关键是不用hack啊！（我一直对 <code class="highlighter-rouge">data</code> 属性有深深的成见，希望是我的误解。。</p>
 
-<h4 id="todo-1">Todo</h4>
+<h4 id="todo-2">Todo</h4>
 
 <ul>
   <li>完善自定义库函数的接口文档 [★★★★★]</li>
@@ -242,8 +248,28 @@
                     
                     
                 </ul>
+
+                <!-- 多说评论框 start -->
+                <div class="ds-thread" data-thread-key="/2016/04/28/tweets-now-and-then.html" data-title="杂七杂八的随感［持续更新］" data-url="http:/ambeta.github.io/2016/04/28/tweets-now-and-then.html"></div>
+                <!-- 多说评论框 end -->
+
             </div>
         </div>
+
+        <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+        <script type="text/javascript">
+            var duoshuo_username = "ambeta";
+            var duoshuoQuery = {short_name: duoshuo_username};
+            (function() {
+                var ds = document.createElement('script');
+                ds.type = 'text/javascript';ds.async = true;
+                ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                ds.charset = 'UTF-8';
+                (document.getElementsByTagName('head')[0] 
+                 || document.getElementsByTagName('body')[0]).appendChild(ds);
+            })();
+        </script>
+        <!-- 多说公共JS代码 end -->
     </div>
 </article>
 
