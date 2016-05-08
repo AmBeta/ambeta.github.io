@@ -677,8 +677,6 @@ footer .copyright a:focus {
   padding-top: 40px;
 }
 .ds-thread .ds-avatar img {
-  position: relative;
-  left: 15px;
   width: 30px !important;
   height: 30px !important;
 }
