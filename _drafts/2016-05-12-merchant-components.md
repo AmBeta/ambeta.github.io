@@ -45,8 +45,10 @@ var topTip = new Hualala.UI.TopTip({
 
 `cfg` 支持如下选项——
 
+- **container**
 
 该构造函数返回的对象包含如下属性——
+
 
 
 ### 加载进度条组件 (LoadingModal)
