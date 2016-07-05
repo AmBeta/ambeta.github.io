@@ -177,3 +177,8 @@ EditModal.proto({
     }
 });
 ```
+
+#### 更多
+
+- 使用 ember.js 创建一个模态框的讨论：  
+    http://discuss.emberjs.com/t/modal-views-can-we-agree-on-a-best-practice/707/5
