@@ -1,10 +1,12 @@
 ---
 layout: post
 title: ES6起步の学习笔记
-date: 2016-04-19 21:39:00 +0800
+date: 2016-08-23 11:35:00 +0800
 tags: 
     - ES6
 ---
+
+This is a beginner's note on ES6. I picked up these pieces when reading staffs on the Web.
 
 ### Generators
 
@@ -43,3 +45,4 @@ What can generators do?
 - Unlike Python, default value expressions are **evaluated at function call time** from left to right.
 - Passing `undefined` is considered to be equivalent to not passing anything at all.
 - A parameter without a default implicitly defaults to `undefined`.
+
