@@ -559,12 +559,11 @@ article {
         &:hover, &:active {
           color: lighten(@theme-color, 10%);
           border-left: 2px solid lighten(@theme-color, 10%);
-          background: none;
         }
         &:active {
           background: #f8f8f8;
         }
-        &:focus {
+        &:focus, &:hover {
           background: none;
         }
       }
