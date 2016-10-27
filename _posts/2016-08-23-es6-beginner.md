@@ -46,3 +46,16 @@ What can generators do?
 - Passing `undefined` is considered to be equivalent to not passing anything at all.
 - A parameter without a default implicitly defaults to `undefined`.
 
+### Arrow functions
+
+- Arrow functions do not have their own `this` value. The value of `this` inside an arrow function is always inherited from the enclosing scope.  
+
+So for the advice to avoid hacking `this` :
+
+- Use non-arrow functions for methods that will be called using the `object.method()` syntax. Those are the functions that will receive a *meaningful* `this` value from their caller.
+- Use arrow functions for everything else.
+
+### Symbols
+
+- Symbols are **immutable** once created.
+- Each symbol is **unique**, distinct from all others (even others that have the same description).
