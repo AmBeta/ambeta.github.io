@@ -17,7 +17,7 @@ tags:
 
 组件化开发过程中样式表的管理却是非常蛋疼的。一个组件的 HTML 和 JS 都是 scoped，但唯独 CSS 是 global，这样就不得不考虑全局命名冲突已经样式冲突等问题。
 
-于是很自然的就想要引入 CSS Modules。
+于是很自然的就想要引入 [CSS Modules](https://github.com/css-modules/css-modules)。
 
 组件的代码如下：
 
@@ -95,3 +95,7 @@ export default class ChoiceBox extends React.Component {
 <div class="style__bordered___Pvrun">
 </div>
 ```
+
+相关参考：
+
+- [SERVERSIDE CSS MODULES WITH BABEL](http://madole.xyz/serverside-css-modules-with-babel/)
