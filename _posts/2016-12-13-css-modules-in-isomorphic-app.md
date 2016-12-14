@@ -96,6 +96,57 @@ export default class ChoiceBox extends React.Component {
 </div>
 ```
 
+#### 使用 less 或者 sass 
+
+尽管使用 CSS Modules 之后就没有必要使用 less 或者 sass 等类 css 语言了，但是也不免有一些习惯性的问题，这里以 less 为例。
+
+创建如下的钩子脚本：
+
+```
+// less-require-hook.js
+var less = require('less');
+
+module.exports = function processLess(data, filename) {
+  var result;
+  less.render(data, {}, function (error, output) {
+    result = output.css;
+  });
+  return result.toString('utf8');
+};
+```
+
+并在 babel 插件的配置中引入该脚本，同时要**注意将该文件添加到 babel 忽略列表中**：
+
+```
+// .babelrc
+{
+  "presets": [
+    "es2015",
+    "react",
+    "stage-1"
+  ],
+  "plugins": [
+  ],
+  "env": {
+    "development": {
+      "presets": [
+        "react-hmre"
+      ]
+    },
+    "server": {
+      "plugins": [
+        ["css-modules-transform", {
+          "generateScopedName": "[name]__[local]___[hash:base64:5]",
+          "extensions": [".css", ".less"],
+          "preprocessCss": "./less-require-hook.js"
+        }]
+      ]
+    }
+  },
+  "ignore": ["./less-require-hook.js"]
+}
+```
+
 #### 关于 CSS Modules 的使用
 
 CSS Modules 是对现有的 CSS 做减法。为了追求简单可控，作者建议遵循如下原则：
@@ -119,9 +170,11 @@ CSS Modules 是对现有的 CSS 做减法。为了追求简单可控，作者建
 但注意，上面 3 个“如果”尽量不要发生。
 
 
-相关参考：
+
+#### 相关参考：
 
 - [SERVERSIDE CSS MODULES WITH BABEL](http://madole.xyz/serverside-css-modules-with-babel/)
-- [CSS Modules 详解及 React 中实践](https://github.com/camsong/blog/issues/5)
+- [CSS Modules - Welcome to the Future](http://glenmaddern.com/articles/css-modules)
 - [Inline Styles](https://github.com/AmBeta/react-redux-universal-hot-example/blob/master/docs/InlineStyles.md)
 - [Modular CSS with React](https://medium.com/@pioul/modular-css-with-react-61638ae9ea3e#.uqj1r2ceb)
+- [CSS Modules 详解及 React 中实践](https://github.com/camsong/blog/issues/5)
