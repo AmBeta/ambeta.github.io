@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Isomorphic App Toast - CSS Modules
+title: React Isomorphic App Toast - CSS Modules
 date: 2016-12-13 10:26:00 +0800
 tags: 
     - CSS Modules
