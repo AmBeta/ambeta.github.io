@@ -5,7 +5,7 @@ date: 2016-12-13 10:26:00 +0800
 tags: 
     - CSS Modules
     - Isomorphic App
-    - React
+    - react
 ---
 
 最近手里的项目终于开始使用 React 进行重构了，当然整体框架选用的是最流行的服务端同构模式。
@@ -123,3 +123,5 @@ CSS Modules 是对现有的 CSS 做减法。为了追求简单可控，作者建
 
 - [SERVERSIDE CSS MODULES WITH BABEL](http://madole.xyz/serverside-css-modules-with-babel/)
 - [CSS Modules 详解及 React 中实践](https://github.com/camsong/blog/issues/5)
+- [Inline Styles](https://github.com/AmBeta/react-redux-universal-hot-example/blob/master/docs/InlineStyles.md)
+- [Modular CSS with React](https://medium.com/@pioul/modular-css-with-react-61638ae9ea3e#.uqj1r2ceb)
