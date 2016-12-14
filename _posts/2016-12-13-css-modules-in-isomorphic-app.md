@@ -171,7 +171,7 @@ CSS Modules 是对现有的 CSS 做减法。为了追求简单可控，作者建
 
 
 
-#### 相关参考：
+#### 相关参考
 
 - [SERVERSIDE CSS MODULES WITH BABEL](http://madole.xyz/serverside-css-modules-with-babel/)
 - [CSS Modules - Welcome to the Future](http://glenmaddern.com/articles/css-modules)
