@@ -144,6 +144,83 @@
 <!-- Post Content Preview -->
 
 <div class="post-preview">
+    <a href="/2016/05/12/ixutils.html">
+        <h2 class="post-title">
+            
+        </h2>
+        <div class="post-content-preview">
+            /* 
+ * Shortcut list: 
+$X = IX.get;
+$XA = IX.cvtToArray;
+$XD = IX.Dom;
+$XE = IX.err;
+$XF = IX.getPropertyAsFunction;
+$XH = IX.HtmlDocumen...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted on May 12, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/05/12/ixui.html">
+        <h2 class="post-title">
+            
+        </h2>
+        <div class="post-content-preview">
+            (function($, window) {
+    IX.ns("Hualala.UI");
+    /**
+     * show popover tip for target element
+     * @param  {[Object]} cfg [descrip...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted on May 12, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/05/12/commonFn.html">
+        <h2 class="post-title">
+            
+        </h2>
+        <div class="post-content-preview">
+            // Route Engin
+(function() {
+    var RouteAttrDefValue = { name: "", url: "", urlType: "site", type: "GET" };
+
+    function urlItemFn(col...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted on May 12, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2016/05/12/merchant-mvc.html">
+        <h2 class="post-title">
+            商户中心重点模块与基类
+        </h2>
+        <div class="post-content-preview">
+            做商户中心项目已经快一个月了，修复过一些Bug，完成过一些需求，对项目的整个架构有了比较清晰的认知，因为项目文档不健全的关系，源码也读了很多。但是源码这种东西，看完当不可能完全记得，因此把读源码的收获记录下来就至关重要了。
+
+项目中比较年长的几个模块都是用MVC的思想写的，...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted on May 12, 2016
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2016/04/28/tweets-now-and-then.html">
         <h2 class="post-title">
             杂七杂八的随感［持续更新］
@@ -178,100 +255,87 @@
 <hr>
 
 <div class="post-preview">
-    <a href="/2016/04/01/reactjs-study-notes-first.html">
+    <a href="/2016/04/19/merchant-components.html">
         <h2 class="post-title">
-            react.js学习记录——实现一个简单的消息中心组件
+            商户中心常用公共函数与组件
         </h2>
         <div class="post-content-preview">
-            React作为最近比较火的前端框架，受到越来越多人的关注，其常常与Angular相提并论，但实际上React并不是一个完整的MVC框架，其基本上只做了V-View部分的工作。
+            商户中心项目中有一些封装好的函数库与UI组件，都比较好用，但是文档维护得比较差，每次要用的时候都需要把源码翻出来看一遍，过段时间又会忘记，因此写个文档记录一下，方便日后查阅，也是吸取一些封装技术的经验吧。
 
-React核心的组件思想大概是其吸引人眼球的主要原因，通过将页面上不同的功能模块转化为组件的方式...
+UI组件
+
+提示信息组件 (TopTip)
+
+
+  Hualala...
         </div>
     </a>
     <p class="post-meta">
-        Posted on April 1, 2016
+        Posted on April 19, 2016
     </p>
 </div>
 <hr>
 
 <div class="post-preview">
-    <a href="/2016/03/28/jekyll-cookbook.html">
+    <a href="/2016/04/19/merchant-common-function-components.html">
         <h2 class="post-title">
-            jekyll + gh-pages搭建个人博客常见问题记录
+            EXAMPLE
         </h2>
         <div class="post-content-preview">
-            jekyll本地调试与gh-pages实际显示不一致
+            
 
-
-  Q: 使用jekyll serve命令在本地查看站点一切正常，但提交到gh-pages之后无法正常显示。  
-A: 推荐使用与gh-pages相同的jekyll版本进行本地调试，即通过命令bundle exec ...
         </div>
     </a>
     <p class="post-meta">
-        Posted on March 28, 2016
+        Posted on April 19, 2016
     </p>
 </div>
 <hr>
 
 <div class="post-preview">
-    <a href="/2016/03/27/build-website-with-jekyll.html">
+    <a href="/2016/04/19/merchant-code-structure.html">
         <h2 class="post-title">
-            如何使用jekyll建站
+            商户中心项目代码结构
         </h2>
         <div class="post-content-preview">
-            终于把自己的个人博客折腾好了，可以开开心心地发博文啦！
+            商户中心项目，为商户提供各种订单查询与管理、自助点餐服务配置等功能。
 
-个人博客这种东西，主要是为了记录一下自己成长的过程，其次也可以作为与其他人交流共享一些经验的平台，而对于我这种健忘的人则是个必不可少的东西，不然过些时日，连jekyll怎么拼的都会忘掉了Orz。。
-
-之前也尝试在CS...
+该项目各个模块基本均采用了MVC思想进行搭建，使用了 Stapes.js 这个非常轻量级的MVC框架，配合使用 handlebars.js 进行模版加载，UI方面使用 bootstrap 进行布局，可以...
         </div>
     </a>
     <p class="post-meta">
-        Posted on March 27, 2016
+        Posted on April 19, 2016
     </p>
 </div>
 <hr>
 
 <div class="post-preview">
-    <a href="/2016/03/23/game2048-mvc.html">
+    <a href="/2016/04/19/example.html">
         <h2 class="post-title">
-            利用MVC思想实现的2048小游戏
+            EXAMPLE
         </h2>
         <div class="post-content-preview">
-            2048是一款很经典的小游戏，据说游戏的源码就是用JavaScript写的，暂时还没来得及看。网上别人写的代码也很多，最少有不到280行代码写成的。
+            
 
-
-
-JS本身语法比较松散，如果随便写的话很容易就写成了面向过程的结构，时间一长，各种复杂的逻辑就很难再理清楚了，后续的维护...
         </div>
     </a>
     <p class="post-meta">
-        Posted on March 23, 2016
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/03/23/hello-world.html">
-        <h2 class="post-title">
-            Hello, World!
-        </h2>
-        <div class="post-content-preview">
-            This is my first blog.
-
-ATTENTION: This blog is still in construction, so that some links are not valid now.
-
-STATEMENT: This theme deriv...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted on March 23, 2016
+        Posted on April 19, 2016
     </p>
 </div>
 <hr>
 
 
 <!-- Pager -->
+
+<ul class="pager">
+    
+    
+    <li class="next">
+        <a href="/page2">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
 
         </div>
     </div>

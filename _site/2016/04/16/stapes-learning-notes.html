@@ -15,13 +15,13 @@
     <link rel="canonical" href="http://ambeta.github.io/2016/04/16/stapes-learning-notes.html">
 
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
 
     <!-- Pygments Github CSS -->
-    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/assets/css/ambeta.main.css">
 
     <!-- Custom Fonts -->
     <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
@@ -66,7 +66,6 @@
     </div>
 </nav>
 <script>
-    // Navbar derives from huxpro@github
     var _body   = document.body;
     var _toggle = document.querySelector('.navbar-toggle');
     var _navitems = document.querySelector('#navbar-items');
@@ -89,8 +88,14 @@
         }
     }
 
-    _toggle.addEventListener('click', toggleNav);
-    _body.addEventListener('click', hideNav);
+    // enable touch events on mobile devices
+    if ('ontouchstart' in document) {
+        _toggle.addEventListener('touchstart', toggleNav);
+        _body.addEventListener('touchstart', hideNav);
+    } else {
+        _toggle.addEventListener('click', toggleNav);
+        _body.addEventListener('click', hideNav);
+    }
 
     function toggleNav(e) {
         if (_navitems.className.indexOf('in') > 0) {
@@ -111,7 +116,7 @@
 <header class="post-header">
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <div class="tags">
                     
                     <a class="tag" href="/tags.html#MVC" title="MVC">MVC</a>
@@ -132,7 +137,7 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 post-container">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2 post-container">
 
                 <h2 id="stapesextend">Stapes.extend()</h2>
 
@@ -180,9 +185,24 @@
   <p>Sets a value, automatically generates an unique uuid as a key.</p>
 </blockquote>
 
-            
+
                 <hr>
 
+            </div>
+
+            <!-- Side Navbar -->
+            <div class="col-md-2 col-lg-2 post-sidebar-container">
+                <div class="post-sidebar hidden-print hidden-xs hidden-sm">
+                    <nav id="post-sidebar-nav" class="post-sidebar-nav affix-bottom">
+                    </nav>
+                    <a href="#top" class="back-to-top"> 返回顶部 </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pager -->
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-lg-offset-2">
                 <ul class="pager">
                     
                     <li class="previous">
@@ -195,16 +215,36 @@
                     
                     
                     <li class="next">
-                        <a href="/2016/04/19/merchant-code-structure.html" data-toggle="tooltip" data-placement="top" title="商户中心项目代码结构">
+                        <a href="/2016/04/19/example.html" data-toggle="tooltip" data-placement="top" title="EXAMPLE">
                         Next Post
                         <br />
-                        <span>商户中心项目代码结构</span>
+                        <span>EXAMPLE</span>
                         </a>
                     </li>
                     
                 </ul>
+
+                <!-- 多说评论框 start -->
+                <div class="ds-thread" data-thread-key="/2016/04/16/stapes-learning-notes.html" data-title="Stapes.js" data-url="http:/ambeta.github.io/2016/04/16/stapes-learning-notes.html"></div>
+                <!-- 多说评论框 end -->
+
             </div>
         </div>
+
+        <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+        <script type="text/javascript">
+            var duoshuo_username = "ambeta";
+            var duoshuoQuery = {short_name: duoshuo_username};
+            (function() {
+                var ds = document.createElement('script');
+                ds.type = 'text/javascript';ds.async = true;
+                ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                ds.charset = 'UTF-8';
+                (document.getElementsByTagName('head')[0] 
+                 || document.getElementsByTagName('body')[0]).appendChild(ds);
+            })();
+        </script>
+        <!-- 多说公共JS代码 end -->
     </div>
 </article>
 
@@ -262,10 +302,13 @@
 </footer>
 
 <!-- jQuery -->
-<script src="/js/jquery.min.js "></script>
+<script src="/assets/js/jquery.min.js "></script>
 
 <!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js "></script>
+<script src="/assets/js/bootstrap.min.js "></script>
+
+<!-- ambeta.main.js -->
+<script src="/assets/js/ambeta.main.min.js "></script>
 
 <!-- async load function -->
 <script>
@@ -284,17 +327,43 @@
     async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
         hljs.initHighlightingOnLoad();
     })
+</script>
+
+<script>
     // only load tagcloud.js in tag.html
-    if($('#tag-cloud').length !== 0){
-        async("/js/jquery.tagcloud.js",function(){
+    if($('#tag-cloud').length !== 0) {
+        async('/assets/js/jquery.tagcloud.js',function (){
             $.fn.tagcloud.defaults = {
                 size: {start: .8, end: 1.2, unit: 'em'},
                 //color: {start: '#bbbbee', end: '#0085a1'},
             };
             $('#tag-cloud a').tagcloud();
-        })
+        });
+    }
+    // only generate doc navbar in page with doc-navbar enabled
+    if ($('#post-sidebar-nav').length !== 0) {
+        async('/assets/js/jquery.gennav.min.js', function() {
+            $('#post-sidebar-nav').genDocNav({
+                navItems: '.post-container h2, h3, h4'
+            });
+            $('body').scrollspy({ 
+                target: '#post-sidebar-nav',
+                offset: 20
+            });
+
+            // fix post sidebar on the right side
+            var $postSidebar = $('.post-sidebar');
+            var startPosY = $('.post-sidebar-container').offset().top;
+            $(window).on('scroll', function(e) {
+                var nowPosY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+                var delta = nowPosY - startPosY;
+                delta > 0 ? $postSidebar.addClass('post-sidebar-fixed') : 
+                            $postSidebar.removeClass('post-sidebar-fixed');
+            });
+        });
     }
 </script>
+
 <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
 
 <!--fastClick.js -->
