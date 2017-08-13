@@ -29,15 +29,15 @@ recast 这个工具则是核心，其提供了对源码进行 AST 分析以及�
 
 代码的范例可以参看 react-codemod 项目，由于没有找到详细的 API 文档，这里就列出一部分个人认为比较重要的 API。
 
-- *jscodeshift(code: string)*  
+- `jscodeshift(code: string)`  
     根据源码 `code` 生成 AST，返回一个 `Collection` 对象。
-- *Collection.find(nodeType: ASTTypes, predictor: any)*  
+- `Collection.find(nodeType: ASTTypes, predictor: any)`  
     从 `Collection` 中过滤出所有 `nodeType` 节点类型的节点，返回一个 `Array<NodePath>` 数组可用于迭代。
-- *Collection.replace(nodes: NodePath | Array<NodePath>)*  
+- `Collection.replace(nodes: NodePath | NodePath[])`  
     用 `nodes` 节点替换 `Collection` 中的**每个** `NodePath`。
-- *Collection.insertBefore/Collection.insertAfter(nodes: NodePath | Array<NodePath>)*
+- `Collection.insertBefore/Collection.insertAfter(nodes: NodePath | NodePath[])`  
     在 `Collection` 中的**每个** `NodePath` 前/后插入 `nodes` 节点。
-- *Collection.paths()*  
+- `Collection.paths()`  
     获取 `Collection` 中的所有 `NodePath`，返回一个 `Array<NodePath>` 数组。
 
 关于 AST 操作的更多 API 可以参看 [recast](https://github.com/benjamn/recast) 的文档以及 [ast-types](https://github.com/benjamn/ast-types) 的文档以及相关的源码。
