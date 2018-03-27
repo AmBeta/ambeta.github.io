@@ -1,9 +1,9 @@
 ---
 layout: post
-title: EXAMPLE
-date: 2016-04-19 21:39:00 +0800
+title: Redux 在 React 项目中的实践：多个 store
+date: 2017-08-21 09:25:00 +0800
 tags: 
-    - MVC
-    - Stapes
+    - react
+    - redux
 ---
 
