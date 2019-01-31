@@ -4,7 +4,7 @@ export PATH
 
 
 install_path=/fs/
-package_download_url=https://github.com/ucoker/finalspeed/raw/master/server/finalspeed_server.zip
+package_download_url=https://github.com/AmBeta/ambeta.github.io/raw/master/archive/finalspeed/finalspeed_server.zip
 package_save_name=finalspeed_server.zip
  
 function checkjava(){
