@@ -1,45 +1,733 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
-    <title>Gridea</title>
-    <updated>2020-03-13T07:43:44.533Z</updated>
+    <title>三土 | AmBeta</title>
+    <updated>2020-03-13T08:34:10.257Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
-    <subtitle>温故而知新</subtitle>
+    <subtitle>一个伪程序猿的自我拉扯</subtitle>
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, Gridea</rights>
+    <rights>All rights reserved 2020, 三土 | AmBeta</rights>
     <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://ambeta.github.io/post/hello-gridea/</id>
-        <link href="https://ambeta.github.io/post/hello-gridea/">
+        <title type="html"><![CDATA[利用 AST 对项目代码进行迁移]]></title>
+        <id>https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/</id>
+        <link href="https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+        <updated>2017-08-13T08:15:00.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>The more code you have, the harder it becomes to make big, sweeping changes quickly and confidently. Even if you trust yourself not to make too many mistakes, and no matter how proficient you are with your text editor, changing tens of thousands of lines of code takes precious, non-refundable time.</p>
+</blockquote>
+<p>项目写了一段时间之后，如果再进行项目的调整，那往往是比较繁琐的事情，不是在编辑器中使用全文检索和替换能够解决的了。</p>
+<p>在看 React 官方文档时，看到他们使用 <a href="https://github.com/reactjs/react-codemod">react-codemod</a> 来解决 React 版本更新造成的 API 使用的问题，于是看了一下这种方案是如何实现的。</p>
+<h4 id="react-codemod"><a href="https://github.com/reactjs/react-codemod">react-codemod</a></h4>
+<p>首先 react-codemod 项目提供的仅仅是一些转化的脚本，而这些转化脚本主要是提供给 <a href="https://github.com/facebook/jscodeshift">jscodeshift</a> 这个工具使用的。</p>
+<h4 id="jscodeshift"><a href="https://github.com/facebook/jscodeshift">jscodeshift</a></h4>
+<p>jscodeshift 的核心则是由 <a href="https://github.com/benjamn/recast">recast</a> 提供，jscodeshift 对 recast 进行了自己的封装，添加了 <code>Collection</code> 类使得对 AST 操作的 API 更加易于使用，也提高了操作的可拓展性，同时该工具也提供了对文件以及文件夹的多线程操作，并可以给出最后转化的结果（成功或失败的文件数）。</p>
+<h4 id="recast"><a href="https://github.com/benjamn/recast">recast</a></h4>
+<p>recast 这个工具则是核心，其提供了对源码进行 AST 分析以及修改的能力，同时可以最大程度地保留原代码的格式，对于 AST 中没有修改的部分，他会原封不动地进行输出，其也支持对 AST 进行格式化的代码输出，提供了部分可定制的代码格式化选项。</p>
+<h4 id="api">API</h4>
+<p>代码的范例可以参看 react-codemod 项目，由于没有找到详细的 API 文档，这里就列出一部分个人认为比较重要的 API。</p>
+<ul>
+<li><code>jscodeshift(code: string)</code><br>
+根据源码 <code>code</code> 生成 AST，返回一个 <code>Collection</code> 对象。</li>
+<li><code>Collection.find(nodeType: ASTTypes, predictor: any)</code><br>
+从 <code>Collection</code> 中过滤出所有 <code>nodeType</code> 节点类型的节点，返回一个 <code>Array&lt;NodePath&gt;</code> 数组可用于迭代。</li>
+<li><code>Collection.replace(nodes: NodePath | NodePath[])</code><br>
+用 <code>nodes</code> 节点替换 <code>Collection</code> 中的<strong>每个</strong> <code>NodePath</code>。</li>
+<li><code>Collection.insertBefore/Collection.insertAfter(nodes: NodePath | NodePath[])</code><br>
+在 <code>Collection</code> 中的<strong>每个</strong> <code>NodePath</code> 前/后插入 <code>nodes</code> 节点。</li>
+<li><code>Collection.paths()</code><br>
+获取 <code>Collection</code> 中的所有 <code>NodePath</code>，返回一个 <code>Array&lt;NodePath&gt;</code> 数组。</li>
+</ul>
+<p>关于 AST 操作的更多 API 可以参看 <a href="https://github.com/benjamn/recast">recast</a> 的文档以及 <a href="https://github.com/benjamn/ast-types">ast-types</a> 的文档以及相关的源码。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[在Stapes框架下实现一个模态框的实践方法]]></title>
+        <id>https://ambeta.github.io/post/zai-stapes-kuang-jia-xia-shi-xian-yi-ge-mo-tai-kuang-de-shi-jian-fang-fa/</id>
+        <link href="https://ambeta.github.io/post/zai-stapes-kuang-jia-xia-shi-xian-yi-ge-mo-tai-kuang-de-shi-jian-fang-fa/">
+        </link>
+        <updated>2016-07-04T10:38:00.000Z</updated>
+        <content type="html"><![CDATA[<p>使用Stapes创建一个基于MVC的数据列表页面时，页面的MVC逻辑比较清晰——所有的数据条目是一个 <code>Model</code>，列表的展示是对应的 <code>View</code>，<code>Controller</code> 则将视图的事件转化为对数据模型的操作。</p>
+<p>对于列表中的每一条数据，由于其是一个独立的数据，因此可以建立一个数据模型用来存储，点击之后弹出模态框，对于这个模态框的设计，如何能保证清晰的逻辑呢？</p>
+<p>假设列表的 MVC 实现代码如下：</p>
+<pre><code>/* List Model */
+var DataModel = Stapes.subclass({
+    constructor : function (cfg) {
+        // initialize...
+    }
+});
+DataModel.proto({
+    updateData : function (params) {
+        // ajax request
+    }
+});
+
+/* List View */
+var DataView = Stapes.subclass({
+    constructor : function (cfg) {
+        this.model = cfg.model || null;
+        this.$body = cfg.body || $('body');
+        
+        this.render();
+        this.bindEvents();
+    }
+});
+DataView.proto({
+    render : function () {},
+
+    bindEvents : function () {
+        this.$body.on('click', 'button', function () {
+            var modal = new SomeModal({});
+        });
+    }
+});
+
+/* List Controller */
+var DataController = Stapes.subclass({
+    constructor : function (cfg) {
+        this.model = cfg.model || null;
+        this.view = cfg.view || null;
+        if (!this.model || !this.view) {
+            throw ('DataController init failed!');
+        }
+
+        bindEvents();
+    }
+});
+DataController.proto({
+    // bind model events
+    this.model.on({
+        update : function (params) {
+            this.model.updateData(params);
+        }
+    }, this);
+    
+    // bind view events
+    this.view.on({
+        update : function (params) {
+            this.model.emit('update', params);
+        }
+    }, this);
+});
+
+</code></pre>
+<h2 id="仅供查看数据的模态框">仅供查看数据的模态框</h2>
+<p>仅供查看数据的模态框是比较容易处理的，这时模态框就是一个单纯的 <code>View</code>，其绑定的数据模型就是列表中的那一条数据。</p>
+<pre><code>var InfoModal = Stapes.subclass({
+    constructor : function (cfg) {
+        this.model = cfg.model || null;
+    }
+});
+</code></pre>
+<h2 id="新增或修改数据的模态框">新增或修改数据的模态框</h2>
+<p>对于新增或者修改的模态框，情况就比较复杂了，因为用户可以在模态框中对用户的数据进行操作。</p>
+<p>根据 MVC 的思想，我们要尽量避免在 <code>View</code> 中对数据模型进行直接的操作，<code>View</code> 应该通过发出事件的方式让 <code>Controller</code> 去捕捉并操作 <code>Model</code>，但是用一个完整的 MVC 去实现一个简单的模态框未免太过周折，并且两个 <code>Controller</code> 之间的通讯问题会把逻辑绕得更加复杂。</p>
+<p>如何写出一个逻辑清晰的模态框组件，总结了有下面几个思路：</p>
+<ul>
+<li>直接操作数据模型</li>
+<li>提供回调</li>
+<li>绑定父视图</li>
+</ul>
+<h3 id="直接操作数据模型">直接操作数据模型</h3>
+<p>说是直接操作 <code>Model</code>，但也是通过事件机制与 <code>Model</code> 进行通讯的，但是由于模态框没有自己的 <code>Controller</code>，只能够直接发出 <code>Model</code> 上的事件，因此这种事件机制与直接操作 <code>Model</code> 并无太大的区别。</p>
+<p>另一种情况是，我们需要在模态框中直接操作另一组数据。</p>
+<h3 id="提供回调">提供回调</h3>
+<p>我们可以为调用该模态框的视图提供一个回调，将用户在模态框中对数据的修改以参数的方式传回。</p>
+<p>用这种方式实现的模态框逻辑很简单，只需要将 <code>Model</code> 中的数据表现出来，然后再将用户的输入传回就好了，不需要关心对 <code>Model</code> 的具体操作与结果。</p>
+<pre><code>var EditModal = Stapes.subclass({
+    constructor : function (cfg) {
+        this.model = cfg.model || null;
+        this.cbFn = cfg.cbFn || function () {};
+        
+        this.$body = null;  // get initialized in `render()`
+
+        this.render();
+        this.bindEvents();
+    }
+});
+EditModal.proto({
+    bindEvents : function () {
+        var self = this;
+        self.$body.on('click', '.btn-ok', function () {
+            var params = self.getPostParams();
+            self.cbFn.call({}, params);
+        });
+    }
+});
+</code></pre>
+<p>这时，在列表视图中，可以这样新建一个模态框：</p>
+<pre><code>var self = this;    // `this` points to the list view
+var modal = new EditModal({
+    model : dataModel,
+    cbFn : function (params) {
+        self.emit('update', params);
+    }
+});
+</code></pre>
+<h3 id="绑定父视图">绑定父视图</h3>
+<p>有时在模态框中的操作过于复杂，需要提供多个回调，这样就可以将父视图绑定到这个模态框上，这个模态框就相当于其父元素的一个组成部分，其可以触发父元素上的事件。</p>
+<pre><code>var EditModal = Stapes.subclass({
+    constructor : function (cfg) {
+        this.model = cfg.model || null;
+        this.parentView = cfg.parentView || null;
+    
+        this.$body = null;  // get initialize in `render()`
+
+        this.render();
+        this.bindEvents();
+    }
+});
+EditModal.proto({
+    bindEvents : function () {
+        var self = this;
+        self.$body.on('click', '.btn-ok', function () {
+            var params = self.getPostParams();
+            self.parentView.emit('update', params);
+        });
+    }
+});
+</code></pre>
+<h4 id="更多">更多</h4>
+<ul>
+<li>使用 ember.js 创建一个模态框的讨论：<br>
+http://discuss.emberjs.com/t/modal-views-can-we-agree-on-a-best-practice/707/5</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何使用jekyll建站]]></title>
+        <id>https://ambeta.github.io/post/ru-he-shi-yong-jekyll-jian-zhan/</id>
+        <link href="https://ambeta.github.io/post/ru-he-shi-yong-jekyll-jian-zhan/">
+        </link>
+        <updated>2016-03-27T15:35:00.000Z</updated>
+        <content type="html"><![CDATA[<p>终于把自己的个人博客折腾好了，可以开开心心地发博文啦！</p>
+<p>个人博客这种东西，主要是为了记录一下自己成长的过程，其次也可以作为与其他人交流共享一些经验的平台，而对于我这种健忘的人则是个必不可少的东西，不然过些时日，连jekyll怎么拼的都会忘掉了Orz。。</p>
+<p>之前也尝试在CSDN上维护自己的博客，但是感觉发文危险系数很高，审核慢就不说了，万一审核不过，码了半天的字都白费了，很是难受，听说Github可以免费挂个人主页，果断尝试一波。</p>
+<p>建站选用的是jekyll这个工具，可以与Github配合使用，其他的还有Hexo等建站工具。</p>
+<h2 id="jekyll简介">jekyll简介</h2>
+<p>jekyll是一个可以将纯文本转化为静态网站的工具，因可以与github pages完美契合而受到很多程序猿的青睐。</p>
+<p><a href="http://www.bootcss.com/">Bootstrap中文网</a>对jekyll的描述如下：</p>
+<blockquote>
+<p>简单：无需数据库、评论功能，不需要不断地更新版本——只用关心你的博客内容<br>
+静态：只用Markdown（或Textile）、Liquid、HTML&amp;CSS就可以构建可部署的静态网站<br>
+博客形态：自定义地址、分类、页面、博客内容以及自定义的布局设计都是系统中一等公民</p>
+</blockquote>
+<hr>
+<h2 id="jekyll手动建站">jekyll手动建站</h2>
+<p>jekyll用的人很多，网上也有很多现成的模板供大家选用。起初我也想选个模板直接进入写博客的正题，但是找了很久都找不到心仪的模板，有的功能非常赞，但是页面风格不是我的style，有的风格很赞，但是功能又过于繁复。索性自己摸索做一个属于自己的，顺便学习一下这个工具的使用，毕竟用jekyll＋Github不发挥点geek精神有点不合适吧。</p>
+<p>Anyway，如果只想火速建个站，可以直接跳转到<a href="#jekyll-template">应用<strong>jekyll模板</strong></a>。</p>
+<h3 id="环境搭建">环境搭建</h3>
+<p>jekyll的环境搭建非常简单，使用如下命令即可建立一个新的站点：</p>
+<pre><code>~ $ gem install jekyll
+~ $ jekyll new myblog
+~ $ cd myblog
+~/myblog $ jekyll serve
+</code></pre>
+<p>完成上述命令之后，用浏览器访问<code>http://localhost:4000</code>即可打开这个新的站点（当然现在什么都没有）。</p>
+<p><em>PS：</em> 环境搭建中遇到的问题可以参考<a href="http://jekyll.bootcss.com/docs/quickstart/">jekyll快速指南</a>尝试获取解决方案。</p>
+<h3 id="目录结构">目录结构</h3>
+<p>一般情况下jekyll的目录结构如下，其中<code>[*]</code>是必选项（如果你想只写一个index.html的话就不需要用jekyll啦- -），而为了获得较好的站点结构以便后续的维护，下面的这个目录结构是最基本的。</p>
+<pre><code>/myblog
+    |-- _includes
+          |-- head.html
+          |-- nav.html
+          |-- footer.html
+    |-- _layouts [*]
+          |-- default.html
+          |-- page.html
+          |-- post.html
+    |-- _posts [*]
+          |-- 2016-03-23-hello-world.md
+    |-- imgs
+    |-- css
+          |-- main.css
+    |-- fonts
+    |-- js
+    |-- _config.yml [*]
+    |-- index.html [*]
+</code></pre>
+<ul>
+<li><code>_layouts</code>中存放的是页面的布局文件。</li>
+<li><code>_includes</code>中存放的是一些文档的组成部分，一般可以被<code>_layouts</code>中的页面布局文件所引用，以减少代码的重复，通常可以用来布局一些html文件头、导航条以及页面脚注等。</li>
+<li><code>_posts</code>中存放的是发布的博文。</li>
+<li><code>imgs</code>中存放的是网站用到的所有图片资源。</li>
+<li><code>css</code>, <code>fonts</code>, <code>js</code>中存放的分别是页面引用的所有样式表、字体文件以及脚本。</li>
+<li><code>_config.yml</code>文件是整个站点的配置文件。</li>
+<li><code>index.html</code>文件即为站点的主页。</li>
+</ul>
+<p>大部分情况下，除了站点主页外，一个站点中还会含有<code>404.html</code>, <code>about.html</code>等页面，用于更加完善的个人主页以及更佳的访客体验，当然这些都不是必须的，只要你的博文写的够精彩，这些都不是重点～</p>
+<h3 id="常用语法">常用语法</h3>
+<p>在介绍不同文件的配置之前，首先需要了解一下jekyll中常用的一些语法规则，这些在编写页面布局文件的时候极为有用，后续博文信息的自动化生成方面就全靠它了。</p>
+<ul>
+<li>jekyll中的<strong>全局变量</strong>主要有<code>site</code>, <code>page</code>, <code>paginator</code>, <code>content</code>，而前三者又更像是一个对象，其中包含着其他的变量，使用<code>.</code>运算符即可访问，例如使用<code>site.title</code>可以访问站点名字变量。</li>
+<li>jekyll中<strong>语句</strong>使用<code>{ %</code>和<code>% }</code>进行包裹，且每一个语句块都需要显示地闭合，例如<code>{ % if % } blablabla { % endif % }</code>即为一个条件语句块。</li>
+<li>jekyll中使用双重大括号包裹的变量表示<strong>取值</strong>运算，例如<code>{ { page.title } }</code>语句可以取得<code>page.title</code>的值。</li>
+</ul>
+<h3 id="文件配置">文件配置</h3>
+<h5 id="_configyml-站点配置文件">_config.yml － 站点配置文件</h5>
+<p>该文件中保存的主要是整个站点的配置，其中的每项配置都作为全局变量<code>site</code>的成员变量可以在任意站点文件中访问到。</p>
+<p>一个常见的站点配置文件可能长得像下面这样：</p>
+<pre><code># Site settings
+title: AmBeta Blog
+SEOTitle: 三土的博客 | AmBeta Blog
+header-img: imgs/header-bg.png
+header-thumb: imgs/my-thumb.png
+email: cyandrewchen@gmail.com
+description: &quot;&quot;
+keyword: &quot;&quot;
+url: &quot;http://ambeta.github.io&quot;  # your host, for absolute URL
+baseurl: &quot;&quot;  
+
+# Build settings
+gems: [jekyll-paginate]
+paginate: 5
+exclude: [&quot;less&quot;,&quot;node_modules&quot;,&quot;Gruntfile.js&quot;,&quot;package.json&quot;,&quot;README.md&quot;]
+
+# Markdown settings
+markdown: kramdown
+kramdown:
+  input: GFM
+</code></pre>
+<h5 id="layouts-页面布局">layouts － 页面布局</h5>
+<p>该文件夹下存放的是所有的页面布局文件，页面布局文件是一系列的<code>.html</code>文件，如下是一个典型的页面布局文件：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+
+{ % include head.html % }
+
+&lt;body&gt;
+    { % include navbar.html % }
+
+    { { content } }
+
+    { % include footer.html % }
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>使用<code>{ % include head.html % }</code>语句可以引入<code>_includes</code>文件夹中<code>head.html</code>的所有内容。</li>
+<li>使用<code>{ { content } }</code>语句会将使用该模版的文件的内容填充到这里。</li>
+</ul>
+<h5 id="indexhtml-站点主页">index.html － 站点主页</h5>
+<p>jekyll会将该文件识别为站点的主页，同时Github也将识别该文件作为当访问你的Github pages时会显示的页面。<br>
+<strong>注意</strong>该文件的名称一定要为<code>index.html</code>。<br>
+在文件头部使用如下配置语句可以指定页面所用的模板：</p>
+<pre><code>---
+layout: default
+---
+</code></pre>
+<h5 id="posts-博文">posts － 博文</h5>
+<p>该文件夹下存放的是所有的博文。<br>
+jekyll支持多种markdown引擎（有需求的话可以在<code>_config.yml</code>文件中自定义引擎选择）。<br>
+jekyll要求每篇博文的名字都遵循如下的格式：</p>
+<pre><code>Year-Month-Date-PostTitle
+</code></pre>
+<p>例如<code>2016-03-22-hello-world.md</code>, <code>2020-02-22-byebye-world.textile</code>都是合法的博文命名。<br>
+博文头部定义的变量可以作为<code>page</code>变量的成员变量被访问到，常见的博文头部如下：</p>
+<pre><code>title: Hello World
+date: 2016-03-22
+layout: post
+</code></pre>
+<h3 id="更多功能">更多功能</h3>
+<h5 id="paginator-分页">paginator － 分页</h5>
+<p>jekyll支持自动分页，在<code>_config.yml</code>文件中加上如下配置可开启分页功能，可以控制每页的最大显示条目数量。<br>
+例如，在<code>index.html</code>文件中使用如下语句可以分页显示所有博文的摘要信息：</p>
+<pre><code>&lt;!-- Post Content Preview --&gt;
+{ % for post in paginator.posts % }
+&lt;div class=&quot;post-preview&quot;&gt;
+	&lt;a href=&quot;{ { post.url | prepend: site.baseurl } }&quot;&gt;
+		&lt;h2 class=&quot;post-title&quot;&gt;
+			{ { post.title } }
+		&lt;/h2&gt;
+		&lt;div class=&quot;post-content-preview&quot;&gt;
+			{ { post.content | strip_html | truncate:100 } }
+		&lt;/div&gt;
+	&lt;/a&gt;
+	&lt;p class=&quot;post-meta&quot;&gt;
+		Posted on { { post.date | date: &quot;%B %-d, %Y&quot; } }
+	&lt;/p&gt;
+&lt;/div&gt;
+&lt;hr&gt;
+{ % endfor % }
+</code></pre>
+<p>更多关于分页的信息可参考<a href="http://jekyll.bootcss.com/docs/pagination/">jekyll分页功能</a>。</p>
+<hr>
+<h2 id="a-namejekyll-templatea应用jekyll模板"><a name="jekyll-template"></a>应用jekyll模板</h2>
+<p>当你物色到一个很喜欢的theme时，你就可以fork一下（如果人家愿意的话），然后稍作修改就可以开始你的博客之旅了。</p>
+<p>主要需要注意修改的有以下几个方面：</p>
+<ol>
+<li><code>_config.yml</code>文件中的站点名称、地址及其他个人信息与站点配置。</li>
+<li>修改主要布局文件如<code>head.html</code>, <code>footer.html</code>, <code>index.html</code>中包含的个人信息。</li>
+</ol>
+<p><em><strong>PS：</strong></em> 如果theme的作者有在Github上维护关于该theme的说明文档的话，那就按照作者的指引进行相应的配置就好啦～</p>
+<p>上述的修改完成后就可以在<code>posts</code>文件夹中添加自己的博文了。</p>
+<hr>
+<h2 id="本地调试页面">本地调试页面</h2>
+<p>当火速写完一篇 <em>Hello World</em> 博文之后迫不及待地就想看看 <em>World</em> 到底有没有听到你的呼唤。</p>
+<p>使用命令行进入站点的根目录，输入以下命令：</p>
+<pre><code>jekyll serve
+</code></pre>
+<p>jekyll便随即开始编译生成站点文件（存放在<code>_site</code>目录中），如果一切正常的话，jekyll会告诉你本地服务器部署的IP及端口号，打开浏览器进行访问即可。</p>
+<p>在命令行中添加<code>--watch</code>选项可以让jekyll随时监听文件的变化并生成更新后的文件。</p>
+<hr>
+<h2 id="发布到github">发布到Github</h2>
+<p>使用Git工具将站点同步到Github仓库上，一切就大功告成啦～！</p>
+<pre><code>~ $ git branch    // * master
+~ $ git commit -a -m &quot;commit comment&quot;
+~ $ git push origin master
+</code></pre>
+<p>如果问题卡在使用Github Pages建立个人主页方面，可以参考<a href="https://segmentfault.com/a/1190000002765287">用Github来部署静态网页</a>，这篇文章写得很详细，当然，<a href="https://help.github.com/categories/github-pages-basics/">Github官网</a>也有相关的用户指引。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[利用MVC思想实现的2048小游戏]]></title>
+        <id>https://ambeta.github.io/post/li-yong-mvc-si-xiang-shi-xian-de-2048-xiao-you-xi/</id>
+        <link href="https://ambeta.github.io/post/li-yong-mvc-si-xiang-shi-xian-de-2048-xiao-you-xi/">
+        </link>
+        <updated>2016-03-23T12:00:00.000Z</updated>
+        <content type="html"><![CDATA[<p>2048是一款很经典的小游戏，据说游戏的源码就是用JavaScript写的，暂时还没来得及看。网上别人写的代码也很多，最少有不到280行代码写成的。</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1584087605868.png" alt="Game2048" loading="lazy"></figure>
+<p>JS本身语法比较松散，如果随便写的话很容易就写成了面向过程的结构，时间一长，各种复杂的逻辑就很难再理清楚了，后续的维护难度很高。而使用MVC的思想可以强化其面向对象的设计，逻辑清晰，方便日后回顾和修改。</p>
+<p>但是使用MVC的代码开销也是比较大的，所以也要酌情采用。<br>
+这次使用MVC来设计这个小游戏，主要还是为了练习一下这种模式，当然，也是为了后续方便再添加一些新的功能。</p>
+<hr>
+<h2 id="游戏逻辑与设计思路">游戏逻辑与设计思路</h2>
+<p>首先简单梳理一下游戏的逻辑：</p>
+<ol>
+<li><em><strong>游戏开始</strong></em><br>
+游戏载入时在两个随机的位置生成数字（2或4）。</li>
+<li><em><strong>移动与合并</strong></em><br>
+响应玩家操作，往一个方向移动所有的数字，<br>
+如果两个相同的数字碰到一起则发生合并，进入步骤<code>3</code>；<br>
+否则不发生任何变化，等待玩家继续尝试。</li>
+<li><em><strong>生成新数字</strong></em><br>
+在空余位置随机生成一个数字（2或4）；<br>
+获取当前剩余空位的数目，若仍有剩余空位，跳转至步骤<code>2</code>等待响应玩家操作；<br>
+若已无剩余空位，判断当前数字阵列是否可发生合并，若可发生合并，则跳转至步骤<code>2</code>等待响应玩家操作，否则，游戏结束，进入步骤<code>4</code>。</li>
+<li><em><strong>游戏结束</strong></em><br>
+当前数字阵列已无可以继续合并的数字，游戏结束；如果玩家选择重新开始，则进入步骤<code>1</code>继续游戏。</li>
+</ol>
+<h2 id="mvc实现">MVC实现</h2>
+<p>接着就利用MVC的思想将游戏分解为模型（Model）、视图（View）以及控制器（Controller）三大部分。</p>
+<ul>
+<li><strong>M - 模型</strong> 主要负责记录和处理游戏的数据。在该游戏中，游戏的数据主要包括所有的数字、玩家当前得分及历史最高得分。</li>
+<li><strong>V - 视图</strong> 主要负责游戏数据的呈现，同时需要响应用户对UI元素的操作。在该游戏中，用户可操作的元素主要包括所有数字的移动和游戏的开始按钮。</li>
+<li><strong>C - 控制器</strong> 主要负责响应UI操作的输入，并将这些输入转化为游戏数据的变化。</li>
+</ul>
+<p>M、V、C三者各司其职，其通过事件的绑定与通知实现彼此之间的通讯：<br>
+<strong>M</strong> 响应 <strong>C</strong> 对数据的直接操作，并在数据发生变化时及时发出通知；<br>
+<strong>V</strong> 监听 <strong>M</strong> 中的数据变化并刷新视图，并在玩家操作UI元素时及时发出通知；<br>
+<strong>C</strong> 监听 <strong>V</strong> 中的玩家操作事件，并相应地调用 <strong>M</strong> 中的方法请求数据操作。</p>
+<p>下面是一个简单地实现了 <em>观察者模式（Observer Pattern）</em> 的类，其主要负责类与类之间事件的绑定与通知：</p>
+<pre><code>function Event(sender) {
+    this._sender = sender;
+    this._listeners = [];
+}
+
+Event.prototype = {
+    attach: function(listener) {	// bind event
+        this._listeners.push(listener);
+    },
+
+    notify: function() {	// trigger event
+        var i, len, args = [];
+
+        args.push(this._sender);
+        for (i = 0, len = arguments.length; i &lt; len; i++) {
+            args.push(arguments[i]);
+        }
+
+        for (i = 0; i &lt; this._listeners.length; i++) {
+            this._listeners[i].apply(this, args);
+        }
+    }
+};
+</code></pre>
+<h3 id="模型model">模型（Model）</h3>
+<p>模型中主要包含的是游戏的数据，除了主要的数字阵列和玩家得分外，还需要根据功能的实现添加一些辅助数据。该游戏的数据模型定义如下：</p>
+<pre><code>function Game2048Model(row, col) {
+    this._row = row;
+    this._col = col;
+    this._currScore = 0;	// player's current score
+    this._maxScore = 0;		// player's best score
+    this._cells = [];		// number cells     
+    this._shift = [];		// shift of number cells when moving
+    this._empty = [];		// empty grid left
+    this._isLocked = false;// lock for data in case of frequent operation
+
+    this.cellsMovedUp = new Event(this);
+    this.cellsMovedDown = new Event(this);
+    this.cellsMovedLeft = new Event(this);
+    this.cellsMovedRight = new Event(this);
+    this.cellCreated = new Event(this);
+    this.scoreUpdated = new Event(this);
+    this.gameOver = new Event(this);
+    this.gameRestarted = new Event(this);
+
+    this.init();
+}
+</code></pre>
+<ul>
+<li>这里将所有的格子中的数字存放在一个名为<code>this._cells</code>的二维数组中；</li>
+<li>由于需要显示数字在移动与合并过程中的轨迹，因此这里使用二维数组<code>this._shift</code>来保存每个数字的位移信息；</li>
+<li><code>this._empty</code>用以保存当前空余的位置信息，为了减少不必要的遍历，同时方便取随机，这里将它设计为一维数组，元素值是用类似于<code>'row,col'</code>的字符串保存的行列位置信息；</li>
+<li><code>this._isLocked</code>变量用以对数据进行锁定，防止对数据同时进行多个操作而产生异常。</li>
+</ul>
+<p>同时，模型上还有一系列的事件触发器，他们用于在数据发生变化时触发视图的更新。</p>
+<p>在处理数字的移动与合并时，提取了一个原子操作<code>mergeCells(array)</code>，实现了将一行元素向左移动与合并，返回合并后的序列与每个元素的位移。<br>
+同时，在数字合并的过程中，更新当前的玩家得分。<br>
+具体实现如下：</p>
+<pre><code>mergeCells: function(array) {   // merge cells from right to left
+    var i, len, lastNum, result = [], shift = [];
+
+    len = array.length;
+    for (i = 0, lastNum = -1; i &lt; len; i++) {
+        if (array[i] === lastNum) { // merge cells
+            result.pop();
+            result.push(2 * array[i]);
+            lastNum = -1;
+            shift[i] = i + 1 - result.length;
+            this._currScore += 2 * array[i];
+        } else if (array[i]) {	// the current number is not 0
+            result.push(array[i]);
+            lastNum = array[i];
+            shift[i] = i + 1 - result.length;
+        } else {	// the number 0 never moves
+            shift[i] = 0;
+        }
+    }
+    for (i = 0; i &lt; len; i++) {
+        result[i] = result[i] || 0;	// fill result with 0
+    }
+
+    return {result: result, shift: shift};
+},
+</code></pre>
+<p>完成了这一原子操作之后，基本上整个游戏的主要逻辑都解决了，接下来就是分别在上下左右四个方向应用该原子操作，获得一次数字移动之后的结果矩阵与位移矩阵。<br>
+这里是一个<code>moveUp</code>操作的代码，操作过程中需要上锁和解锁，并及时更新当前空余位置的坐标信息：</p>
+<pre><code>moveUp: function() {
+    var i, j, tmpArray, mergeResult, isMerged;
+
+    if (this._isLocked) return false;
+    this._isLocked = true;	// lock the data for operation
+
+    isMerged = false;
+    for (j = 0; j &lt; this._col; j++) {
+        tmpArray = [];
+        for (i = 0; i &lt; this._row; i++) {
+            tmpArray.push(this._cells[i][j]);
+        }
+        mergeResult = this.mergeCells(tmpArray);
+        for (i = this._row - 1; i &gt;= 0; i--) {
+            this._cells[i][j] = mergeResult.result.pop();
+            this._shift[i][j] = mergeResult.shift.pop();
+
+            isMerged = this.updateEmpty(i, j, this._cells[i][j]) || isMerged;
+        }
+    }
+
+    if (isMerged) {	// data changed, trigger a UI update
+        this.cellsMovedUp.notify(this._cells, this._shift);
+
+        this.updateScore();
+        this.createRandomCell();
+    }
+
+    this._isLocked = false;	// release the lock of data
+}
+</code></pre>
+<p>完成了上下左右的操作实现之后，整个数据模型就基本上建立好了，可以先在一个html文件中引入该脚本，再通过浏览器的控制台实例化一个数据模型并上下左右移动数据，以检验逻辑是否正确。</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1584087637353.png" alt="game2048console" loading="lazy"></figure>
+<p>这样子玩2048确实还是第一次:9</p>
+<h4 id="更多实现细节"><em>更多实现细节</em></h4>
+<p>在实现数字移动与合并时，使用了一个<code>lastNum</code>变量来记录上一个push进<code>result</code>中的数字，<code>lastNum</code>初始化为－1，并且在每次完成数字合并之后都进行复位。<strong>注意</strong>这里不能直接判断push进<code>result</code>数组中的最后一个数字是否可与当前数字合并，因为当遇到<code>[2 2 4 0]</code>这样的序列时会发生两次合并操作，使得结果变成了<code>[8 0 0 0]</code>，这并不是我们想要的结果:(</p>
+<h3 id="视图view">视图（View）</h3>
+<p>视图随时监听数据模型的变化，并负责将游戏的数据呈现出来，这里主要分为<strong>两个方面</strong>，一方面是当前数字的位置信息，另一方面则是数字在移动过程中的轨迹。前者就是将数据模型<code>Game2048Model._cells</code>数组中的数字呈现出来，而后者则需要将<code>Game2048Model._shift</code>数组中的信息表现出来。此外，视图还需要监听玩家对UI的操作，并及时通知到控制器以进行数据操作。</p>
+<p>视图的功能非常明确，其需要绑定一个数据模型，同时还需要绑定一组UI元素。<br>
+视图的类设计如下（代码比较长，但是还是有必要提一下的）：</p>
+<pre><code>function Game2048View(gameModel, ctrlEle) {
+    this._gameModel = gameModel;
+    this._ctrlEle = ctrlEle;
+    this._$cellDiv = [];
+    this._row = 0;
+    this._col = 0;
+    this._animDur = 200;    // the animation duration (ms)
+    this._cellSize = 100;  // the size/width of cells (px)
+    this._cellGap = 20;     // the gap between cells (px)
+
+    this.restartButtonClicked = new Event(this);
+    this.upKeyPressed = new Event(this);
+    this.downKeyPressed = new Event(this);
+    this.leftKeyPressed = new Event(this);
+    this.rightKeyPressed = new Event(this);
+
+
+    var _this = this;
+
+    // bind model events
+    this._gameModel.gameRestarted.attach(function(sender, cells) {
+        _this._ctrlEle.$gameOverLayer.hide();
+        _this.rebuildCells(cells);
+    });
+    this._gameModel.cellsMovedUp.attach(function(sender, cells, shift) {
+        _this.moveUp(cells, shift);
+    });
+    this._gameModel.cellsMovedDown.attach(function(sender, cells, shift) {
+        _this.moveDown(cells, shift);
+    });
+    this._gameModel.cellsMovedLeft.attach(function(sender, cells, shift) {
+        _this.moveLeft(cells, shift);
+    });
+    this._gameModel.cellsMovedRight.attach(function(sender, cells, shift) {
+        _this.moveRight(cells, shift);
+    });
+    this._gameModel.cellCreated.attach(function(sender, index, val) {
+        _this.createCell(index, val);
+    });
+    this._gameModel.scoreUpdated.attach(function(sender, currScore, maxScore) {
+        _this.updateScore(currScore, maxScore);
+    });
+    this._gameModel.gameOver.attach(function() {
+        _this._ctrlEle.$gameOverLayer.show();
+    });
+
+    // bind UI events
+    this._ctrlEle.$restartButton.on('click touchstart', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        _this.restartButtonClicked.notify();
+    });
+    $('body').on('keydown', function(e) {
+        switch (e.keyCode) {
+            case 87:    // key 'W'
+            case 38:    // key 'UP'
+                _this.upKeyPressed.notify();
+                break;
+            case 83:    // key 'S'
+            case 40:    // key 'DOWN'
+                _this.downKeyPressed.notify();
+                break;
+            case 65:    // key 'A'
+            case 37:    // key 'LEFT'
+                _this.leftKeyPressed.notify();
+                break;
+            case 68:    // key 'D'
+            case 39:    // key 'RIGHT'
+                _this.rightKeyPressed.notify();
+                break;
+            default:
+                return true;    // release for default trigger
+                break;
+        }
+        return false;   // prevent default and stop propagation
+    });
+
+    // touch and move events for mobile devices
+    var lastX, lastY;
+    this._ctrlEle.$container.on('touchstart', function(e) {
+        e.preventDefault();
+        lastX = e.originalEvent.changedTouches[0].pageX;
+        lastY = e.originalEvent.changedTouches[0].pageY;
+    });
+    this._ctrlEle.$container.on('touchend', function(e) {
+        var deltaX, deltaY;
+
+        deltaX = e.originalEvent.changedTouches[0].pageX - lastX;
+        deltaY = e.originalEvent.changedTouches[0].pageY - lastY;
+
+        if (Math.abs(deltaX) &gt; Math.abs(deltaY)) {          // move horizontally
+            if (deltaX &gt; 0) _this.rightKeyPressed.notify(); // move right
+            else _this.leftKeyPressed.notify();             // move left
+        } else {                                            // move vertically
+            if (deltaY &gt; 0) _this.downKeyPressed.notify();  // move down
+            else _this.upKeyPressed.notify();               // move up
+        }
+    });
+    this._ctrlEle.$container.on('touchmove', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    this.init();
+}
+</code></pre>
+<ul>
+<li><code>ctrlEle</code>是一个保存有所有需要操控的UI元素的对象，这里使用的是jQuery的DOM节点对象，变量命名以<code>$</code>开头，以示区分。其中<code>$container</code>是一个容器元素，提供绘制数字块的区域。</li>
+<li>由于需要适配不同的屏幕尺寸，因此定义了<code>this._cellSize</code>以及<code>this._cellGap</code>用于在页面初始化时动态地设定每个数字块的大小及间距。</li>
+<li><code>this._restartButtonClicked</code>、<code>this._upKeyPressed</code>等一系列的事件触发器用于响应玩家输入并通知控制器对游戏数据进行更新。</li>
+<li>视图类实现了对数据模型的监听，并调用自身的方法对页面进行重绘。</li>
+</ul>
+<p>在收到数据模型发送的数字上移变化的通知时，视图首先根据<code>Game2048Model._shift</code>数组中的数字位移信息显示移动的动画，再刷新视图显示最后的移动结果。<br>
+如下是一个上移操作的实现：</p>
+<pre><code>moveUp: function(cells, shift) {
+    var i, j, pos, _this;
+
+    _this = this;
+    for (i = 0; i &lt; this._row; i++) for (j = 0; j &lt; this._col; j++) if (shift[i][j]) {
+        pos = this.getPos(i - shift[i][j], j);
+        this._$cellDiv[i][j].stop(true, true).animate({
+            'top': pos.top,
+            'left': pos.left
+        }, this._animDur, function () {
+            _this.rebuildCells(cells);
+        });
+    }
+}
+</code></pre>
+<h4 id="更多实现细节-2"><em>更多实现细节</em></h4>
+<ol>
+<li>
+<p>处理移动端的触摸操作时需要注意以下几点：</p>
+<ul>
+<li>移动端触摸的原生事件主要有<code>ontouchstart</code>, <code>ontouchmove</code>, <code>ontouchend</code>，其分别在触摸开始、触摸移动以及触摸结束时触发；</li>
+<li>PC端的鼠标点击事件<code>onclick</code>在移动端也可以触发，但是在iPhone上会表现出明显的延迟，主要时因为iPhone会在手指点击屏幕后等待一段时间进行判断，使用<code>ontouchstart</code>事件则表现较好，但需要<strong>注意</strong>使用<code>event.preventDefault()</code>来阻止进一步触发<code>onclick</code>事件；</li>
+<li>在iPhone端可以直接使用<code>event.pageX</code>, <code>event.pageY</code>来获取触摸点的坐标，但在Android端则需要使用对于多点触控设计的<code>event.touches</code>及<code>event.changedTouches</code>来获取触摸点的坐标，当然iPhone也是支持后者的，所以都用后者也没有问题；</li>
+<li>在<code>ontouchstart</code>事件回调函数中使用<code>event.preventDefault()</code>可以防止在Android系统上<code>ontouchend</code>事件无法正常触发；</li>
+<li>在<code>ontouchmove</code>事件回调函数中使用<code>event.preventDefault()</code>可以防止页面滚动，这有助于得到原生应用的效果，尤其是针对这种需要以滑动方式进行操作的应用和游戏。</li>
+</ul>
+</li>
+<li>
+<p>使用jQuery的动画函数<code>animate()</code>时需要根据情况在调用前使用<code>stop([boolean], [boolean])</code>来终止元素上已有的动画，其中第一个布尔值表示是停止当前元素上的动画，第二个布尔值表示是否将元素置为上一个动画的结束状态。</p>
+</li>
+<li>
+<p>在为数字添加移动效果时使用了<code>animate()</code>的回调函数用来将元素复位，如果紧接着<code>animate()</code>就复位数字的话，则数字最后的位置是在动画结束的地方。</p>
+</li>
+</ol>
+<h3 id="控制器controller">控制器（Controller）</h3>
+<p>控制器主要负责监听UI事件，并调用数据模型上的变化函数，起到的主要是桥梁的作用，避免视图类对数据的直接操作。<br>
+控制器类的实现如下：</p>
+<pre><code>function Game2048Controller(gameModel, gameView) {
+    this._gameModel = gameModel;
+    this._gameView = gameView;
+
+    var _this = this;
+
+    this._gameView.restartButtonClicked.attach(function() {
+        _this.restartGame();
+    });
+    this._gameView.upKeyPressed.attach(function() {
+        _this.moveUp();
+    });
+    this._gameView.downKeyPressed.attach(function() {
+        _this.moveDown();
+    });
+    this._gameView.leftKeyPressed.attach(function() {
+        _this.moveLeft();
+    });
+    this._gameView.rightKeyPressed.attach(function() {
+        _this.moveRight();
+    });
+}
+</code></pre>
+<h2 id="小结">小结</h2>
+<p>MVC框架是一种比较传统的框架，其运用简单，容易理解，框架自身的开销比较小。使用MVC将数据处理的逻辑与视图渲染的逻辑代码分开，使得代码结构更加清晰，也降低了模块之间的耦合，方便独立地修改数据逻辑与视图逻辑。</p>
+<p>在JavaScript的模型视图框架中，<em>backbonejs</em> 与该思想比较相符，其同样也是MVC架构，但其中的<code>C</code>并不表示Controller，而是Collection的意思，意为多个数据模型的集合。而目前更为流行的框架主要是MVVM，例如 <em>angularjs</em> 等，其使用ViewModel代替了MVC中的Controller，通过增加数据绑定层进一步降低了View和Model之间的耦合程度，同时也提供了双向数据绑定的思想，值得深入学习。</p>
+<p>在线演示地址：<a href="http://ambeta.github.io/Game2048">Game2048</a><br>
+代码Github仓库地址：<a href="https://github.com/AmBeta/Game2048">AmBeta/Game2048</a></p>
 ]]></content>
     </entry>
 </feed>

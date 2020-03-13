@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>利用 AST 对项目代码进行迁移 | 三土 | AmBeta</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ambeta.github.io/favicon.ico?v=1584088331199">
+<link rel="stylesheet" href="https://ambeta.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75340276-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-75340276-2');
+</script>
+
+
+    <meta name="description" content="
+The more code you have, the harder it becomes to make big, sweeping changes quickly and confidently. Even if you trust ..." />
+    <meta name="keywords" content="AST,javascript" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ambeta.github.io">
+        <img src="https://ambeta.github.io/images/avatar.png?v=1584088331199" class="site-logo">
+        <h1 class="site-title">三土 | AmBeta</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/AmBeta" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      一个伪程序猿的自我拉扯
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ambeta.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">利用 AST 对项目代码进行迁移</h2>
+            <div class="post-date">2017-08-13</div>
+            
+            <div class="post-content" v-pre>
+              <blockquote>
+<p>The more code you have, the harder it becomes to make big, sweeping changes quickly and confidently. Even if you trust yourself not to make too many mistakes, and no matter how proficient you are with your text editor, changing tens of thousands of lines of code takes precious, non-refundable time.</p>
+</blockquote>
+<p>项目写了一段时间之后，如果再进行项目的调整，那往往是比较繁琐的事情，不是在编辑器中使用全文检索和替换能够解决的了。</p>
+<p>在看 React 官方文档时，看到他们使用 <a href="https://github.com/reactjs/react-codemod">react-codemod</a> 来解决 React 版本更新造成的 API 使用的问题，于是看了一下这种方案是如何实现的。</p>
+<h4 id="react-codemod"><a href="https://github.com/reactjs/react-codemod">react-codemod</a></h4>
+<p>首先 react-codemod 项目提供的仅仅是一些转化的脚本，而这些转化脚本主要是提供给 <a href="https://github.com/facebook/jscodeshift">jscodeshift</a> 这个工具使用的。</p>
+<h4 id="jscodeshift"><a href="https://github.com/facebook/jscodeshift">jscodeshift</a></h4>
+<p>jscodeshift 的核心则是由 <a href="https://github.com/benjamn/recast">recast</a> 提供，jscodeshift 对 recast 进行了自己的封装，添加了 <code>Collection</code> 类使得对 AST 操作的 API 更加易于使用，也提高了操作的可拓展性，同时该工具也提供了对文件以及文件夹的多线程操作，并可以给出最后转化的结果（成功或失败的文件数）。</p>
+<h4 id="recast"><a href="https://github.com/benjamn/recast">recast</a></h4>
+<p>recast 这个工具则是核心，其提供了对源码进行 AST 分析以及修改的能力，同时可以最大程度地保留原代码的格式，对于 AST 中没有修改的部分，他会原封不动地进行输出，其也支持对 AST 进行格式化的代码输出，提供了部分可定制的代码格式化选项。</p>
+<h4 id="api">API</h4>
+<p>代码的范例可以参看 react-codemod 项目，由于没有找到详细的 API 文档，这里就列出一部分个人认为比较重要的 API。</p>
+<ul>
+<li><code>jscodeshift(code: string)</code><br>
+根据源码 <code>code</code> 生成 AST，返回一个 <code>Collection</code> 对象。</li>
+<li><code>Collection.find(nodeType: ASTTypes, predictor: any)</code><br>
+从 <code>Collection</code> 中过滤出所有 <code>nodeType</code> 节点类型的节点，返回一个 <code>Array&lt;NodePath&gt;</code> 数组可用于迭代。</li>
+<li><code>Collection.replace(nodes: NodePath | NodePath[])</code><br>
+用 <code>nodes</code> 节点替换 <code>Collection</code> 中的<strong>每个</strong> <code>NodePath</code>。</li>
+<li><code>Collection.insertBefore/Collection.insertAfter(nodes: NodePath | NodePath[])</code><br>
+在 <code>Collection</code> 中的<strong>每个</strong> <code>NodePath</code> 前/后插入 <code>nodes</code> 节点。</li>
+<li><code>Collection.paths()</code><br>
+获取 <code>Collection</code> 中的所有 <code>NodePath</code>，返回一个 <code>Array&lt;NodePath&gt;</code> 数组。</li>
+</ul>
+<p>关于 AST 操作的更多 API 可以参看 <a href="https://github.com/benjamn/recast">recast</a> 的文档以及 <a href="https://github.com/benjamn/ast-types">ast-types</a> 的文档以及相关的源码。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ambeta.github.io/tag/7_HWl6hXQ/" class="tag">
+                    AST
+                  </a>
+                
+                  <a href="https://ambeta.github.io/tag/ICr4BDevj/" class="tag">
+                    javascript
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ambeta.github.io/post/zai-stapes-kuang-jia-xia-shi-xian-yi-ge-mo-tai-kuang-de-shi-jian-fang-fa/">
+                  <h3 class="post-title">
+                    在Stapes框架下实现一个模态框的实践方法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
