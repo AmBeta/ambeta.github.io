@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>AST | 三土 | AmBeta</title>
+<title>重定向 bash 脚本输出到系统日志 | 三土 | AmBeta</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -27,7 +27,8 @@
 </script>
 
 
-    <meta name="description" content="一个伪程序猿的自我拉扯">
+    <meta name="description" content="【TL;DR】最近在家里的小米 R3G（刷了 Padavan 系统）部署 trojan 客户端，由于 hiboy 的固件没有预装 trojan，于是只能手写开机脚本。脚本写好了，但是从路由器的 webUI 上看不到启动日志，于是有了这篇文章..." />
+    <meta name="keywords" content="shell" />
   </head>
   <body>
     <div id="app" class="main">
@@ -101,28 +102,46 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <h2 class="current-tag">标签: AST</h2>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/">
-                  <h2 class="post-title">利用 AST 对项目代码进行迁移</h2>
-                </a>
-                <div class="post-date">
-                  2017-08-13
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
+          <div class="post-detail">
+            <h2 class="post-title">重定向 bash 脚本输出到系统日志</h2>
+            <div class="post-date">2020-03-18</div>
+            
+            <div class="post-content" v-pre>
+              <p><em>【TL;DR】最近在家里的小米 R3G（刷了 Padavan 系统）部署 trojan 客户端，由于 hiboy 的固件没有预装 trojan，于是只能手写开机脚本。脚本写好了，但是从路由器的 webUI 上看不到启动日志，于是有了这篇文章。</em></p>
+<h1 id="how">HOW</h1>
+<h2 id="exec-1-logger-s-t-basename-0-21"><code>exec 1&gt; &gt;(logger -s -t $(basename $0)) 2&gt;&amp;1</code></h2>
+<p>在脚本的开头插入上述的命令可以将脚本中所有的输出重定向到系统日志中。</p>
+<h2 id="command-21-logger-s-t-basename-0"><code>[command] 2&gt;&amp;1 | logger -s -t $(basename $0)</code></h2>
+<p>使用管道运算符将标准输出作为系统日志的标准输入。<br>
+同时，shell 提供了与 <code>2&gt;&amp;1</code> 等价的快捷方式 <code>|&amp;</code> 可以替换使用。</p>
+<h1 id="reference">Reference</h1>
+<p><a href="https://www.urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/">Redirecting bash script output to syslog</a><br>
+<a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">bash manual: Redirections</a></p>
 
-          <div class="pagination-container">
-  
-  
-</div>
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ambeta.github.io/tag/SwadHtcw4/" class="tag">
+                    shell
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/">
+                  <h3 class="post-title">
+                    利用 AST 对项目代码进行迁移
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
 
         </div>
       </div>

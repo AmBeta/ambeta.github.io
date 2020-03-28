@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2020-03-13T08:52:10.219Z</updated>
+    <updated>2020-03-28T09:28:58.781Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -10,6 +10,123 @@
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 三土 | AmBeta</rights>
+    <entry>
+        <title type="html"><![CDATA[在 Padavan 上使用 trojan]]></title>
+        <id>https://ambeta.github.io/post/zai-padavan-shang-shi-yong-trojan/</id>
+        <link href="https://ambeta.github.io/post/zai-padavan-shang-shi-yong-trojan/">
+        </link>
+        <updated>2020-03-28T08:02:00.000Z</updated>
+        <content type="html"><![CDATA[<p>由于目前所使用的 <a href="https://opt.cn2qq.com/padavan/">hiboy Padavan 固件</a> 还没有内置 trojan 代理的支持，因此只能使用自定义脚本的方式来部署。</p>
+<p>本文主要分为三个部分：</p>
+<ol>
+<li>获取 trojan 程序</li>
+<li>配置 trojan 启动脚本</li>
+<li>配置透明代理</li>
+</ol>
+<h1 id="获取-trojan-程序">获取 trojan 程序</h1>
+<p>由于目前 <a href="https://github.com/trojan-gfw/trojan">trojan</a> 没有提供 MIPS 平台的可执行文件，因此需要自行编译获取对应程序。</p>
+<p>[hanwckf/Trojan-pdv-build] 已经提供了在 Linux 环境下进行交叉编译的相关脚本，我在此基础上稍作修改，利用 github actions 实现在线编译，并在编译时自动获取最新的 trojan 版本。具体操作如下：</p>
+<ol>
+<li>打开 <a href="https://github.com/AmBeta/Trojan-pdv-build">AmBeta/Trojan-pdv-build</a>，点击项目右上角的 Fork 按钮 fork 项目到自己的仓库</li>
+<li>在自己 fork 的项目里，点击右上角的 Star 按钮触发构建操作</li>
+<li>在项目的 Actions 面板中可以看到当前的构建进度，构建完成后就可以下载生成的文件了</li>
+</ol>
+<h1 id="配置-trojan-启动脚本">配置 trojan 启动脚本</h1>
+<h2 id="1-新建-trojan-客户端配置文件">1. 新建 trojan 客户端配置文件</h2>
+<p>新建一个文本文档，录入以下内容，保存文件名为 <code>trojan_config.sh</code>。<br>
+<strong>注意</strong>修改文件内容中的 <code>&lt;Server Host&gt;</code>，<code>&lt;Server Port&gt;</code>，<code>&lt;Password&gt;</code> 为你的服务器对应的域名、端口号和密码。</p>
+<pre><code class="language-json">{
+    &quot;run_type&quot;: &quot;client&quot;,
+    &quot;local_addr&quot;: &quot;&lt;RouterIP&gt;&quot;,
+    &quot;local_port&quot;: 1080,
+    &quot;remote_addr&quot;: &quot;&lt;Server Host&gt;&quot;,
+    &quot;remote_port&quot;: &lt;Server Port&gt;,
+    &quot;password&quot;: [
+        &quot;&lt;Password&gt;&quot;
+    ],
+    &quot;log_level&quot;: 2,
+    &quot;ssl&quot;: {
+        &quot;verify&quot;: true,
+        &quot;verify_hostname&quot;: true,
+        &quot;cert&quot;: &quot;&quot;,
+        &quot;cipher&quot;: &quot;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:AES128-SHA:AES256-SHA:DES-CBC3-SHA&quot;,
+        &quot;cipher_tls13&quot;: &quot;TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384&quot;,
+        &quot;sni&quot;: &quot;&quot;,
+        &quot;alpn&quot;: [
+            &quot;h2&quot;,
+            &quot;http/1.1&quot;
+        ],
+        &quot;reuse_session&quot;: true,
+        &quot;session_ticket&quot;: false,
+        &quot;curves&quot;: &quot;&quot;
+    },
+    &quot;tcp&quot;: {
+        &quot;no_delay&quot;: true,
+        &quot;keep_alive&quot;: true,
+        &quot;reuse_port&quot;: false,
+        &quot;fast_open&quot;: false,
+        &quot;fast_open_qlen&quot;: 20
+    }
+}
+</code></pre>
+<h2 id="2-新建-trojan-客户端启动脚本">2. 新建 trojan 客户端启动脚本</h2>
+<p>新建一个文本文档，录入以下内容，保存文件名为 <code>trojan_start.sh</code>。</p>
+<pre><code class="language-shell">#!/bin/sh
+# 启动前运行的脚本
+export PATH='/etc/storage/bin:/tmp/script:/etc/storage/script:/opt/usr/sbin:/opt/usr/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin'
+export LD_LIBRARY_PATH=/lib:/opt/lib
+export SSL_CERT_FILE=/etc/storage/cacert.pem
+
+# kill existing trojan process
+killall trojan
+
+# startup
+logger -t &quot;【trojan】&quot; &quot;启动 trojan 客户端&quot;
+trojan -c /etc/storage/trojan_config.sh 2&gt;&amp;1 | logger -t &quot;【trojan】&quot; &amp;
+</code></pre>
+<p>在命令行中输入以下命令为文件添加可执行权限：</p>
+<pre><code class="language-shell">chmod +x trojan_start.sh
+</code></pre>
+<h2 id="3-下载证书">3. 下载证书</h2>
+<p>trojan 使用 tls 与服务器建立连接，因此需要用到相关的证书，否则可能会遇到无法验证证书从而无法建立连接的问题。（<a href="https://github.com/shadowsocks/v2ray-plugin/issues/53">mipsle not work properly at padavan Router #53</a>）<br>
+使用如下命令下载证书：</p>
+<pre><code class="language-shell">curl -O https://curl.haxx.se/ca/cacert.pem
+</code></pre>
+<h2 id="4-上传文件到路由器">4. 上传文件到路由器</h2>
+<p>在命令行中使用 scp 命令将以上文件拷贝到路由器（<strong>注意</strong>将 root 替换为路由器管理页面登录的用户名）。</p>
+<pre><code class="language-shell">scp trojan root@192.168.123.1:/etc/storage/bin
+scp trojan_config.sh trojan_start.sh cacert.pem root@192.168.123.1:/etc/storage
+</code></pre>
+<p>由于 Padavan 特殊的安全机制，路由器重启后未执行保存命令的文件会丢失，因此需要执行一次保存操作。打开路由器的 webUI 管理页面，依次点击 <code>高级设置-&gt;系统管理-&gt;恢复/导出/上传设置-&gt;保存 /etc/storage/ 内容到闪存-&gt;提交</code>，等待片刻即可。</p>
+<h2 id="5-webui-配置启动自定义脚本">5. webUI 配置启动自定义脚本</h2>
+<p>配置路由器启动时自动启动 trojan 客户端。依次点击 <code>高级设置-&gt;自定义设置-&gt;脚本-&gt;在路由器启动后执行</code>，在输入框中追加如下脚本：</p>
+<pre><code class="language-shell">/etc/storage/trojan_start.sh &amp;
+</code></pre>
+<h1 id="配置透明代理">配置透明代理</h1>
+<p>由于路由器性能有限，这里使用 ss_tproxy + transocks + trojan 的组合作为路由器透明代理的方案。<br>
+在 <code>扩展功能-&gt;广告屏蔽功能-&gt;transocks</code> 页面配置 transocks 透明代理服务：</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1585386892335.png" alt="transocks 配置" loading="lazy"></figure>
+<p>Padavan 固件的内置脚本会自动启用 ss_tproxy，等待脚本执行完成后路由器透明代理就设置完成了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[重定向 bash 脚本输出到系统日志]]></title>
+        <id>https://ambeta.github.io/post/chong-ding-xiang-bash-jiao-ben-shu-chu-dao-xi-tong-ri-zhi/</id>
+        <link href="https://ambeta.github.io/post/chong-ding-xiang-bash-jiao-ben-shu-chu-dao-xi-tong-ri-zhi/">
+        </link>
+        <updated>2020-03-18T06:00:13.000Z</updated>
+        <content type="html"><![CDATA[<p><em>【TL;DR】最近在家里的小米 R3G（刷了 Padavan 系统）部署 trojan 客户端，由于 hiboy 的固件没有预装 trojan，于是只能手写开机脚本。脚本写好了，但是从路由器的 webUI 上看不到启动日志，于是有了这篇文章。</em></p>
+<h1 id="how">HOW</h1>
+<h2 id="exec-1-logger-s-t-basename-0-21"><code>exec 1&gt; &gt;(logger -s -t $(basename $0)) 2&gt;&amp;1</code></h2>
+<p>在脚本的开头插入上述的命令可以将脚本中所有的输出重定向到系统日志中。</p>
+<h2 id="command-21-logger-s-t-basename-0"><code>[command] 2&gt;&amp;1 | logger -s -t $(basename $0)</code></h2>
+<p>使用管道运算符将标准输出作为系统日志的标准输入。<br>
+同时，shell 提供了与 <code>2&gt;&amp;1</code> 等价的快捷方式 <code>|&amp;</code> 可以替换使用。</p>
+<h1 id="reference">Reference</h1>
+<p><a href="https://www.urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/">Redirecting bash script output to syslog</a><br>
+<a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">bash manual: Redirections</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[利用 AST 对项目代码进行迁移]]></title>
         <id>https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/</id>
