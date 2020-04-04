@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2020-04-04T03:40:40.402Z</updated>
+    <updated>2020-04-04T12:34:34.534Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -10,6 +10,42 @@
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 三土 | AmBeta</rights>
+    <entry>
+        <title type="html"><![CDATA[4.4全国哀悼日——全(局域)网五十度灰]]></title>
+        <id>https://ambeta.github.io/post/4-yue-4-ri-quan-guo-ai-dao-ri-quan-wang-wu-shi-du-hui/</id>
+        <link href="https://ambeta.github.io/post/4-yue-4-ri-quan-guo-ai-dao-ri-quan-wang-wu-shi-du-hui/">
+        </link>
+        <updated>2020-04-04T11:55:03.000Z</updated>
+        <content type="html"><![CDATA[<p>国务院紧急通知清明节当天全国哀悼，各个网站也赶紧实现了全站灰度呈现，一起来看看各大厂都是怎么干的。</p>
+<h2 id="淘宝taobaocom">淘宝（taobao.com）</h2>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1586001637288.png" alt="50度灰淘宝" loading="lazy"></figure>
+<p>淘宝比较直接，直接在 <code>html</code> 根元素上添加了 <code>filter</code> 样式，同时也有对 IE6 的支持：</p>
+<pre><code class="language-css">html {
+    -webkit-filter: grayscale(100%);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
+}
+</code></pre>
+<h2 id="百度baiducom">百度（baidu.com）</h2>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1586001911862.png" alt="50度灰百度" loading="lazy"></figure>
+<p>百度做得更细致一些，直接精确到了对应的 DOM 元素，可以看到网站左上角的空气质量显示仍保留有颜色。<br>
+技术实现上也是使用 <code>filter</code> 同时添加了对 IE6 的支持，但用了 postCSS 或类似的 CSS 预处理器，相比于淘宝的实现多了很多的 browser vendor prefix。</p>
+<h2 id="腾讯qqcom">腾讯（qq.com）</h2>
+<figure data-type="image" tabindex="3"><img src="https://ambeta.github.io/post-images/1586002406191.png" alt="50度灰腾讯" loading="lazy"></figure>
+<p>腾讯网在 <code>body</code> 元素上添加了一个 css 样式类 <code>garyBody</code>（grayBody???），同样使用 <code>filter</code> 属性实现灰度变化，但是缺少了对 IE6 的支持。<br>
+另一个值得注意的是，body 上的这个样式类是通过 js 动态插入的，所以在网站打开时会有一个从彩色切换到灰色的跳变，并且如果禁用了浏览器脚本执行的话，网站就无法切换到灰色模式了。</p>
+<h2 id="京东jdcom">京东（jd.com）</h2>
+<figure data-type="image" tabindex="4"><img src="https://ambeta.github.io/post-images/1586002807113.png" alt="50度灰京东" loading="lazy"></figure>
+<p>京东也是直接在 <code>html</code> 根元素上添加了相应的样式，所使用的 css 属性与淘宝一致，不过使用的是类名选择器而不是标签选择器。<br>
+另外，京东的整个网站是一个单页面应用，并且没有做首屏服务端渲染，所以禁用浏览器脚本的话网站基本无法使用，当然也没法切换到灰度模式：</p>
+<figure data-type="image" tabindex="5"><img src="https://ambeta.github.io/post-images/1586003024944.png" alt="禁用脚本后的京东" loading="lazy"></figure>
+<h2 id="总结吐槽">总结（吐槽）</h2>
+<blockquote>
+<p>腾讯的哥们最粗（单词拼错？缺乏IE6支持？）<br>
+百度的哥们最细（精确到元素，可能网站结构比较简单吧:)）</p>
+</blockquote>
+<p>花了半个小时的时间写了一篇这么无聊的文章，了解了一个全站变灰的方式以及可能的坑，当然也不希望以后会用到这个技术吧。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[使用 UPX 压缩可执行文件]]></title>
         <id>https://ambeta.github.io/post/shi-yong-upx-ya-suo-ke-zhi-xing-wen-jian/</id>
