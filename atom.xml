@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2020-03-28T09:28:58.781Z</updated>
+    <updated>2020-04-04T03:40:40.402Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -10,6 +10,69 @@
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 三土 | AmBeta</rights>
+    <entry>
+        <title type="html"><![CDATA[使用 UPX 压缩可执行文件]]></title>
+        <id>https://ambeta.github.io/post/shi-yong-upx-ya-suo-ke-zhi-xing-wen-jian/</id>
+        <link href="https://ambeta.github.io/post/shi-yong-upx-ya-suo-ke-zhi-xing-wen-jian/">
+        </link>
+        <updated>2020-04-03T02:57:01.000Z</updated>
+        <content type="html"><![CDATA[<p><a href="https://upx.github.io/">UPX</a> 可以有效地对可执行文件进行压缩，并且压缩后的文件可以直接由系统执行，支持多系统和平台。<br>
+使用 UPX 来压缩可执行文件是一种减少发布包大小的有效方式。</p>
+<h1 id="安装">安装</h1>
+<ul>
+<li>
+<p>从 <a href="https://github.com/upx/upx/releases">github release page</a> 下载预编译的二进制文件</p>
+</li>
+<li>
+<p>macOS 可以使用 brew 安装：</p>
+<pre><code class="language-shell">brew install upx
+</code></pre>
+</li>
+</ul>
+<h1 id="使用">使用</h1>
+<h2 id="压缩">压缩</h2>
+<pre><code class="language-shell">upx [options] yourfile
+</code></pre>
+<p>upx 对文件的默认操作即为压缩，使用上述命令会使用默认参数压缩并替换文件 yourfile。<br>
+upx 支持如下可选参数：</p>
+<ul>
+<li><code>-1[23456789]</code>：不同的压缩级别，数值越高压缩率越高，但耗时更长。对于小于 512 KiB 的文件默认使用 <code>-8</code>，其他的默认为 <code>-7</code>。
+<ul>
+<li><code>--best</code>：最高压缩级别</li>
+<li><code>--brute</code>：尝试使用各种压缩方式来获取最高压缩比</li>
+<li><code>--ultra-brute</code>：尝试使用更多的参数来获取更高的压缩比</li>
+</ul>
+</li>
+<li><code>-o [file]</code>：将压缩文件保存为 [file]</li>
+</ul>
+<h2 id="解压">解压</h2>
+<pre><code class="language-shell">upx -d [yourfile]
+</code></pre>
+<h1 id="优劣">优劣</h1>
+<p>压缩的程序占用更少的硬盘空间，但会在打开时消耗更多的 CPU 资源，在运行时占用更多的内存（或 swap 空间、/tmp 存储等）。</p>
+<h2 id="优点">优点</h2>
+<ul>
+<li>UPX 可以压缩各种类型的可执行文件</li>
+<li>压缩后的文件可以直接由操作系统执行</li>
+<li>压缩过程不会修改源文件，也就意味着解压后直接可以得到原始文件</li>
+<li>不会产生额外的动态库调用</li>
+</ul>
+<h2 id="缺点">缺点</h2>
+<ul>
+<li>运行的程序不会共享数据段（<em>汇编</em>），所以多实例运行的程序不适合压缩</li>
+<li>使用 <code>ldd</code> 和 <code>size</code> 命令无法获取到程序的有效信息</li>
+</ul>
+<h1 id="原理">原理</h1>
+<h2 id="为什么压缩后的文件可由系统直接执行">为什么压缩后的文件可由系统直接执行？</h2>
+<p>UPX 将程序压缩，并在头部加入解压的程序，具体的原理可以参看参考[2]。<br>
+在 Linux 系统中可以使用 <code>strings</code> 命令查看可执行文件的内容，通过查看 UPX 压缩后的程序可以看到，UPX 在文件中写入了自己的特征码。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li>1: <a href="https://github.com/upx/upx/blob/master/doc/upx.pod">UPX manual</a></li>
+<li>2: <a href="https://dzone.com/articles/packers-how-they-work-featuring-upx">Packers, How They Work, Featuring UPX</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[在 Padavan 上使用 trojan]]></title>
         <id>https://ambeta.github.io/post/zai-padavan-shang-shi-yong-trojan/</id>
