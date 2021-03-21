@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2021-03-19T10:43:55.879Z</updated>
+    <updated>2021-03-21T07:57:09.758Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -45,6 +45,109 @@
 孩子，你听的懂吗？现在，我要把这一句诗送给你：“我也有过你们这样的青春，那时的我们就像今天的你们。”</p>
 </blockquote>
 <p><em>文章摘抄自原文，如有侵权请联系删除。</em></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[uni-app 小程序换肤方案]]></title>
+        <id>https://ambeta.github.io/post/wei-xin-xiao-cheng-xu-huan-fu-fang-an/</id>
+        <link href="https://ambeta.github.io/post/wei-xin-xiao-cheng-xu-huan-fu-fang-an/">
+        </link>
+        <updated>2020-08-03T03:02:53.000Z</updated>
+        <content type="html"><![CDATA[<p>由于小程序支持 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/var()">CSS 变量</a>，可以比较方便地实现换肤功能。页面中的动态颜色使用 CSS 变量取值，通过 js 控制内联样式（inlined styles）或切换不同的样式类（css classes），实现 CSS 变量的动态切换，从而达到换肤的目的。</p>
+<h1 id="方案实现">方案实现</h1>
+<h2 id="step-1-定义-css-变量">Step 1: 定义 CSS 变量</h2>
+<p>将 CSS 变量定义在主题的样式类中，并在入口文件中引入：</p>
+<pre><code class="language-css">// theme.css
+.theme-1 {
+    --color-primary: red;
+}
+.theme-2 {
+    --color-primary: blue;
+}
+</code></pre>
+<h2 id="step-2-引入-css-变量">Step 2: 引入 CSS 变量</h2>
+<p>这里使用 i18n 的思路，将每个主题样式类定义为 i18n 中的一个 locale，再引入到每个页面中。</p>
+<pre><code class="language-js">// i18n.js
+import Vue form 'vue';
+import VueI18n from 'vue-i18n';
+
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
+    locale: 'vendorA',
+    messages: {
+        vendorA: {
+            theme: {
+                css: 'theme-1',
+            },
+        },
+        vendorB: {
+            theme: {
+                css: 'theme-2',
+            },
+        },
+    },
+});
+
+Vue.prototype._i18n = i18n;
+
+export default i18n;
+</code></pre>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;view :class=[theme.css, 'page-test']&gt;
+    &lt;/view&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    export default {
+        computed: {
+            theme() {
+                return this.$t('theme');
+            },
+        },
+    };
+&lt;/script&gt;
+
+&lt;style&gt;
+    .page-test {
+        background-color: var(--color-primary, white);
+    }
+&lt;/style&gt;
+</code></pre>
+<pre><code class="language-js">// main.js
+import Vue from 'vue';
+import App from './App';
+import i18n from './i18n.js';
+
+const app = new Vue({
+  i18n,
+  ...App,
+});
+app.$mount();
+</code></pre>
+<h2 id="step-3-切换-css-变量">Step 3: 切换 CSS 变量</h2>
+<p>通过切换 i18n 中定义的不同的 locale 来达到切换皮肤的目的。</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;view&gt;
+        &lt;button @click=&quot;handleClick&quot;&gt;Click to change!&lt;/button&gt;
+    &lt;/view&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    export default {
+        method: {
+            handleClick() {
+                this._i18n.locale = 'vendorB';
+            },
+        },
+    };
+&lt;/script&gt;
+</code></pre>
+<h1 id="参考文档">参考文档</h1>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000021922132">小程序中使用css var变量，使js可以动态设置css样式属性</a></li>
+<li><a href="https://ask.dcloud.net.cn/article/35102">uniapp与vue-i18n实现国际化多语言</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -478,192 +581,6 @@ EditModal.proto({
 <li>使用 ember.js 创建一个模态框的讨论：<br>
 http://discuss.emberjs.com/t/modal-views-can-we-agree-on-a-best-practice/707/5</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[如何使用jekyll建站]]></title>
-        <id>https://ambeta.github.io/post/ru-he-shi-yong-jekyll-jian-zhan/</id>
-        <link href="https://ambeta.github.io/post/ru-he-shi-yong-jekyll-jian-zhan/">
-        </link>
-        <updated>2016-03-27T15:35:00.000Z</updated>
-        <content type="html"><![CDATA[<p>终于把自己的个人博客折腾好了，可以开开心心地发博文啦！</p>
-<p>个人博客这种东西，主要是为了记录一下自己成长的过程，其次也可以作为与其他人交流共享一些经验的平台，而对于我这种健忘的人则是个必不可少的东西，不然过些时日，连jekyll怎么拼的都会忘掉了Orz。。</p>
-<p>之前也尝试在CSDN上维护自己的博客，但是感觉发文危险系数很高，审核慢就不说了，万一审核不过，码了半天的字都白费了，很是难受，听说Github可以免费挂个人主页，果断尝试一波。</p>
-<p>建站选用的是jekyll这个工具，可以与Github配合使用，其他的还有Hexo等建站工具。</p>
-<h2 id="jekyll简介">jekyll简介</h2>
-<p>jekyll是一个可以将纯文本转化为静态网站的工具，因可以与github pages完美契合而受到很多程序猿的青睐。</p>
-<p><a href="http://www.bootcss.com/">Bootstrap中文网</a>对jekyll的描述如下：</p>
-<blockquote>
-<p>简单：无需数据库、评论功能，不需要不断地更新版本——只用关心你的博客内容<br>
-静态：只用Markdown（或Textile）、Liquid、HTML&amp;CSS就可以构建可部署的静态网站<br>
-博客形态：自定义地址、分类、页面、博客内容以及自定义的布局设计都是系统中一等公民</p>
-</blockquote>
-<hr>
-<h2 id="jekyll手动建站">jekyll手动建站</h2>
-<p>jekyll用的人很多，网上也有很多现成的模板供大家选用。起初我也想选个模板直接进入写博客的正题，但是找了很久都找不到心仪的模板，有的功能非常赞，但是页面风格不是我的style，有的风格很赞，但是功能又过于繁复。索性自己摸索做一个属于自己的，顺便学习一下这个工具的使用，毕竟用jekyll＋Github不发挥点geek精神有点不合适吧。</p>
-<p>Anyway，如果只想火速建个站，可以直接跳转到<a href="#jekyll-template">应用<strong>jekyll模板</strong></a>。</p>
-<h3 id="环境搭建">环境搭建</h3>
-<p>jekyll的环境搭建非常简单，使用如下命令即可建立一个新的站点：</p>
-<pre><code>~ $ gem install jekyll
-~ $ jekyll new myblog
-~ $ cd myblog
-~/myblog $ jekyll serve
-</code></pre>
-<p>完成上述命令之后，用浏览器访问<code>http://localhost:4000</code>即可打开这个新的站点（当然现在什么都没有）。</p>
-<p><em>PS：</em> 环境搭建中遇到的问题可以参考<a href="http://jekyll.bootcss.com/docs/quickstart/">jekyll快速指南</a>尝试获取解决方案。</p>
-<h3 id="目录结构">目录结构</h3>
-<p>一般情况下jekyll的目录结构如下，其中<code>[*]</code>是必选项（如果你想只写一个index.html的话就不需要用jekyll啦- -），而为了获得较好的站点结构以便后续的维护，下面的这个目录结构是最基本的。</p>
-<pre><code>/myblog
-    |-- _includes
-          |-- head.html
-          |-- nav.html
-          |-- footer.html
-    |-- _layouts [*]
-          |-- default.html
-          |-- page.html
-          |-- post.html
-    |-- _posts [*]
-          |-- 2016-03-23-hello-world.md
-    |-- imgs
-    |-- css
-          |-- main.css
-    |-- fonts
-    |-- js
-    |-- _config.yml [*]
-    |-- index.html [*]
-</code></pre>
-<ul>
-<li><code>_layouts</code>中存放的是页面的布局文件。</li>
-<li><code>_includes</code>中存放的是一些文档的组成部分，一般可以被<code>_layouts</code>中的页面布局文件所引用，以减少代码的重复，通常可以用来布局一些html文件头、导航条以及页面脚注等。</li>
-<li><code>_posts</code>中存放的是发布的博文。</li>
-<li><code>imgs</code>中存放的是网站用到的所有图片资源。</li>
-<li><code>css</code>, <code>fonts</code>, <code>js</code>中存放的分别是页面引用的所有样式表、字体文件以及脚本。</li>
-<li><code>_config.yml</code>文件是整个站点的配置文件。</li>
-<li><code>index.html</code>文件即为站点的主页。</li>
-</ul>
-<p>大部分情况下，除了站点主页外，一个站点中还会含有<code>404.html</code>, <code>about.html</code>等页面，用于更加完善的个人主页以及更佳的访客体验，当然这些都不是必须的，只要你的博文写的够精彩，这些都不是重点～</p>
-<h3 id="常用语法">常用语法</h3>
-<p>在介绍不同文件的配置之前，首先需要了解一下jekyll中常用的一些语法规则，这些在编写页面布局文件的时候极为有用，后续博文信息的自动化生成方面就全靠它了。</p>
-<ul>
-<li>jekyll中的<strong>全局变量</strong>主要有<code>site</code>, <code>page</code>, <code>paginator</code>, <code>content</code>，而前三者又更像是一个对象，其中包含着其他的变量，使用<code>.</code>运算符即可访问，例如使用<code>site.title</code>可以访问站点名字变量。</li>
-<li>jekyll中<strong>语句</strong>使用<code>{ %</code>和<code>% }</code>进行包裹，且每一个语句块都需要显示地闭合，例如<code>{ % if % } blablabla { % endif % }</code>即为一个条件语句块。</li>
-<li>jekyll中使用双重大括号包裹的变量表示<strong>取值</strong>运算，例如<code>{ { page.title } }</code>语句可以取得<code>page.title</code>的值。</li>
-</ul>
-<h3 id="文件配置">文件配置</h3>
-<h5 id="_configyml-站点配置文件">_config.yml － 站点配置文件</h5>
-<p>该文件中保存的主要是整个站点的配置，其中的每项配置都作为全局变量<code>site</code>的成员变量可以在任意站点文件中访问到。</p>
-<p>一个常见的站点配置文件可能长得像下面这样：</p>
-<pre><code># Site settings
-title: AmBeta Blog
-SEOTitle: 三土的博客 | AmBeta Blog
-header-img: imgs/header-bg.png
-header-thumb: imgs/my-thumb.png
-email: cyandrewchen@gmail.com
-description: &quot;&quot;
-keyword: &quot;&quot;
-url: &quot;http://ambeta.github.io&quot;  # your host, for absolute URL
-baseurl: &quot;&quot;  
-
-# Build settings
-gems: [jekyll-paginate]
-paginate: 5
-exclude: [&quot;less&quot;,&quot;node_modules&quot;,&quot;Gruntfile.js&quot;,&quot;package.json&quot;,&quot;README.md&quot;]
-
-# Markdown settings
-markdown: kramdown
-kramdown:
-  input: GFM
-</code></pre>
-<h5 id="layouts-页面布局">layouts － 页面布局</h5>
-<p>该文件夹下存放的是所有的页面布局文件，页面布局文件是一系列的<code>.html</code>文件，如下是一个典型的页面布局文件：</p>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;zh-CN&quot;&gt;
-
-{ % include head.html % }
-
-&lt;body&gt;
-    { % include navbar.html % }
-
-    { { content } }
-
-    { % include footer.html % }
-
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<ul>
-<li>使用<code>{ % include head.html % }</code>语句可以引入<code>_includes</code>文件夹中<code>head.html</code>的所有内容。</li>
-<li>使用<code>{ { content } }</code>语句会将使用该模版的文件的内容填充到这里。</li>
-</ul>
-<h5 id="indexhtml-站点主页">index.html － 站点主页</h5>
-<p>jekyll会将该文件识别为站点的主页，同时Github也将识别该文件作为当访问你的Github pages时会显示的页面。<br>
-<strong>注意</strong>该文件的名称一定要为<code>index.html</code>。<br>
-在文件头部使用如下配置语句可以指定页面所用的模板：</p>
-<pre><code>---
-layout: default
----
-</code></pre>
-<h5 id="posts-博文">posts － 博文</h5>
-<p>该文件夹下存放的是所有的博文。<br>
-jekyll支持多种markdown引擎（有需求的话可以在<code>_config.yml</code>文件中自定义引擎选择）。<br>
-jekyll要求每篇博文的名字都遵循如下的格式：</p>
-<pre><code>Year-Month-Date-PostTitle
-</code></pre>
-<p>例如<code>2016-03-22-hello-world.md</code>, <code>2020-02-22-byebye-world.textile</code>都是合法的博文命名。<br>
-博文头部定义的变量可以作为<code>page</code>变量的成员变量被访问到，常见的博文头部如下：</p>
-<pre><code>title: Hello World
-date: 2016-03-22
-layout: post
-</code></pre>
-<h3 id="更多功能">更多功能</h3>
-<h5 id="paginator-分页">paginator － 分页</h5>
-<p>jekyll支持自动分页，在<code>_config.yml</code>文件中加上如下配置可开启分页功能，可以控制每页的最大显示条目数量。<br>
-例如，在<code>index.html</code>文件中使用如下语句可以分页显示所有博文的摘要信息：</p>
-<pre><code>&lt;!-- Post Content Preview --&gt;
-{ % for post in paginator.posts % }
-&lt;div class=&quot;post-preview&quot;&gt;
-	&lt;a href=&quot;{ { post.url | prepend: site.baseurl } }&quot;&gt;
-		&lt;h2 class=&quot;post-title&quot;&gt;
-			{ { post.title } }
-		&lt;/h2&gt;
-		&lt;div class=&quot;post-content-preview&quot;&gt;
-			{ { post.content | strip_html | truncate:100 } }
-		&lt;/div&gt;
-	&lt;/a&gt;
-	&lt;p class=&quot;post-meta&quot;&gt;
-		Posted on { { post.date | date: &quot;%B %-d, %Y&quot; } }
-	&lt;/p&gt;
-&lt;/div&gt;
-&lt;hr&gt;
-{ % endfor % }
-</code></pre>
-<p>更多关于分页的信息可参考<a href="http://jekyll.bootcss.com/docs/pagination/">jekyll分页功能</a>。</p>
-<hr>
-<h2 id="a-namejekyll-templatea应用jekyll模板"><a name="jekyll-template"></a>应用jekyll模板</h2>
-<p>当你物色到一个很喜欢的theme时，你就可以fork一下（如果人家愿意的话），然后稍作修改就可以开始你的博客之旅了。</p>
-<p>主要需要注意修改的有以下几个方面：</p>
-<ol>
-<li><code>_config.yml</code>文件中的站点名称、地址及其他个人信息与站点配置。</li>
-<li>修改主要布局文件如<code>head.html</code>, <code>footer.html</code>, <code>index.html</code>中包含的个人信息。</li>
-</ol>
-<p><em><strong>PS：</strong></em> 如果theme的作者有在Github上维护关于该theme的说明文档的话，那就按照作者的指引进行相应的配置就好啦～</p>
-<p>上述的修改完成后就可以在<code>posts</code>文件夹中添加自己的博文了。</p>
-<hr>
-<h2 id="本地调试页面">本地调试页面</h2>
-<p>当火速写完一篇 <em>Hello World</em> 博文之后迫不及待地就想看看 <em>World</em> 到底有没有听到你的呼唤。</p>
-<p>使用命令行进入站点的根目录，输入以下命令：</p>
-<pre><code>jekyll serve
-</code></pre>
-<p>jekyll便随即开始编译生成站点文件（存放在<code>_site</code>目录中），如果一切正常的话，jekyll会告诉你本地服务器部署的IP及端口号，打开浏览器进行访问即可。</p>
-<p>在命令行中添加<code>--watch</code>选项可以让jekyll随时监听文件的变化并生成更新后的文件。</p>
-<hr>
-<h2 id="发布到github">发布到Github</h2>
-<p>使用Git工具将站点同步到Github仓库上，一切就大功告成啦～！</p>
-<pre><code>~ $ git branch    // * master
-~ $ git commit -a -m &quot;commit comment&quot;
-~ $ git push origin master
-</code></pre>
-<p>如果问题卡在使用Github Pages建立个人主页方面，可以参考<a href="https://segmentfault.com/a/1190000002765287">用Github来部署静态网页</a>，这篇文章写得很详细，当然，<a href="https://help.github.com/categories/github-pages-basics/">Github官网</a>也有相关的用户指引。</p>
 ]]></content>
     </entry>
 </feed>
