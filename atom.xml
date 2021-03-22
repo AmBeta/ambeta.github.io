@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2021-03-21T07:57:09.758Z</updated>
+    <updated>2021-03-22T10:07:55.150Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -10,6 +10,50 @@
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 三土 | AmBeta</rights>
+    <entry>
+        <title type="html"><![CDATA[从豆丁网下载无水印文档]]></title>
+        <id>https://ambeta.github.io/post/cong-dou-ding-wang-xia-zai-wu-shui-yin-wen-dang/</id>
+        <link href="https://ambeta.github.io/post/cong-dou-ding-wang-xia-zai-wu-shui-yin-wen-dang/">
+        </link>
+        <updated>2021-03-22T07:44:04.000Z</updated>
+        <content type="html"><![CDATA[<p>为了找一个基建项目的环评公示，翻遍了各个环保局网站都没有找到，最后只在豆丁网看到了一份，但是下载需要 11RMB，这种本应免费提供的文档需要花钱下载感觉不值，于是就想着破解一下。</p>
+<p>通过网页元素检查发现文档预览使用的是 canvas，通过 canvas 转图片可以很方便地导出，但是文档有水印，通过 debug 代码发现水印是通过前端传参控制显隐的，利用 devtools 的 log breakpoint 可以修改运行时代码这一点，将水印显示的参数调整为关闭，文档预览便不再有水印了:&gt;</p>
+<h1 id="how">How</h1>
+<h2 id="step1-修改-js-文件">Step1: 修改 js 文件</h2>
+<p>从 <code>Sources</code> 面板打开 <code>js/canvas/jgcw20201019/jgcw-page.js</code> 文件，格式化一下。</p>
+<p>跳转到 <code>L1931</code> 行，并添加 log breakpoint 输入 <code>e.watermark = false</code>。</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1616400763020.png" alt="文件修改-1" loading="lazy"></figure>
+<p>继续跳转到 <code>L3993</code> 行，并添加 log breakpoint 输入 <code>Object.assign(this.currentArgs, e)</code>。（这个函数会检查参数是否一致，如果不一致则会触发重新加载进入死循环。）</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1616400835251.png" alt="文件修改-2" loading="lazy"></figure>
+<h2 id="step2-预览文档">Step2: 预览文档</h2>
+<p>重新刷新页面会发现预览文档时的水印已经没有了（首页还是有水印，可能首页走的是其他函数渲染的，没有大碍就没管了）。<br>
+预览到文档最后一页，使得每一页都渲染出来。</p>
+<h2 id="step3-导出文档">Step3: 导出文档</h2>
+<p>导出就使用 canvas 转图片保存的方式，需要的话可以再合并为 pdf 文件。<br>
+在 <code>Console</code> 面板输入下面的代码，然后就不停地点击保存就可以了:&lt;</p>
+<pre><code class="language-js">function downloadImage(data, filename) {
+    const a = document.createElement('a');
+    a.href = data;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+}
+document.querySelectAll('canvas').forEach((node, index) =&gt; {
+    // if you dont replace you will get a DOM 18 exception.
+    const data = node..toDataURL(&quot;image/png&quot;).replace(&quot;image/png&quot;, &quot;image/octet-stream&quot;);
+    downloadImage(data, `${index}.png`);
+});
+</code></pre>
+<h1 id="blabla">Blabla...</h1>
+<p>破解的主要突破口还是预览时是否显示水印是通过前端参数控制，如果是通过调用不同的接口在服务端控制就比较麻烦了。<br>
+另外通过 debug 代码发现豆丁网已经用上了 wasm，在代码混淆方面效果还是挺不错的，如果全部都用 wasm 写估计就很难通过 debug 源码的方式发现破绽了。</p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl">Save Canvas As An Image</a></li>
+<li><a href="https://apple.stackexchange.com/questions/11163/how-do-i-combine-two-or-more-images-to-get-a-single-pdf-file">How to combine images to a single pdf</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[《武汉日记》方方]]></title>
         <id>https://ambeta.github.io/post/lesslesswu-han-ri-ji-greatergreater-fang-fang/</id>
@@ -428,159 +472,6 @@ scp trojan_config.sh trojan_start.sh cacert.pem root@192.168.123.1:/etc/storage
 获取 <code>Collection</code> 中的所有 <code>NodePath</code>，返回一个 <code>Array&lt;NodePath&gt;</code> 数组。</li>
 </ul>
 <p>关于 AST 操作的更多 API 可以参看 <a href="https://github.com/benjamn/recast">recast</a> 的文档以及 <a href="https://github.com/benjamn/ast-types">ast-types</a> 的文档以及相关的源码。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[在Stapes框架下实现一个模态框的实践方法]]></title>
-        <id>https://ambeta.github.io/post/zai-stapes-kuang-jia-xia-shi-xian-yi-ge-mo-tai-kuang-de-shi-jian-fang-fa/</id>
-        <link href="https://ambeta.github.io/post/zai-stapes-kuang-jia-xia-shi-xian-yi-ge-mo-tai-kuang-de-shi-jian-fang-fa/">
-        </link>
-        <updated>2016-07-04T10:38:00.000Z</updated>
-        <content type="html"><![CDATA[<p>使用Stapes创建一个基于MVC的数据列表页面时，页面的MVC逻辑比较清晰——所有的数据条目是一个 <code>Model</code>，列表的展示是对应的 <code>View</code>，<code>Controller</code> 则将视图的事件转化为对数据模型的操作。</p>
-<p>对于列表中的每一条数据，由于其是一个独立的数据，因此可以建立一个数据模型用来存储，点击之后弹出模态框，对于这个模态框的设计，如何能保证清晰的逻辑呢？</p>
-<p>假设列表的 MVC 实现代码如下：</p>
-<pre><code>/* List Model */
-var DataModel = Stapes.subclass({
-    constructor : function (cfg) {
-        // initialize...
-    }
-});
-DataModel.proto({
-    updateData : function (params) {
-        // ajax request
-    }
-});
-
-/* List View */
-var DataView = Stapes.subclass({
-    constructor : function (cfg) {
-        this.model = cfg.model || null;
-        this.$body = cfg.body || $('body');
-        
-        this.render();
-        this.bindEvents();
-    }
-});
-DataView.proto({
-    render : function () {},
-
-    bindEvents : function () {
-        this.$body.on('click', 'button', function () {
-            var modal = new SomeModal({});
-        });
-    }
-});
-
-/* List Controller */
-var DataController = Stapes.subclass({
-    constructor : function (cfg) {
-        this.model = cfg.model || null;
-        this.view = cfg.view || null;
-        if (!this.model || !this.view) {
-            throw ('DataController init failed!');
-        }
-
-        bindEvents();
-    }
-});
-DataController.proto({
-    // bind model events
-    this.model.on({
-        update : function (params) {
-            this.model.updateData(params);
-        }
-    }, this);
-    
-    // bind view events
-    this.view.on({
-        update : function (params) {
-            this.model.emit('update', params);
-        }
-    }, this);
-});
-
-</code></pre>
-<h2 id="仅供查看数据的模态框">仅供查看数据的模态框</h2>
-<p>仅供查看数据的模态框是比较容易处理的，这时模态框就是一个单纯的 <code>View</code>，其绑定的数据模型就是列表中的那一条数据。</p>
-<pre><code>var InfoModal = Stapes.subclass({
-    constructor : function (cfg) {
-        this.model = cfg.model || null;
-    }
-});
-</code></pre>
-<h2 id="新增或修改数据的模态框">新增或修改数据的模态框</h2>
-<p>对于新增或者修改的模态框，情况就比较复杂了，因为用户可以在模态框中对用户的数据进行操作。</p>
-<p>根据 MVC 的思想，我们要尽量避免在 <code>View</code> 中对数据模型进行直接的操作，<code>View</code> 应该通过发出事件的方式让 <code>Controller</code> 去捕捉并操作 <code>Model</code>，但是用一个完整的 MVC 去实现一个简单的模态框未免太过周折，并且两个 <code>Controller</code> 之间的通讯问题会把逻辑绕得更加复杂。</p>
-<p>如何写出一个逻辑清晰的模态框组件，总结了有下面几个思路：</p>
-<ul>
-<li>直接操作数据模型</li>
-<li>提供回调</li>
-<li>绑定父视图</li>
-</ul>
-<h3 id="直接操作数据模型">直接操作数据模型</h3>
-<p>说是直接操作 <code>Model</code>，但也是通过事件机制与 <code>Model</code> 进行通讯的，但是由于模态框没有自己的 <code>Controller</code>，只能够直接发出 <code>Model</code> 上的事件，因此这种事件机制与直接操作 <code>Model</code> 并无太大的区别。</p>
-<p>另一种情况是，我们需要在模态框中直接操作另一组数据。</p>
-<h3 id="提供回调">提供回调</h3>
-<p>我们可以为调用该模态框的视图提供一个回调，将用户在模态框中对数据的修改以参数的方式传回。</p>
-<p>用这种方式实现的模态框逻辑很简单，只需要将 <code>Model</code> 中的数据表现出来，然后再将用户的输入传回就好了，不需要关心对 <code>Model</code> 的具体操作与结果。</p>
-<pre><code>var EditModal = Stapes.subclass({
-    constructor : function (cfg) {
-        this.model = cfg.model || null;
-        this.cbFn = cfg.cbFn || function () {};
-        
-        this.$body = null;  // get initialized in `render()`
-
-        this.render();
-        this.bindEvents();
-    }
-});
-EditModal.proto({
-    bindEvents : function () {
-        var self = this;
-        self.$body.on('click', '.btn-ok', function () {
-            var params = self.getPostParams();
-            self.cbFn.call({}, params);
-        });
-    }
-});
-</code></pre>
-<p>这时，在列表视图中，可以这样新建一个模态框：</p>
-<pre><code>var self = this;    // `this` points to the list view
-var modal = new EditModal({
-    model : dataModel,
-    cbFn : function (params) {
-        self.emit('update', params);
-    }
-});
-</code></pre>
-<h3 id="绑定父视图">绑定父视图</h3>
-<p>有时在模态框中的操作过于复杂，需要提供多个回调，这样就可以将父视图绑定到这个模态框上，这个模态框就相当于其父元素的一个组成部分，其可以触发父元素上的事件。</p>
-<pre><code>var EditModal = Stapes.subclass({
-    constructor : function (cfg) {
-        this.model = cfg.model || null;
-        this.parentView = cfg.parentView || null;
-    
-        this.$body = null;  // get initialize in `render()`
-
-        this.render();
-        this.bindEvents();
-    }
-});
-EditModal.proto({
-    bindEvents : function () {
-        var self = this;
-        self.$body.on('click', '.btn-ok', function () {
-            var params = self.getPostParams();
-            self.parentView.emit('update', params);
-        });
-    }
-});
-</code></pre>
-<h4 id="更多">更多</h4>
-<ul>
-<li>使用 ember.js 创建一个模态框的讨论：<br>
-http://discuss.emberjs.com/t/modal-views-can-we-agree-on-a-best-practice/707/5</li>
-</ul>
 ]]></content>
     </entry>
 </feed>

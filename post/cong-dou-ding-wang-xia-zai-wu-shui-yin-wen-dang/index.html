@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>使用 UPX 压缩可执行文件 | 三土 | AmBeta</title>
+<title>从豆丁网下载无水印文档 | 三土 | AmBeta</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -33,14 +33,8 @@
 </script>
 
 
-    <meta name="description" content="UPX 可以有效地对可执行文件进行压缩，并且压缩后的文件可以直接由系统执行，支持多系统和平台。
-使用 UPX 来压缩可执行文件是一种减少发布包大小的有效方式。
-安装
-
-
-从 github release page 下载预编译的二进制文件
-
-..." />
+    <meta name="description" content="为了找一个基建项目的环评公示，翻遍了各个环保局网站都没有找到，最后只在豆丁网看到了一份，但是下载需要 11RMB，这种本应免费提供的文档需要花钱下载感觉不值，于是就想着破解一下。
+通过网页元素检查发现文档预览使用的是 canvas，通过 c..." />
     <meta name="keywords" content="" />
   </head>
   <body>
@@ -122,64 +116,45 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">使用 UPX 压缩可执行文件</h2>
-            <div class="post-date">2020-04-03</div>
+            <h2 class="post-title">从豆丁网下载无水印文档</h2>
+            <div class="post-date">2021-03-22</div>
             
             <div class="post-content" v-pre>
-              <p><a href="https://upx.github.io/">UPX</a> 可以有效地对可执行文件进行压缩，并且压缩后的文件可以直接由系统执行，支持多系统和平台。<br>
-使用 UPX 来压缩可执行文件是一种减少发布包大小的有效方式。</p>
-<h1 id="安装">安装</h1>
-<ul>
-<li>
-<p>从 <a href="https://github.com/upx/upx/releases">github release page</a> 下载预编译的二进制文件</p>
-</li>
-<li>
-<p>macOS 可以使用 brew 安装：</p>
-<pre><code class="language-shell">brew install upx
+              <p>为了找一个基建项目的环评公示，翻遍了各个环保局网站都没有找到，最后只在豆丁网看到了一份，但是下载需要 11RMB，这种本应免费提供的文档需要花钱下载感觉不值，于是就想着破解一下。</p>
+<p>通过网页元素检查发现文档预览使用的是 canvas，通过 canvas 转图片可以很方便地导出，但是文档有水印，通过 debug 代码发现水印是通过前端传参控制显隐的，利用 devtools 的 log breakpoint 可以修改运行时代码这一点，将水印显示的参数调整为关闭，文档预览便不再有水印了:&gt;</p>
+<h1 id="how">How</h1>
+<h2 id="step1-修改-js-文件">Step1: 修改 js 文件</h2>
+<p>从 <code>Sources</code> 面板打开 <code>js/canvas/jgcw20201019/jgcw-page.js</code> 文件，格式化一下。</p>
+<p>跳转到 <code>L1931</code> 行，并添加 log breakpoint 输入 <code>e.watermark = false</code>。</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1616400763020.png" alt="文件修改-1" loading="lazy"></figure>
+<p>继续跳转到 <code>L3993</code> 行，并添加 log breakpoint 输入 <code>Object.assign(this.currentArgs, e)</code>。（这个函数会检查参数是否一致，如果不一致则会触发重新加载进入死循环。）</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1616400835251.png" alt="文件修改-2" loading="lazy"></figure>
+<h2 id="step2-预览文档">Step2: 预览文档</h2>
+<p>重新刷新页面会发现预览文档时的水印已经没有了（首页还是有水印，可能首页走的是其他函数渲染的，没有大碍就没管了）。<br>
+预览到文档最后一页，使得每一页都渲染出来。</p>
+<h2 id="step3-导出文档">Step3: 导出文档</h2>
+<p>导出就使用 canvas 转图片保存的方式，需要的话可以再合并为 pdf 文件。<br>
+在 <code>Console</code> 面板输入下面的代码，然后就不停地点击保存就可以了:&lt;</p>
+<pre><code class="language-js">function downloadImage(data, filename) {
+    const a = document.createElement('a');
+    a.href = data;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+}
+document.querySelectAll('canvas').forEach((node, index) =&gt; {
+    // if you dont replace you will get a DOM 18 exception.
+    const data = node..toDataURL(&quot;image/png&quot;).replace(&quot;image/png&quot;, &quot;image/octet-stream&quot;);
+    downloadImage(data, `${index}.png`);
+});
 </code></pre>
-</li>
-</ul>
-<h1 id="使用">使用</h1>
-<h2 id="压缩">压缩</h2>
-<pre><code class="language-shell">upx [options] yourfile
-</code></pre>
-<p>upx 对文件的默认操作即为压缩，使用上述命令会使用默认参数压缩并替换文件 yourfile。<br>
-upx 支持如下可选参数：</p>
+<h1 id="blabla">Blabla...</h1>
+<p>破解的主要突破口还是预览时是否显示水印是通过前端参数控制，如果是通过调用不同的接口在服务端控制就比较麻烦了。<br>
+另外通过 debug 代码发现豆丁网已经用上了 wasm，在代码混淆方面效果还是挺不错的，如果全部都用 wasm 写估计就很难通过 debug 源码的方式发现破绽了。</p>
+<h1 id="reference">Reference</h1>
 <ul>
-<li><code>-1[23456789]</code>：不同的压缩级别，数值越高压缩率越高，但耗时更长。对于小于 512 KiB 的文件默认使用 <code>-8</code>，其他的默认为 <code>-7</code>。
-<ul>
-<li><code>--best</code>：最高压缩级别</li>
-<li><code>--brute</code>：尝试使用各种压缩方式来获取最高压缩比</li>
-<li><code>--ultra-brute</code>：尝试使用更多的参数来获取更高的压缩比</li>
-</ul>
-</li>
-<li><code>-o [file]</code>：将压缩文件保存为 [file]</li>
-</ul>
-<h2 id="解压">解压</h2>
-<pre><code class="language-shell">upx -d [yourfile]
-</code></pre>
-<h1 id="优劣">优劣</h1>
-<p>压缩的程序占用更少的硬盘空间，但会在打开时消耗更多的 CPU 资源，在运行时占用更多的内存（或 swap 空间、/tmp 存储等）。</p>
-<h2 id="优点">优点</h2>
-<ul>
-<li>UPX 可以压缩各种类型的可执行文件</li>
-<li>压缩后的文件可以直接由操作系统执行</li>
-<li>压缩过程不会修改源文件，也就意味着解压后直接可以得到原始文件</li>
-<li>不会产生额外的动态库调用</li>
-</ul>
-<h2 id="缺点">缺点</h2>
-<ul>
-<li>运行的程序不会共享数据段（<em>汇编</em>），所以多实例运行的程序不适合压缩</li>
-<li>使用 <code>ldd</code> 和 <code>size</code> 命令无法获取到程序的有效信息</li>
-</ul>
-<h1 id="原理">原理</h1>
-<h2 id="为什么压缩后的文件可由系统直接执行">为什么压缩后的文件可由系统直接执行？</h2>
-<p>UPX 将程序压缩，并在头部加入解压的程序，具体的原理可以参看参考[2]。<br>
-在 Linux 系统中可以使用 <code>strings</code> 命令查看可执行文件的内容，通过查看 UPX 压缩后的程序可以看到，UPX 在文件中写入了自己的特征码。</p>
-<h1 id="参考">参考</h1>
-<ul>
-<li>1: <a href="https://github.com/upx/upx/blob/master/doc/upx.pod">UPX manual</a></li>
-<li>2: <a href="https://dzone.com/articles/packers-how-they-work-featuring-upx">Packers, How They Work, Featuring UPX</a></li>
+<li><a href="https://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl">Save Canvas As An Image</a></li>
+<li><a href="https://apple.stackexchange.com/questions/11163/how-do-i-combine-two-or-more-images-to-get-a-single-pdf-file">How to combine images to a single pdf</a></li>
 </ul>
 
             </div>
@@ -187,9 +162,9 @@ upx 支持如下可选参数：</p>
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://ambeta.github.io/post/zai-padavan-shang-shi-yong-trojan/">
+                <a href="https://ambeta.github.io/post/lesslesswu-han-ri-ji-greatergreater-fang-fang/">
                   <h3 class="post-title">
-                    在 Padavan 上使用 trojan
+                    《武汉日记》方方
                   </h3>
                 </a>
               </div>
