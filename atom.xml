@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2021-03-22T10:07:55.150Z</updated>
+    <updated>2021-03-22T10:10:16.717Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -324,6 +324,17 @@ upx 支持如下可选参数：</p>
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[flutter cookbook]]></title>
+        <id>https://ambeta.github.io/post/flutter-cookbook/</id>
+        <link href="https://ambeta.github.io/post/flutter-cookbook/">
+        </link>
+        <updated>2020-04-01T02:50:34.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="faq">FAQ</h1>
+<h2 id="flutter-upgrade-卡在-building-flutter-tools"><code>flutter upgrade</code> 卡在 <code>Building flutter tools...</code></h2>
+<p>一般是由于网络原因脚本卡在了 <code>pub upgrade</code> 命令，需要使用代理连接 <code>pub.dartlang.org</code>。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[在 Padavan 上使用 trojan]]></title>
         <id>https://ambeta.github.io/post/zai-padavan-shang-shi-yong-trojan/</id>
         <link href="https://ambeta.github.io/post/zai-padavan-shang-shi-yong-trojan/">
@@ -438,40 +449,6 @@ scp trojan_config.sh trojan_start.sh cacert.pem root@192.168.123.1:/etc/storage
 <h1 id="reference">Reference</h1>
 <p><a href="https://www.urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/">Redirecting bash script output to syslog</a><br>
 <a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">bash manual: Redirections</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[利用 AST 对项目代码进行迁移]]></title>
-        <id>https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/</id>
-        <link href="https://ambeta.github.io/post/li-yong-ast-dui-xiang-mu-dai-ma-jin-xing-qian-yi/">
-        </link>
-        <updated>2017-08-13T08:15:00.000Z</updated>
-        <content type="html"><![CDATA[<blockquote>
-<p>The more code you have, the harder it becomes to make big, sweeping changes quickly and confidently. Even if you trust yourself not to make too many mistakes, and no matter how proficient you are with your text editor, changing tens of thousands of lines of code takes precious, non-refundable time.</p>
-</blockquote>
-<p>项目写了一段时间之后，如果再进行项目的调整，那往往是比较繁琐的事情，不是在编辑器中使用全文检索和替换能够解决的了。</p>
-<p>在看 React 官方文档时，看到他们使用 <a href="https://github.com/reactjs/react-codemod">react-codemod</a> 来解决 React 版本更新造成的 API 使用的问题，于是看了一下这种方案是如何实现的。</p>
-<h4 id="react-codemod"><a href="https://github.com/reactjs/react-codemod">react-codemod</a></h4>
-<p>首先 react-codemod 项目提供的仅仅是一些转化的脚本，而这些转化脚本主要是提供给 <a href="https://github.com/facebook/jscodeshift">jscodeshift</a> 这个工具使用的。</p>
-<h4 id="jscodeshift"><a href="https://github.com/facebook/jscodeshift">jscodeshift</a></h4>
-<p>jscodeshift 的核心则是由 <a href="https://github.com/benjamn/recast">recast</a> 提供，jscodeshift 对 recast 进行了自己的封装，添加了 <code>Collection</code> 类使得对 AST 操作的 API 更加易于使用，也提高了操作的可拓展性，同时该工具也提供了对文件以及文件夹的多线程操作，并可以给出最后转化的结果（成功或失败的文件数）。</p>
-<h4 id="recast"><a href="https://github.com/benjamn/recast">recast</a></h4>
-<p>recast 这个工具则是核心，其提供了对源码进行 AST 分析以及修改的能力，同时可以最大程度地保留原代码的格式，对于 AST 中没有修改的部分，他会原封不动地进行输出，其也支持对 AST 进行格式化的代码输出，提供了部分可定制的代码格式化选项。</p>
-<h4 id="api">API</h4>
-<p>代码的范例可以参看 react-codemod 项目，由于没有找到详细的 API 文档，这里就列出一部分个人认为比较重要的 API。</p>
-<ul>
-<li><code>jscodeshift(code: string)</code><br>
-根据源码 <code>code</code> 生成 AST，返回一个 <code>Collection</code> 对象。</li>
-<li><code>Collection.find(nodeType: ASTTypes, predictor: any)</code><br>
-从 <code>Collection</code> 中过滤出所有 <code>nodeType</code> 节点类型的节点，返回一个 <code>Array&lt;NodePath&gt;</code> 数组可用于迭代。</li>
-<li><code>Collection.replace(nodes: NodePath | NodePath[])</code><br>
-用 <code>nodes</code> 节点替换 <code>Collection</code> 中的<strong>每个</strong> <code>NodePath</code>。</li>
-<li><code>Collection.insertBefore/Collection.insertAfter(nodes: NodePath | NodePath[])</code><br>
-在 <code>Collection</code> 中的<strong>每个</strong> <code>NodePath</code> 前/后插入 <code>nodes</code> 节点。</li>
-<li><code>Collection.paths()</code><br>
-获取 <code>Collection</code> 中的所有 <code>NodePath</code>，返回一个 <code>Array&lt;NodePath&gt;</code> 数组。</li>
-</ul>
-<p>关于 AST 操作的更多 API 可以参看 <a href="https://github.com/benjamn/recast">recast</a> 的文档以及 <a href="https://github.com/benjamn/ast-types">ast-types</a> 的文档以及相关的源码。</p>
 ]]></content>
     </entry>
 </feed>
