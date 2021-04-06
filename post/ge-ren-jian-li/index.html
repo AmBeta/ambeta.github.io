@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://ambeta.github.io/favicon.ico?v=1617686931390">
+<link rel="shortcut icon" href="https://ambeta.github.io/favicon.ico?v=1617689366035">
 <link rel="stylesheet" href="https://ambeta.github.io/styles/main.css">
 
 
@@ -44,7 +44,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://ambeta.github.io">
-        <img src="https://ambeta.github.io/images/avatar.png?v=1617686931390" class="site-logo">
+        <img src="https://ambeta.github.io/images/avatar.png?v=1617689366035" class="site-logo">
         <h1 class="site-title">三土 | AmBeta</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -148,14 +148,16 @@
 <li><strong>简介</strong>：支撑餐饮门店点餐系统的商户后台设置系统</li>
 <li><strong>技术栈</strong>：<a href="https://hay.github.io/stapes/">Stapes.js</a>, <a href="https://jquery.com/">jQuery</a>, <a href="https://handlebarsjs.com/">Handlebars</a>, <a href="https://gruntjs.com/">Grunt</a></li>
 </ul>
-<p>前端单页面应用，MVC 思想在前端的早期探索和实践。数据模型层（M）主要负责业务数据的处理，示图层（V）主要负责数据的呈现，使用 Handlebars 进行模板渲染，jQuery 控制页面响应逻辑，控制层（C）主要负责调控，使用 Stapes 实现类的封装与继承，不同层之间通过事件机制通讯。项目使用 Grunt 构建打包。</p>
+<p>前端单页面应用，MVC 思想在前端的早期探索和实践。数据模型层（M）主要负责业务数据的处理，示图层（V）主要负责数据的呈现，使用 Handlebars 进行模板渲染，jQuery 控制页面响应逻辑，控制层（C）主要负责调控，使用 Stapes 实现类的封装与继承，不同层之间通过事件机制通讯。项目使用 Grunt 构建打包。<br>
+该项目共有 5 个前端共同维护，各自负责不同的业务模块。</p>
 <h2 id="新商户中心201612-20184">新商户中心（2016.12 - 2018.4）</h2>
 <ul>
 <li><strong>简介</strong>：商户集成管理系统，包含商户后台设置系统、供应链系统、加盟系统等多个子系统。</li>
 <li><strong>技术栈</strong>：<a href="https://reactjs.org/">React</a>, <a href="https://redux.js.org/">Redux</a>, <a href="https://webpack.js.org/">webpack</a>, <a href="https://koajs.com/">koa</a></li>
 </ul>
 <p>由于公司业务的迅速扩张，原有前端架构难以支撑，故采用当时流行的 React 技术栈对项目重构。<br>
-新商户中心采用微前端架构，不同的业务子系统独立开发、打包、发布，同时引入了 nodejs server，负责前端接口的 grpc 代理调用以及服务端渲染等。</p>
+新商户中心采用微前端架构，不同的业务子系统独立开发、打包、发布，同时引入了 nodejs server，负责前端接口的 grpc 代理调用以及服务端渲染等。<br>
+该项目约有三十个前端负责维护，按小组分模块维护不同的子系统，我主要负责基础框架、组件库以及部分业务子模块的维护。</p>
 <h2 id="系统监视器20176-20184">系统监视器（2017.6 - 2018.4）</h2>
 <ul>
 <li><strong>简介</strong>：支撑微前端架构下新商户中心项目的运维系统。</li>
@@ -168,27 +170,32 @@
 <li><strong>简介</strong>：对接餐饮和供应链的财务一体化系统。</li>
 <li><strong>技术栈</strong>：<a href="https://vuejs.org/">Vue.js</a>, <a href="https://webpack.js.org/">webpack</a></li>
 </ul>
+<p>该项目为纯前端项目，项目框架直接使用 <a href="https://cli.vuejs.org/">Vue Cli</a> 搭建，组件库是基于 <a href="https://element.eleme.io/#/zh-CN">Element</a> 二次开发的。<br>
+共有 5 个前端负责该项目的开发和维护，我主要负责基础框架和组件库的维护工作。</p>
 <h2 id="打印服务201811-至今">打印服务（2018.11 至今）</h2>
 <ul>
 <li><strong>简介</strong>：实现财务数据到打印表单的转化。</li>
 <li><strong>技术栈</strong>：<a href="https://expressjs.com/">Express</a>, <a href="http://pdfmake.org/#/">pdfmake</a></li>
 </ul>
-<p>从客户端接收打印数据并选择合适的模板进行渲染，输出 PDF 文件返回给客户端以供打印，纯前端的打印解决方案。</p>
+<p>该项目是一个 nodejs 的小型服务端项目，使用 typescript 编写，提供打印相关的接口，从客户端接收打印数据并选择合适的模板进行渲染，输出 PDF 文件返回给客户端以供打印。<br>
+这种打印方式没有直接控制打印机，是一种基于浏览器的纯前端技术打印解决方案。</p>
 <h2 id="帮助中心20199-20206">帮助中心（2019.9 - 2020.6）</h2>
 <ul>
-<li><strong>简介</strong>：为用户提供操作指引的网站。</li>
+<li><strong>简介</strong>：为财务系统用户提供操作指引。</li>
 <li><strong>技术栈</strong>：<a href="https://vuejs.org/">Vue.js</a></li>
 </ul>
-<p>该项目实现了 PPTX 文档到网页的转换，并且支持动画的解析。</p>
+<p>该项目包含了文档上传和文档呈现两个子项目，文档上传实现了 DOCX、PPTX 等格式的文档到 HTML 的转换，文档呈现则实现了静态文档阅读、幻灯片播放以及指引教程播放等功能。</p>
 <h2 id="财务审批小程序20207-至今">财务审批小程序（2020.7 至今）</h2>
 <ul>
-<li><strong>简介</strong>：对接财务软件的移动审批。</li>
+<li><strong>简介</strong>：对接财务软件的移动审批小程序。</li>
 <li><strong>技术栈</strong>：<a href="https://uniapp.dcloud.io/">uni-app</a></li>
 </ul>
+<p>该项目使用 uni app 实现多平台小程序的统一开发维护，配合各平台开发 cli 工具实现统一发布。</p>
 <h1 id="相关链接">相关链接</h1>
 <ul>
 <li><a href="https://ambeta.github.io/">个人博客</a></li>
 <li><a href="https://github.com/AmBeta">Github 个人页</a></li>
+<li>联系邮箱：<a href="mailto:cnxcchenyao@gmail.com">cnxcchenyao@gmail.com</a></li>
 </ul>
 <figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1615106497405.jpeg" alt="" loading="lazy"></figure>
 
