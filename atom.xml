@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2021-04-06T06:09:30.196Z</updated>
+    <updated>2021-04-13T10:11:28.835Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -10,6 +10,97 @@
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 三土 | AmBeta</rights>
+    <entry>
+        <title type="html"><![CDATA[使用 Time Slice 解决 Long Task 问题]]></title>
+        <id>https://ambeta.github.io/post/shi-yong-time-slice-jie-jue-long-task-wen-ti/</id>
+        <link href="https://ambeta.github.io/post/shi-yong-time-slice-jie-jue-long-task-wen-ti/">
+        </link>
+        <updated>2021-04-13T09:00:28.000Z</updated>
+        <content type="html"><![CDATA[<p>前端处理大量数据时经常会遇到页面假死的问题，无法响应任何页面交互，严重影响用户体验。</p>
+<p>这是因为 js 是单线程执行的，而浏览器的页面渲染和 js 执行共享同一个主线程，因此一个执行时间过长的 js task 会阻塞主线程，导致页面无法响应。<br>
+使用 Chrome devtools 提供的 Performance 工具可以看到相关的提示：</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1618305639006.png" alt="Long Task - Performance devtool" loading="lazy"></figure>
+<p>我们可以通过将一个 long task 切分为多个 short task 的方式，交出主线程的执行权，这种方式也常被称为时间切片（<a href="https://en.wikipedia.org/wiki/Preemption_(computing)#Time_slice">Time Slice</a>）。</p>
+<h1 id="demo">Demo</h1>
+<pre><code class="language-javascript">const DATA = new Array(5000).fill();
+const COSTLY_FUNC = () =&gt; {
+  for (let i = 0; i &lt; 1000; i++) {
+    document.querySelector('div');
+  }
+};
+
+/**
+ * @param {function} runFn An iteratee function to be wrapped
+ * @param {function} cbFn  A callback function when all iteratees are called
+ * @param {number}   size  Size of each short task
+ * @return {function} Wrapped iteratee function
+ */
+function timeSlice(runFn, cbFn, size = 10) {
+  const self = this;
+  const nextTick = window.setTimeout;
+  const queue = [];
+  const results = [];
+  let timer = 0;
+
+  const run = async () =&gt; {
+    let count = size;
+
+    while (count-- &amp;&amp; queue.length) {
+      const args = queue.shift();
+      results.push(runFn.call(self, ...args));
+    }
+
+    if (queue.length &gt; 0) {
+      timer = nextTick(run);
+    } else {
+      timer = 0;
+      await Promise.all(results);
+      cbFn();
+    }
+  };
+  const add = (...args) =&gt; {
+    queue.push([...args]);
+    if (timer === 0) {
+      timer = nextTick(run);
+    }
+  };
+
+  return add;
+}
+
+function loop() {
+    const start = performance.now();
+    DATA.forEach(() =&gt; {
+        COSTLY_FUNC();
+    });
+    console.log(performance.now() - start);
+}
+
+function loopWithTimeSlice() {
+    const start = performance.now();
+    await new Promise(resolve =&gt;
+        DATA.forEach(timeSlice(() =&gt; {
+            COSTLY_FUNC();
+        }, resolve))
+    );
+    console.log(performance.now() - start);
+}
+</code></pre>
+<p>如上所示，<code>timeSlice</code> 函数将一个迭代回调包装为一个支持 time slice 的函数，调用该迭代回调时将不再立即调用，而是将其推入调用队列中，并通过 <code>setTimeout</code> 在后续的 task 中依次调用。</p>
+<p>使用 Performance 工具 debug 上述 <code>loop</code> 和 <code>loopWithTimeSlice</code> 函数，可以看到 long task 已经被拆分为了多个 task：</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1618307521553.png" alt="Time Slice" loading="lazy"></figure>
+<h1 id="procon">Pro/Con</h1>
+<p>使用 Time Slice 的方式可以有效解决页面无响应的问题，但是由于执行权的释放让任务总体的执行时间也变得更长了。上述示例代码中使用 <code>setTimeout</code> 拆分任务，也可以替换使用 <code>requestIdleCallback</code> 进一步降权，但这也会拉长任务的总执行时间。<br>
+此外，子任务的大小也是一个需要调优的参数，根据一次迭代的执行时间长短相应地缩小或者扩大子任务中迭代执行的次数（即 <code>timeSlice</code> 函数中的 size 参数）。</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Time Slice 并不是唯一的解决方案，也可以使用 Web Worker 将大量计算放在子线程中进行。<br>
+Time Slice 也不是通用的解决方案，需要根据情况选用，每种解决方案都有各自的额外开销，需要根据迭代选用适合的方案。</p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://github.com/berwin/time-slicing">berwin/time-slicing</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[从豆丁网下载无水印文档]]></title>
         <id>https://ambeta.github.io/post/cong-dou-ding-wang-xia-zai-wu-shui-yin-wen-dang/</id>
@@ -431,24 +522,6 @@ scp trojan_config.sh trojan_start.sh cacert.pem root@192.168.123.1:/etc/storage
 在 <code>扩展功能-&gt;广告屏蔽功能-&gt;transocks</code> 页面配置 transocks 透明代理服务：</p>
 <figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1585386892335.png" alt="transocks 配置" loading="lazy"></figure>
 <p>Padavan 固件的内置脚本会自动启用 ss_tproxy，等待脚本执行完成后路由器透明代理就设置完成了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[重定向 bash 脚本输出到系统日志]]></title>
-        <id>https://ambeta.github.io/post/chong-ding-xiang-bash-jiao-ben-shu-chu-dao-xi-tong-ri-zhi/</id>
-        <link href="https://ambeta.github.io/post/chong-ding-xiang-bash-jiao-ben-shu-chu-dao-xi-tong-ri-zhi/">
-        </link>
-        <updated>2020-03-18T06:00:13.000Z</updated>
-        <content type="html"><![CDATA[<p><em>【TL;DR】最近在家里的小米 R3G（刷了 Padavan 系统）部署 trojan 客户端，由于 hiboy 的固件没有预装 trojan，于是只能手写开机脚本。脚本写好了，但是从路由器的 webUI 上看不到启动日志，于是有了这篇文章。</em></p>
-<h1 id="how">HOW</h1>
-<h2 id="exec-1-logger-s-t-basename-0-21"><code>exec 1&gt; &gt;(logger -s -t $(basename $0)) 2&gt;&amp;1</code></h2>
-<p>在脚本的开头插入上述的命令可以将脚本中所有的输出重定向到系统日志中。</p>
-<h2 id="command-21-logger-s-t-basename-0"><code>[command] 2&gt;&amp;1 | logger -s -t $(basename $0)</code></h2>
-<p>使用管道运算符将标准输出作为系统日志的标准输入。<br>
-同时，shell 提供了与 <code>2&gt;&amp;1</code> 等价的快捷方式 <code>|&amp;</code> 可以替换使用。</p>
-<h1 id="reference">Reference</h1>
-<p><a href="https://www.urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/">Redirecting bash script output to syslog</a><br>
-<a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">bash manual: Redirections</a></p>
 ]]></content>
     </entry>
 </feed>

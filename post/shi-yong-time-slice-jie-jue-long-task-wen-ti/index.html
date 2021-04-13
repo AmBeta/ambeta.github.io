@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>使用 Time Slice 解决 Long Task 问题 | 三土 | AmBeta</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ambeta.github.io/favicon.ico?v=1618308686431">
+<link rel="stylesheet" href="https://ambeta.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75340276-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-75340276-2');
+</script>
+
+
+    <meta name="description" content="前端处理大量数据时经常会遇到页面假死的问题，无法响应任何页面交互，严重影响用户体验。
+这是因为 js 是单线程执行的，而浏览器的页面渲染和 js 执行共享同一个主线程，因此一个执行时间过长的 js task 会阻塞主线程，导致页面无法响应。..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ambeta.github.io">
+        <img src="https://ambeta.github.io/images/avatar.png?v=1618308686431" class="site-logo">
+        <h1 class="site-title">三土 | AmBeta</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/tag/sP51HulXH" class="site-nav">
+            书影随感
+          </a>
+        
+      
+        
+          <a href="https://ambeta.github.io/post/ge-ren-jian-li" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/AmBeta" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      一个伪程序猿的自我拉扯
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ambeta.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">使用 Time Slice 解决 Long Task 问题</h2>
+            <div class="post-date">2021-04-13</div>
+            
+            <div class="post-content" v-pre>
+              <p>前端处理大量数据时经常会遇到页面假死的问题，无法响应任何页面交互，严重影响用户体验。</p>
+<p>这是因为 js 是单线程执行的，而浏览器的页面渲染和 js 执行共享同一个主线程，因此一个执行时间过长的 js task 会阻塞主线程，导致页面无法响应。<br>
+使用 Chrome devtools 提供的 Performance 工具可以看到相关的提示：</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1618305639006.png" alt="Long Task - Performance devtool" loading="lazy"></figure>
+<p>我们可以通过将一个 long task 切分为多个 short task 的方式，交出主线程的执行权，这种方式也常被称为时间切片（<a href="https://en.wikipedia.org/wiki/Preemption_(computing)#Time_slice">Time Slice</a>）。</p>
+<h1 id="demo">Demo</h1>
+<pre><code class="language-javascript">const DATA = new Array(5000).fill();
+const COSTLY_FUNC = () =&gt; {
+  for (let i = 0; i &lt; 1000; i++) {
+    document.querySelector('div');
+  }
+};
+
+/**
+ * @param {function} runFn An iteratee function to be wrapped
+ * @param {function} cbFn  A callback function when all iteratees are called
+ * @param {number}   size  Size of each short task
+ * @return {function} Wrapped iteratee function
+ */
+function timeSlice(runFn, cbFn, size = 10) {
+  const self = this;
+  const nextTick = window.setTimeout;
+  const queue = [];
+  const results = [];
+  let timer = 0;
+
+  const run = async () =&gt; {
+    let count = size;
+
+    while (count-- &amp;&amp; queue.length) {
+      const args = queue.shift();
+      results.push(runFn.call(self, ...args));
+    }
+
+    if (queue.length &gt; 0) {
+      timer = nextTick(run);
+    } else {
+      timer = 0;
+      await Promise.all(results);
+      cbFn();
+    }
+  };
+  const add = (...args) =&gt; {
+    queue.push([...args]);
+    if (timer === 0) {
+      timer = nextTick(run);
+    }
+  };
+
+  return add;
+}
+
+function loop() {
+    const start = performance.now();
+    DATA.forEach(() =&gt; {
+        COSTLY_FUNC();
+    });
+    console.log(performance.now() - start);
+}
+
+function loopWithTimeSlice() {
+    const start = performance.now();
+    await new Promise(resolve =&gt;
+        DATA.forEach(timeSlice(() =&gt; {
+            COSTLY_FUNC();
+        }, resolve))
+    );
+    console.log(performance.now() - start);
+}
+</code></pre>
+<p>如上所示，<code>timeSlice</code> 函数将一个迭代回调包装为一个支持 time slice 的函数，调用该迭代回调时将不再立即调用，而是将其推入调用队列中，并通过 <code>setTimeout</code> 在后续的 task 中依次调用。</p>
+<p>使用 Performance 工具 debug 上述 <code>loop</code> 和 <code>loopWithTimeSlice</code> 函数，可以看到 long task 已经被拆分为了多个 task：</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1618307521553.png" alt="Time Slice" loading="lazy"></figure>
+<h1 id="procon">Pro/Con</h1>
+<p>使用 Time Slice 的方式可以有效解决页面无响应的问题，但是由于执行权的释放让任务总体的执行时间也变得更长了。上述示例代码中使用 <code>setTimeout</code> 拆分任务，也可以替换使用 <code>requestIdleCallback</code> 进一步降权，但这也会拉长任务的总执行时间。<br>
+此外，子任务的大小也是一个需要调优的参数，根据一次迭代的执行时间长短相应地缩小或者扩大子任务中迭代执行的次数（即 <code>timeSlice</code> 函数中的 size 参数）。</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Time Slice 并不是唯一的解决方案，也可以使用 Web Worker 将大量计算放在子线程中进行。<br>
+Time Slice 也不是通用的解决方案，需要根据情况选用，每种解决方案都有各自的额外开销，需要根据迭代选用适合的方案。</p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://github.com/berwin/time-slicing">berwin/time-slicing</a></li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ambeta.github.io/post/cong-dou-ding-wang-xia-zai-wu-shui-yin-wen-dang/">
+                  <h3 class="post-title">
+                    从豆丁网下载无水印文档
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '8f505b6fe1798d1fd150',
+        clientSecret: 'c7468fbe58715e31c69c206be6c38df7313936ca',
+        repo: 'ambeta.github.io',
+        owner: 'AmBeta',
+        admin: ['AmBeta'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
