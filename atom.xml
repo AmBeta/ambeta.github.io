@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2021-04-13T10:13:11.301Z</updated>
+    <updated>2021-07-01T08:33:07.851Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -203,7 +203,7 @@ document.querySelectAll('canvas').forEach((node, index) =&gt; {
 <h2 id="step-2-引入-css-变量">Step 2: 引入 CSS 变量</h2>
 <p>这里使用 i18n 的思路，将每个主题样式类定义为 i18n 中的一个 locale，再引入到每个页面中。</p>
 <pre><code class="language-js">// i18n.js
-import Vue form 'vue';
+import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
 Vue.use(VueI18n);
@@ -229,7 +229,7 @@ Vue.prototype._i18n = i18n;
 export default i18n;
 </code></pre>
 <pre><code class="language-html">&lt;template&gt;
-    &lt;view :class=[theme.css, 'page-test']&gt;
+    &lt;view :class=&quot;[theme.css, 'page-test']&quot;&gt;
     &lt;/view&gt;
 &lt;/template&gt;
 
