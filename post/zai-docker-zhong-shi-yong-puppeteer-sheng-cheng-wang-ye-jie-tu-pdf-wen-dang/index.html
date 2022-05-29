@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>在 docker 中使用 puppeteer 生成网页截图 PDF 文档 | 三土 | AmBeta</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ambeta.github.io/favicon.ico?v=1653807097040">
+<link rel="stylesheet" href="https://ambeta.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75340276-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-75340276-2');
+</script>
+
+
+    <meta name="description" content="之前的网页截图生成 PDF 项目使用的是 PhantomJS，由于其目前已停止开发，故切换到 puppeteer。
+运行环境准备
+关于如何在 docker 中运行 puppeteer，官方文档中有详细说明（@Reference 1），这里仅..." />
+    <meta name="keywords" content="docker,puppeteer" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ambeta.github.io">
+        <img src="https://ambeta.github.io/images/avatar.png?v=1653807097040" class="site-logo">
+        <h1 class="site-title">三土 | AmBeta</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/tag/sP51HulXH" class="site-nav">
+            书影随感
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/AmBeta" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      一个伪程序猿的自我拉扯
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ambeta.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">在 docker 中使用 puppeteer 生成网页截图 PDF 文档</h2>
+            <div class="post-date">2022-05-29</div>
+            
+            <div class="post-content" v-pre>
+              <p>之前的网页截图生成 PDF 项目使用的是 <a href="https://github.com/ariya/phantomjs">PhantomJS</a>，由于其目前已停止开发，故切换到 <a href="https://github.com/puppeteer/puppeteer">puppeteer</a>。</p>
+<h1 id="运行环境准备">运行环境准备</h1>
+<p>关于如何在 docker 中运行 puppeteer，官方文档中有详细说明（@Reference 1），这里仅以在 alpine 环境中运行举例。</p>
+<pre><code class="language-dockerfile">FROM alpine
+
+# Replace apk install source  for Chinese users.
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+# Installs latest Chromium (100) package.
+RUN apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      harfbuzz \
+      ca-certificates \
+      ttf-dejavu \
+      fontconfig \
+      nodejs \
+      npm
+
+# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Puppeteer v13.5.0 works with Chromium 100.
+RUN yarn add puppeteer@13.5.0
+
+# Add user so we don't need --no-sandbox.
+RUN addgroup -S pptruser &amp;&amp; adduser -S -G pptruser pptruser \
+    &amp;&amp; mkdir -p /home/pptruser/Downloads /app \
+    &amp;&amp; chown -R pptruser:pptruser /home/pptruser \
+    &amp;&amp; chown -R pptruser:pptruser /app
+
+# Run everything after as non-privileged user.
+USER pptruser
+</code></pre>
+<p>这里需要 <strong>注意</strong> 的点：</p>
+<ol>
+<li>只能够使用 apk 安装的 chromium，puppeteer 内置的脚本安装的 chromium 会有动态链接库不兼容的问题，因此一定要配置好 npm 安装依赖时的环境变量 <code>PUPPETEER_SKIP_CHROMIUM_DOWNLOAD</code> 和运行时的环境变量 <code>PUPPETEER_EXECUTABLE_PATH</code>。</li>
+<li>目前通过 apk 安装的 chromium 只支持在 puppeteer@13.5.0 下运行，因此需要检查好安装的 puppeteer 版本。</li>
+<li>由于 alpine 中不含字体库，会导致 puppeteer 无法正常渲染文字，故添加 <code>fontconfig</code> 用于安装字体，需要将字体文件放置在 <code>/usr/share/fonts/</code> 目录下。</li>
+<li>国内用户使用 apk 安装库时可能会遇到网络问题，故可以切换 apk 源到国内镜像。</li>
+</ol>
+<h1 id="生成-pdf-示例代码">生成 PDF 示例代码</h1>
+<pre><code class="language-typescript">import puppeteer from 'puppeteer';
+
+type Options = puppeteer.PDFOptions &amp; {};
+
+async function genPDF(content: string, options: Options) {
+  const browser = await puppeteer.launch({
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      // https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#tips
+      '--disable-dev-shm-usage',
+    ],
+  });
+  const page = await browser.newPage();
+  await page.setContent(content);
+  const pdfBuffer = await page.pdf(options);
+  await browser.close();
+  return pdfBuffer;
+}
+</code></pre>
+<h1 id="reference">Reference</h1>
+<ol>
+<li><a href="https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker">running-puppeteer-in-docker</a></li>
+<li><a href="https://pptr.dev/#?product=Puppeteer&amp;version=v14.1.1&amp;show=api-pagepdfoptions">puppeteer API reference</a></li>
+<li><a href="https://furthergazer.top/article/2020/3/9/7.html">alpine linux 使用国内镜像源进行加速</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/357870388">Alpine镜像的中文支持和字体对比（puppeteer自动截图）</a></li>
+<li><a href="https://www.cxyzjd.com/article/zimou5581/101368129">如何给dcoker容器里的alpine系统安装中文字体</a></li>
+</ol>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ambeta.github.io/tag/7F8er60Tx/" class="tag">
+                    docker
+                  </a>
+                
+                  <a href="https://ambeta.github.io/tag/6WjmRfLXo3/" class="tag">
+                    puppeteer
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ambeta.github.io/post/shi-yong-time-slice-jie-jue-long-task-wen-ti/">
+                  <h3 class="post-title">
+                    使用 Time Slice 解决 Long Task 问题
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '8f505b6fe1798d1fd150',
+        clientSecret: 'c7468fbe58715e31c69c206be6c38df7313936ca',
+        repo: 'ambeta.github.io',
+        owner: 'AmBeta',
+        admin: ['AmBeta'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
