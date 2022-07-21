@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>书影随感-序 | 三土 | AmBeta</title>
+<title>使用 ZeroTier 实现异地组网 | 三土 | AmBeta</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -33,9 +33,8 @@
 </script>
 
 
-    <meta name="description" content="自从开始了每天地铁通勤三小时的生活，我又把八岁高龄的泡面盖 kindle paperwhite 掏了出来，每天上下班路上看看书让痛苦的通勤时间多了一种享受（苦中作乐技能 MAX）。
-消遣书籍中，我最爱看的还是偏向于纪实类的小说，就像我喜欢看..." />
-    <meta name="keywords" content="书影随感" />
+    <meta name="description" content="对于家宽没有公网 IP 的情况，想要访问家里的 NAS 等设备就需要进行内网穿透。开源的 frp、nps 等工具可以方便地实现内网穿透，但目前这些工具的 P2P 穿透能力较差，强烈依赖于服务端的进出口带宽，而 ZeroTier 可以实现内网..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -110,32 +109,67 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">书影随感-序</h2>
-            <div class="post-date">2020-07-07</div>
+            <h2 class="post-title">使用 ZeroTier 实现异地组网</h2>
+            <div class="post-date">2022-07-21</div>
             
             <div class="post-content" v-pre>
-              <p>自从开始了每天地铁通勤三小时的生活，我又把八岁高龄的泡面盖 kindle paperwhite 掏了出来，每天上下班路上看看书让痛苦的通勤时间多了一种享受（苦中作乐技能 MAX）。</p>
-<p>消遣书籍中，我最爱看的还是偏向于纪实类的小说，就像我喜欢看剧情片一样，贴近现实让我比较能够构想出画面，而合乎情理的戏剧冲突又让我感受到现实生活中没有的魅力。我看书很慢，逐字逐句，在脑中勾画出一帧帧画面，进而组成一个个电影片段。这也是读书吸引我的一个地方，我感觉自己就是一个电影导演。</p>
-<p>我很容易沉浸在小说或者电影的世界中，甚至故事结束之后我好些天都无法从那个世界出来，这样我也没办法紧接着去读下一本书或看下一部电影。这样在虚拟世界的弥留之际，不妨把自己的感想记录下来，也算是对那个世界做一个正式的告别，让我更快地可以进入下一个世界。</p>
-<p>附图：八岁老 kindle<br>
-<img src="https://ambeta.github.io/post-images/1594089890434.jpeg" alt="kindle paperwhite" loading="lazy"></p>
+              <p>对于家宽没有公网 IP 的情况，想要访问家里的 NAS 等设备就需要进行内网穿透。开源的 frp、nps 等工具可以方便地实现内网穿透，但目前这些工具的 P2P 穿透能力较差，强烈依赖于服务端的进出口带宽，而 ZeroTier 可以实现内网穿透，由官方提供通讯服务器，并且他对 P2P 穿透的支持性比较强。</p>
+<p>关于 ZeroTier 的注册方法网上已经有很多教程，这里不再赘述。</p>
+<h1 id="安装-zerotier">安装 ZeroTier</h1>
+<p><a href="https://www.zerotier.com/download/">ZeroTier 官网</a>提供了多种平台的客户端下载，可自行下载安装。</p>
+<h2 id="路由器-padavanopenwrt">路由器 (Padavan/OpenWRT)</h2>
+<p>官网暂时没有提供对应平台的版本，需要使用 opkg 从 Entware 源下载。<br>
+最新的软件包可能会有兼容性问题，如果启动时出现如下的警告信息：</p>
+<pre><code class="language-shell">WARNING: ioctl() failed setting up Linux tap device (set MAC)
+</code></pre>
+<p>建议使用 1.4.6 版本，安装脚本如下：</p>
+<pre><code class="language-shell">$ opkg install &quot;http://bin.entware.net/mipselsf-k3.4/archive/zerotier_1.4.6-5_mipsel-3.4.ipk&quot;
+</code></pre>
+<h1 id="启动-zerotier">启动 ZeroTier</h1>
+<h2 id="路由器-padavanopenwrt-2">路由器 (Padavan/OpenWRT)</h2>
+<pre><code class="language-shell">$ zerotier-one -d
+$ zerotier-cli join &lt;YOUER NETWORK ID&gt;
+</code></pre>
+<h1 id="配置-zerotier-路由">配置 ZeroTier 路由</h1>
+<p>在 ZeroTier 创建的网络中添加一条路由记录：</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1658397826520.png" alt="ZeroTier 路由配置" loading="lazy"></figure>
+<p>即将所有对内网网段的访问全部代理到路由器的虚拟网卡上。</p>
+<p>设置路由器支持桥接模式：</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1658398192061.png" alt="开启路由器桥接" loading="lazy"></figure>
+<h1 id="配置路由器防火墙规则">配置路由器防火墙规则</h1>
+<p>配置防火墙让 ZeroTier 创建的虚拟网卡的流量进入内网，并设置转发规则，从而可以访问内网中的其他机器。<br>
+首先查看虚拟网卡的名称：</p>
+<pre><code class="language-shell">$ ifconfig
+
+ztklhznki4 Link encap:Ethernet  HWaddr 66:BB:BD:04:7C:62
+          inet addr:10.147.19.163  Bcast:10.147.19.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:2800  Metric:1
+          RX packets:4659 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3150 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:500
+          RX bytes:601999 (587.8 KiB)  TX bytes:2428690 (2.3 MiB)
+</code></pre>
+<p>我的虚拟网卡名称为：<code>ztklhznki4</code></p>
+<p>配置防火墙规则：</p>
+<pre><code class="language-shell">$ iptables -A INPUT -i ztklhznki4 -j ACCEPT
+$ iptables -A FORWARD -i ztklhznki4 -j ACCEPT
+$ iptables -A FORWARD -o ztklhznki4 -j ACCEPT
+$ iptables -t nat -A POSTROUTING -o ztklhznki4 -j MASQUERADE
+</code></pre>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://www.cnblogs.com/wzcsxjl/p/14883792.html">Padavan安装使用ZeroTier实现组建虚拟局域网的方法 </a></li>
+<li><a href="https://www.cnblogs.com/jonnyan/p/14175136.html">zerotier充当网关实现内网互联,访问其它节点内网 </a></li>
+</ul>
 
             </div>
-            
-              <div class="tag-container">
-                
-                  <a href="https://ambeta.github.io/tag/sP51HulXH/" class="tag">
-                    书影随感
-                  </a>
-                
-              </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://ambeta.github.io/post/4-yue-4-ri-quan-guo-ai-dao-ri-quan-wang-wu-shi-du-hui/">
+                <a href="https://ambeta.github.io/post/jing-dong-wu-xian-bao-yi-dai-64g-shua-ji/">
                   <h3 class="post-title">
-                    4.4全国哀悼日——全(局域)网五十度灰
+                    京东无线宝一代64G刷机
                   </h3>
                 </a>
               </div>

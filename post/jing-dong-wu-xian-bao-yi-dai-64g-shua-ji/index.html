@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>书影随感-序 | 三土 | AmBeta</title>
+<title>京东无线宝一代64G刷机 | 三土 | AmBeta</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -33,9 +33,20 @@
 </script>
 
 
-    <meta name="description" content="自从开始了每天地铁通勤三小时的生活，我又把八岁高龄的泡面盖 kindle paperwhite 掏了出来，每天上下班路上看看书让痛苦的通勤时间多了一种享受（苦中作乐技能 MAX）。
-消遣书籍中，我最爱看的还是偏向于纪实类的小说，就像我喜欢看..." />
-    <meta name="keywords" content="书影随感" />
+    <meta name="description" content="刷机步骤
+
+
+确认型号为：RE-SP-01B；
+
+
+倒置，撕开2个半周的粘合的胶圈，拧下三颗螺丝，位置：顶部中间，左右稍中下部；
+
+
+上下左右，各有2个卡扣，用硬物撬开或者电吹风吹软弄开；
+
+
+CH341A 或者 Minpro 或者 其它编..." />
+    <meta name="keywords" content="router,Padavan" />
   </head>
   <body>
     <div id="app" class="main">
@@ -110,22 +121,82 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">书影随感-序</h2>
-            <div class="post-date">2020-07-07</div>
+            <h2 class="post-title">京东无线宝一代64G刷机</h2>
+            <div class="post-date">2022-07-08</div>
             
             <div class="post-content" v-pre>
-              <p>自从开始了每天地铁通勤三小时的生活，我又把八岁高龄的泡面盖 kindle paperwhite 掏了出来，每天上下班路上看看书让痛苦的通勤时间多了一种享受（苦中作乐技能 MAX）。</p>
-<p>消遣书籍中，我最爱看的还是偏向于纪实类的小说，就像我喜欢看剧情片一样，贴近现实让我比较能够构想出画面，而合乎情理的戏剧冲突又让我感受到现实生活中没有的魅力。我看书很慢，逐字逐句，在脑中勾画出一帧帧画面，进而组成一个个电影片段。这也是读书吸引我的一个地方，我感觉自己就是一个电影导演。</p>
-<p>我很容易沉浸在小说或者电影的世界中，甚至故事结束之后我好些天都无法从那个世界出来，这样我也没办法紧接着去读下一本书或看下一部电影。这样在虚拟世界的弥留之际，不妨把自己的感想记录下来，也算是对那个世界做一个正式的告别，让我更快地可以进入下一个世界。</p>
-<p>附图：八岁老 kindle<br>
-<img src="https://ambeta.github.io/post-images/1594089890434.jpeg" alt="kindle paperwhite" loading="lazy"></p>
+              <h1 id="刷机步骤">刷机步骤</h1>
+<ol>
+<li>
+<p>确认型号为：RE-SP-01B；</p>
+</li>
+<li>
+<p>倒置，撕开2个半周的粘合的胶圈，拧下三颗螺丝，位置：顶部中间，左右稍中下部；</p>
+</li>
+<li>
+<p>上下左右，各有2个卡扣，用硬物撬开或者电吹风吹软弄开；</p>
+</li>
+<li>
+<p>CH341A 或者 Minpro 或者 其它编程器，接入16口的夹具（SOP16转DIP8夹子），找到路由线路板上winbond字样flash；</p>
+</li>
+<li>
+<p>flash上从左到右，左上角为16、15，右上角为10、9，左下角为1、2，右下角为7、8；</p>
+</li>
+<li>
+<p>编程器1、2、3、4、5、6、7、8分别对应：7、8、9、10、15、16、1、2夹好连接好夹具；</p>
+</li>
+<li>
+<p>连接好电脑，识别出编程器，点编程器软件“检测”，识别到芯片为W25Q256，为FFF的是没弄好；(ch341a用1.4最新版的软件)</p>
+</li>
+<li>
+<p>编程器读取，并保存备份原厂编程器固件；</p>
+</li>
+<li>
+<p>编程器打开：breed-mt7621-jd-cloud-1.bin，分别依次点“擦除、写入、检验”。或者直接点“自动”。</p>
+</li>
+<li>
+<p>完成后。拨掉夹具，接入路由电源，路由灯应该亮且不是红包，网线接入路由连接到电脑，访问192.168.1.1；</p>
+</li>
+<li>
+<p>进入breed, <strong>开启环境变量</strong>，位置为“内部”，保存重启。<strong>开启breed保护</strong>，保存重启。（<strong>特别重要</strong>，防止后面格式化64g变砖)</p>
+</li>
+<li>
+<p>刷入固件 JDC-1_3.4.3.9-099.trx</p>
+</li>
+<li>
+<p>进入padavan后，点击服务，启用 Telnet 服务，启用 SSH 服务:</p>
+</li>
+<li>
+<p>操作台 输入fdisk -l  查看分区状况，有个58GB的mmcblk0，如下：<br>
+Disk /dev/mtdblock6 doesn't contain a valid partition table<br>
+Disk /dev/mmcblk0: 58 GB, 61865984000 bytes, 120832000 sectors<br>
+1888000 cylinders, 4 heads, 16 sectors/track<br>
+Units: sectors of 1 * 512 = 512 bytes</p>
+</li>
+<li>
+<p>操作台 输入mkfs.ext4/dev/mmcblk0  稍等一会重新刷新，sd状态重新刷新下就出来了</p>
+</li>
+<li>
+<p>如果mac丢失信号很差，就刷eeprom.bin和full.bin</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1658391934401.jpeg" alt="转换器接线" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1658391914689.jpeg" alt="连接到电脑" loading="lazy"></figure>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://www.right.com.cn/forum/thread-8221140-1-2.html">京东无线宝一代64G拆机编程器刷机并挂载内置64G经验分享，mac地址不丢失</a></li>
+</ul>
 
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://ambeta.github.io/tag/sP51HulXH/" class="tag">
-                    书影随感
+                  <a href="https://ambeta.github.io/tag/A8mv7_ivV/" class="tag">
+                    router
+                  </a>
+                
+                  <a href="https://ambeta.github.io/tag/YgjSVHhVu/" class="tag">
+                    Padavan
                   </a>
                 
               </div>
@@ -133,9 +204,9 @@
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://ambeta.github.io/post/4-yue-4-ri-quan-guo-ai-dao-ri-quan-wang-wu-shi-du-hui/">
+                <a href="https://ambeta.github.io/post/zai-docker-zhong-shi-yong-puppeteer-sheng-cheng-wang-ye-jie-tu-pdf-wen-dang/">
                   <h3 class="post-title">
-                    4.4全国哀悼日——全(局域)网五十度灰
+                    在 docker 中使用 puppeteer 生成网页截图 PDF 文档
                   </h3>
                 </a>
               </div>

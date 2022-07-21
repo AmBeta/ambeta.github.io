@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ambeta.github.io</id>
     <title>三土 | AmBeta</title>
-    <updated>2022-05-29T06:53:36.770Z</updated>
+    <updated>2022-07-21T10:10:30.164Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ambeta.github.io"/>
     <link rel="self" href="https://ambeta.github.io/atom.xml"/>
@@ -10,6 +10,131 @@
     <logo>https://ambeta.github.io/images/avatar.png</logo>
     <icon>https://ambeta.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, 三土 | AmBeta</rights>
+    <entry>
+        <title type="html"><![CDATA[使用 ZeroTier 实现异地组网]]></title>
+        <id>https://ambeta.github.io/post/shi-yong-zerotier-shi-xian-yi-di-zu-wang/</id>
+        <link href="https://ambeta.github.io/post/shi-yong-zerotier-shi-xian-yi-di-zu-wang/">
+        </link>
+        <updated>2022-07-21T08:33:47.000Z</updated>
+        <content type="html"><![CDATA[<p>对于家宽没有公网 IP 的情况，想要访问家里的 NAS 等设备就需要进行内网穿透。开源的 frp、nps 等工具可以方便地实现内网穿透，但目前这些工具的 P2P 穿透能力较差，强烈依赖于服务端的进出口带宽，而 ZeroTier 可以实现内网穿透，由官方提供通讯服务器，并且他对 P2P 穿透的支持性比较强。</p>
+<p>关于 ZeroTier 的注册方法网上已经有很多教程，这里不再赘述。</p>
+<h1 id="安装-zerotier">安装 ZeroTier</h1>
+<p><a href="https://www.zerotier.com/download/">ZeroTier 官网</a>提供了多种平台的客户端下载，可自行下载安装。</p>
+<h2 id="路由器-padavanopenwrt">路由器 (Padavan/OpenWRT)</h2>
+<p>官网暂时没有提供对应平台的版本，需要使用 opkg 从 Entware 源下载。<br>
+最新的软件包可能会有兼容性问题，如果启动时出现如下的警告信息：</p>
+<pre><code class="language-shell">WARNING: ioctl() failed setting up Linux tap device (set MAC)
+</code></pre>
+<p>建议使用 1.4.6 版本，安装脚本如下：</p>
+<pre><code class="language-shell">$ opkg install &quot;http://bin.entware.net/mipselsf-k3.4/archive/zerotier_1.4.6-5_mipsel-3.4.ipk&quot;
+</code></pre>
+<h1 id="启动-zerotier">启动 ZeroTier</h1>
+<h2 id="路由器-padavanopenwrt-2">路由器 (Padavan/OpenWRT)</h2>
+<pre><code class="language-shell">$ zerotier-one -d
+$ zerotier-cli join &lt;YOUER NETWORK ID&gt;
+</code></pre>
+<h1 id="配置-zerotier-路由">配置 ZeroTier 路由</h1>
+<p>在 ZeroTier 创建的网络中添加一条路由记录：</p>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1658397826520.png" alt="ZeroTier 路由配置" loading="lazy"></figure>
+<p>即将所有对内网网段的访问全部代理到路由器的虚拟网卡上。</p>
+<p>设置路由器支持桥接模式：</p>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1658398192061.png" alt="开启路由器桥接" loading="lazy"></figure>
+<h1 id="配置路由器防火墙规则">配置路由器防火墙规则</h1>
+<p>配置防火墙让 ZeroTier 创建的虚拟网卡的流量进入内网，并设置转发规则，从而可以访问内网中的其他机器。<br>
+首先查看虚拟网卡的名称：</p>
+<pre><code class="language-shell">$ ifconfig
+
+ztklhznki4 Link encap:Ethernet  HWaddr 66:BB:BD:04:7C:62
+          inet addr:10.147.19.163  Bcast:10.147.19.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:2800  Metric:1
+          RX packets:4659 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3150 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:500
+          RX bytes:601999 (587.8 KiB)  TX bytes:2428690 (2.3 MiB)
+</code></pre>
+<p>我的虚拟网卡名称为：<code>ztklhznki4</code></p>
+<p>配置防火墙规则：</p>
+<pre><code class="language-shell">$ iptables -A INPUT -i ztklhznki4 -j ACCEPT
+$ iptables -A FORWARD -i ztklhznki4 -j ACCEPT
+$ iptables -A FORWARD -o ztklhznki4 -j ACCEPT
+$ iptables -t nat -A POSTROUTING -o ztklhznki4 -j MASQUERADE
+</code></pre>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://www.cnblogs.com/wzcsxjl/p/14883792.html">Padavan安装使用ZeroTier实现组建虚拟局域网的方法 </a></li>
+<li><a href="https://www.cnblogs.com/jonnyan/p/14175136.html">zerotier充当网关实现内网互联,访问其它节点内网 </a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[京东无线宝一代64G刷机]]></title>
+        <id>https://ambeta.github.io/post/jing-dong-wu-xian-bao-yi-dai-64g-shua-ji/</id>
+        <link href="https://ambeta.github.io/post/jing-dong-wu-xian-bao-yi-dai-64g-shua-ji/">
+        </link>
+        <updated>2022-07-08T08:53:06.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="刷机步骤">刷机步骤</h1>
+<ol>
+<li>
+<p>确认型号为：RE-SP-01B；</p>
+</li>
+<li>
+<p>倒置，撕开2个半周的粘合的胶圈，拧下三颗螺丝，位置：顶部中间，左右稍中下部；</p>
+</li>
+<li>
+<p>上下左右，各有2个卡扣，用硬物撬开或者电吹风吹软弄开；</p>
+</li>
+<li>
+<p>CH341A 或者 Minpro 或者 其它编程器，接入16口的夹具（SOP16转DIP8夹子），找到路由线路板上winbond字样flash；</p>
+</li>
+<li>
+<p>flash上从左到右，左上角为16、15，右上角为10、9，左下角为1、2，右下角为7、8；</p>
+</li>
+<li>
+<p>编程器1、2、3、4、5、6、7、8分别对应：7、8、9、10、15、16、1、2夹好连接好夹具；</p>
+</li>
+<li>
+<p>连接好电脑，识别出编程器，点编程器软件“检测”，识别到芯片为W25Q256，为FFF的是没弄好；(ch341a用1.4最新版的软件)</p>
+</li>
+<li>
+<p>编程器读取，并保存备份原厂编程器固件；</p>
+</li>
+<li>
+<p>编程器打开：breed-mt7621-jd-cloud-1.bin，分别依次点“擦除、写入、检验”。或者直接点“自动”。</p>
+</li>
+<li>
+<p>完成后。拨掉夹具，接入路由电源，路由灯应该亮且不是红包，网线接入路由连接到电脑，访问192.168.1.1；</p>
+</li>
+<li>
+<p>进入breed, <strong>开启环境变量</strong>，位置为“内部”，保存重启。<strong>开启breed保护</strong>，保存重启。（<strong>特别重要</strong>，防止后面格式化64g变砖)</p>
+</li>
+<li>
+<p>刷入固件 JDC-1_3.4.3.9-099.trx</p>
+</li>
+<li>
+<p>进入padavan后，点击服务，启用 Telnet 服务，启用 SSH 服务:</p>
+</li>
+<li>
+<p>操作台 输入fdisk -l  查看分区状况，有个58GB的mmcblk0，如下：<br>
+Disk /dev/mtdblock6 doesn't contain a valid partition table<br>
+Disk /dev/mmcblk0: 58 GB, 61865984000 bytes, 120832000 sectors<br>
+1888000 cylinders, 4 heads, 16 sectors/track<br>
+Units: sectors of 1 * 512 = 512 bytes</p>
+</li>
+<li>
+<p>操作台 输入mkfs.ext4/dev/mmcblk0  稍等一会重新刷新，sd状态重新刷新下就出来了</p>
+</li>
+<li>
+<p>如果mac丢失信号很差，就刷eeprom.bin和full.bin</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://ambeta.github.io/post-images/1658391934401.jpeg" alt="转换器接线" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://ambeta.github.io/post-images/1658391914689.jpeg" alt="连接到电脑" loading="lazy"></figure>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://www.right.com.cn/forum/thread-8221140-1-2.html">京东无线宝一代64G拆机编程器刷机并挂载内置64G经验分享，mac地址不丢失</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[在 docker 中使用 puppeteer 生成网页截图 PDF 文档]]></title>
         <id>https://ambeta.github.io/post/zai-docker-zhong-shi-yong-puppeteer-sheng-cheng-wang-ye-jie-tu-pdf-wen-dang/</id>
@@ -429,80 +554,6 @@ app.$mount();
 百度的哥们最细（精确到元素，可能网站结构比较简单吧:)）</p>
 </blockquote>
 <p>花了半个小时的时间写了一篇这么无聊的文章，了解了一个全站变灰的方式以及可能的坑，当然也不希望以后会用到这个技术吧。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[使用 UPX 压缩可执行文件]]></title>
-        <id>https://ambeta.github.io/post/shi-yong-upx-ya-suo-ke-zhi-xing-wen-jian/</id>
-        <link href="https://ambeta.github.io/post/shi-yong-upx-ya-suo-ke-zhi-xing-wen-jian/">
-        </link>
-        <updated>2020-04-03T02:57:01.000Z</updated>
-        <content type="html"><![CDATA[<p><a href="https://upx.github.io/">UPX</a> 可以有效地对可执行文件进行压缩，并且压缩后的文件可以直接由系统执行，支持多系统和平台。<br>
-使用 UPX 来压缩可执行文件是一种减少发布包大小的有效方式。</p>
-<h1 id="安装">安装</h1>
-<ul>
-<li>
-<p>从 <a href="https://github.com/upx/upx/releases">github release page</a> 下载预编译的二进制文件</p>
-</li>
-<li>
-<p>macOS 可以使用 brew 安装：</p>
-<pre><code class="language-shell">brew install upx
-</code></pre>
-</li>
-</ul>
-<h1 id="使用">使用</h1>
-<h2 id="压缩">压缩</h2>
-<pre><code class="language-shell">upx [options] yourfile
-</code></pre>
-<p>upx 对文件的默认操作即为压缩，使用上述命令会使用默认参数压缩并替换文件 yourfile。<br>
-upx 支持如下可选参数：</p>
-<ul>
-<li><code>-1[23456789]</code>：不同的压缩级别，数值越高压缩率越高，但耗时更长。对于小于 512 KiB 的文件默认使用 <code>-8</code>，其他的默认为 <code>-7</code>。
-<ul>
-<li><code>--best</code>：最高压缩级别</li>
-<li><code>--brute</code>：尝试使用各种压缩方式来获取最高压缩比</li>
-<li><code>--ultra-brute</code>：尝试使用更多的参数来获取更高的压缩比</li>
-</ul>
-</li>
-<li><code>-o [file]</code>：将压缩文件保存为 [file]</li>
-</ul>
-<h2 id="解压">解压</h2>
-<pre><code class="language-shell">upx -d [yourfile]
-</code></pre>
-<h1 id="优劣">优劣</h1>
-<p>压缩的程序占用更少的硬盘空间，但会在打开时消耗更多的 CPU 资源，在运行时占用更多的内存（或 swap 空间、/tmp 存储等）。</p>
-<h2 id="优点">优点</h2>
-<ul>
-<li>UPX 可以压缩各种类型的可执行文件</li>
-<li>压缩后的文件可以直接由操作系统执行</li>
-<li>压缩过程不会修改源文件，也就意味着解压后直接可以得到原始文件</li>
-<li>不会产生额外的动态库调用</li>
-</ul>
-<h2 id="缺点">缺点</h2>
-<ul>
-<li>运行的程序不会共享数据段（<em>汇编</em>），所以多实例运行的程序不适合压缩</li>
-<li>使用 <code>ldd</code> 和 <code>size</code> 命令无法获取到程序的有效信息</li>
-</ul>
-<h1 id="原理">原理</h1>
-<h2 id="为什么压缩后的文件可由系统直接执行">为什么压缩后的文件可由系统直接执行？</h2>
-<p>UPX 将程序压缩，并在头部加入解压的程序，具体的原理可以参看参考[2]。<br>
-在 Linux 系统中可以使用 <code>strings</code> 命令查看可执行文件的内容，通过查看 UPX 压缩后的程序可以看到，UPX 在文件中写入了自己的特征码。</p>
-<h1 id="参考">参考</h1>
-<ul>
-<li>1: <a href="https://github.com/upx/upx/blob/master/doc/upx.pod">UPX manual</a></li>
-<li>2: <a href="https://dzone.com/articles/packers-how-they-work-featuring-upx">Packers, How They Work, Featuring UPX</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[flutter cookbook]]></title>
-        <id>https://ambeta.github.io/post/flutter-cookbook/</id>
-        <link href="https://ambeta.github.io/post/flutter-cookbook/">
-        </link>
-        <updated>2020-04-01T02:50:34.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="faq">FAQ</h1>
-<h2 id="flutter-upgrade-卡在-building-flutter-tools"><code>flutter upgrade</code> 卡在 <code>Building flutter tools...</code></h2>
-<p>一般是由于网络原因脚本卡在了 <code>pub upgrade</code> 命令，需要使用代理连接 <code>pub.dartlang.org</code>。</p>
 ]]></content>
     </entry>
 </feed>
